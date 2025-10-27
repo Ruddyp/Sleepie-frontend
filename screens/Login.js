@@ -13,14 +13,14 @@ import {
 import Button from '../components/KitUI/Button'
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { API_IP, API_PORT } from '@env';
 
 
 
 export default function Login({ navigation }) {
 
 
-
+  const IP = process.env.EXPO_PUBLIC_IP
+  const port = process.env.EXPO_PUBLIC_PORT
 
   const dispatch = useDispatch();
 
