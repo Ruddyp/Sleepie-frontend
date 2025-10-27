@@ -9,7 +9,7 @@ export default function Home() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
-  console.log(user)
+  console.log("user", user)
 
   return (
     <SafeAreaView>
