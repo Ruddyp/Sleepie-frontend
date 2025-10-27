@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Button from "../components/KitUI/Button";
+import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
+
 import {
   Colors,
   Typography,
@@ -12,6 +14,7 @@ import {
 } from "../components/KitUI/tokens";
 
 export default function KitScreen() {
+  const [inputValue, setInputValue] = useState("");
   return (
     <LinearGradient
       colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
@@ -36,6 +39,13 @@ export default function KitScreen() {
           size="large"
           variant="primary"
         />
+        <Input
+          label="Mon champ de test"
+          placeholder="Tape quelque chose..."
+          value={inputValue}
+          onChangeText={setInputValue}
+          password
+        />
       </View>
     </LinearGradient>
   );
@@ -43,8 +53,7 @@ export default function KitScreen() {
 
 const styles = StyleSheet.create({
   main: {
-    height: "100%",
-    width: "100%",
+    flex: 1,
     paddingTop: 50,
     gap: 10,
   },

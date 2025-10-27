@@ -24,7 +24,7 @@ export default function Button({
       colors={buttonStyle.color}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.main}
+      style={[styles.gradient]}
     >
       <TouchableOpacity
         style={{ ...styles.button, ...buttonStyle.button, ...buttonStyle.size }}
@@ -38,11 +38,15 @@ export default function Button({
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    borderRadius: BorderRadius.large,
+    overflow: "hidden",
+    ...Shadows.soft,
+  },
   button: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: BorderRadius.large,
     paddingHorizontal: Spacing.xxxl,
     ...Shadows.soft,
   },
