@@ -1,9 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Button } from "react-native";
+import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import TrackPlayer from "react-native-track-player";
+import { useEffect } from "react";
 
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
@@ -28,9 +29,7 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false }}
-      tabBar={({ state, navigation }) => (
-        <NightTabBar state={state} navigation={navigation} />
-      )}
+      tabBar={({ state, navigation }) => <NightTabBar state={state} navigation={navigation} />}
     >
       <Tab.Screen name="Accueil" component={Home} />
       <Tab.Screen name="Écouter" component={Listen} />
@@ -42,6 +41,21 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+  useEffect(() => {
+    (async function () {
+      try {
+        await TrackPlayer.setupPlayer();
+        await TrackPlayer.updateOptions({
+          capabilities: [TrackPlayer.Capability.Play, TrackPlayer.Capability.Pause],
+          compactCapabilities: [TrackPlayer.Capability.Play, TrackPlayer.Capability.Pause],
+        });
+        console.log("setup track player ok.");
+      } catch (error) {
+        console.log("Error happended while seting up track player => ", error);
+      }
+    })();
+  }, []);
+
   return (
     <Provider store={store}>
       <SafeAreaProvider>
@@ -55,9 +69,3 @@ export default function App() {
     </Provider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
