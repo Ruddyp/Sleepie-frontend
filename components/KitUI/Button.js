@@ -1,27 +1,52 @@
 import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
+import {
+  Colors,
+  Typography,
+  Spacing,
+  BorderRadius,
+  Shadows,
+  Sizes,
+} from "./tokens";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function ButtonLargePrimary({ title, variant = "primary", size = "medium" }) {
+export default function Button({
+  title,
+  variant = "primary",
+  size = "medium",
+  onPress,
+  disable,
+}) {
   const buttonStyle = getButtonStyle(variant, size);
+  if (disable) onPress = undefined;
 
   return (
-    <View>
+    <LinearGradient
+      colors={buttonStyle.color}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={[styles.gradient]}
+    >
       <TouchableOpacity
         style={{ ...styles.button, ...buttonStyle.button, ...buttonStyle.size }}
         activeOpacity={0.8}
+        onPress={onPress}
       >
         <Text style={{ ...styles.text, ...buttonStyle.text }}>{title}</Text>
       </TouchableOpacity>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
+  gradient: {
+    borderRadius: BorderRadius.large,
+    overflow: "hidden",
+    ...Shadows.soft,
+  },
   button: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    borderRadius: BorderRadius.large,
     paddingHorizontal: Spacing.xxxl,
     ...Shadows.soft,
   },
@@ -33,17 +58,17 @@ const styles = StyleSheet.create({
 });
 
 function getButtonStyle(variant, size) {
-  let button = {};
+  let color = [];
   let text = {};
   let sizeButton = {};
 
   if (variant === "secondary") {
-    button = { backgroundColor: Colors.accentGlow };
+    color = [Colors.accentGlow, Colors.accentGlow];
     text = { color: Colors.textBody };
   }
 
   if (variant === "primary") {
-    button = { backgroundColor: Colors.accentPrimarySolid };
+    color = Colors.accentPrimary;
     text = { color: Colors.textBody };
   }
 
@@ -60,7 +85,7 @@ function getButtonStyle(variant, size) {
   }
 
   return {
-    button,
+    color,
     text,
     size: sizeButton,
   };

@@ -1,44 +1,60 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import ButtonSmallPrimary from "../components/KitUI/ButtonSmallPrimary";
-import ButtonSmallSecondary from "../components/KitUI/ButtonSmallSecondary";
-import ButtonMediumPrimary from "../components/KitUI/ButtonMediumPrimary";
-import ButtonMediumSecondary from "../components/KitUI/ButtonMediumSecondary";
-import ButtonLargePrimary from "../components/KitUI/ButtonLargePrimary";
-import ButtonLargeSecondary from "../components/KitUI/ButtonLargeSecondary copy";
+import Button from "../components/KitUI/Button";
+import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
 
+import {
+  Colors,
+  Typography,
+  Spacing,
+  BorderRadius,
+  Shadows,
+  Sizes,
+} from "../components/KitUI/tokens";
+
 export default function KitScreen() {
+  const [inputValue, setInputValue] = useState("");
   return (
-    <LinearGradient colors={["#0B1A33", "#0F2045"]} style={styles.main}>
-      <ButtonSmallPrimary title="Button Small Primary" style={styles.buttonSmallPrimary}>
-        {" "}
-      </ButtonSmallPrimary>
-      <ButtonSmallSecondary title="Button Small Secondary"> </ButtonSmallSecondary>
-      <ButtonMediumPrimary title="Button Medium Primary"> </ButtonMediumPrimary>
-      <ButtonMediumSecondary title="Button Medium Secondary"> </ButtonMediumSecondary>
-      <ButtonLargePrimary title="Button Large Primary"></ButtonLargePrimary>
-      <ButtonLargePrimary
-        title="Button small secondary test"
-        size="small"
-        variant="secondary"
-      ></ButtonLargePrimary>
-      <ButtonLargePrimary
-        title="Button small secondary test"
-        size="medium"
-        variant="primary"
-      ></ButtonLargePrimary>
-      <ButtonLargeSecondary title="Button Large Secondary"></ButtonLargeSecondary>
+    <LinearGradient
+      colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.main}
+    >
+      <View style={styles.main}>
+        <Button
+          title="Button small secondary test"
+          size="small"
+          variant="secondary"
+          onPress={() => console.log("TEST")}
+        />
+        <Button
+          title="Button medium primary test"
+          size="medium"
+          variant="primary"
+        />
+        <Button
+          title="Button large primary test"
+          size="large"
+          variant="primary"
+        />
+        <Input
+          label="Mon champ de test"
+          placeholder="Tape quelque chose..."
+          value={inputValue}
+          onChangeText={setInputValue}
+          password
+        />
+      </View>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
-    height: "100%",
-    width: "100%",
+    flex: 1,
     paddingTop: 50,
     gap: 10,
-    backgroundColor: ["#0B1A33", "#0F2045"],
   },
 });
