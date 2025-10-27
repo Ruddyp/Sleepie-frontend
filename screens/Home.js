@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View } from "react-native";
 
 export default function Home() {
-    return (
-        <View>
-            <Text>HOME PAGE</Text>
-        </View>
-    )
+  return (
+    <View>
+      <Text>HOME PAGE</Text>
+    </View>
+  );
 }
