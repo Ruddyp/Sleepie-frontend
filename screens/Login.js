@@ -11,6 +11,7 @@ import {
   Sizes,
 } from "../components/KitUI/tokens";
 import Button from '../components/KitUI/Button'
+import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 
@@ -68,29 +69,25 @@ export default function Login({ navigation }) {
           end={{ x: 1, y: 1 }}
           style={styles.main}>
           <Text>Login PAGE</Text>
-          <TextInput
+          <Input
             placeholder="username"
             onChangeText={(value) => setUsername(value)}
             value={username}
-            style={styles.input}
           />
-          <TextInput
+          <Input
             placeholder="email"
             onChangeText={(value) => setEmail(value)}
             value={email}
-            style={styles.input}
           />
-          <TextInput
+          <Input
             placeholder="password"
             onChangeText={(value) => setPassword(value)}
             value={password}
-            style={styles.input}
           />
-          <TextInput
+          <Input
             placeholder="confirm password"
             onChangeText={(value) => setConfirmationPassword(value)}
             value={confirmationPassword}
-            style={styles.input}
           />
           <Button
             title="Signup"
