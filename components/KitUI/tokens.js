@@ -11,6 +11,8 @@ export const Colors = {
   bgSecondarySolid: "#13264F",
   bgTertiary: ["#1C325F", "#234074"], // gradient
   bgTertiarySolid: "#1C325F",
+  bgSleepieBlue1: "#1064DB",
+  bgSleepieBlue2: "#00A0F7",
 
   // Text
   textTitle: "#F5FAFF",

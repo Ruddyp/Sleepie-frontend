@@ -104,7 +104,7 @@ const styles = StyleSheet.create({
   },
   playFab: {
     left: Spacing.md,
-    backgroundColor: Colors.accentPrimarySolid,
+    backgroundColor: Colors.bgSleepieBlue2,
   },
   likeFab: {
     right: Spacing.md,

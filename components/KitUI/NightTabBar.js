@@ -2,14 +2,28 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors, Typography, Spacing, Shadows } from "./tokens";
 
 const TAB_CONFIG = {
-  home: { icon: "🏠", label: "Accueil" },
-  discover: { icon: "🎧", label: "Découvrir" },
-  create: { icon: "✨", label: "Créer" },
-  favorites: { icon: "⭐", label: "Favoris" },
-  kitScreen: { icon: "🧪", label: "KitScreen" },
+  home: { inactive: "home-outline", active: "home", label: "Accueil" },
+  discover: {
+    inactive: "headset-outline",
+    active: "headset",
+    label: "Découvrir",
+  },
+  create: {
+    inactive: "sparkles-outline",
+    active: "sparkles",
+    label: "Créer",
+    isMain: true,
+  },
+  favorites: { inactive: "heart-outline", active: "heart", label: "Favoris" },
+  kitScreen: {
+    inactive: "person-outline",
+    active: "person",
+    label: "KitScreen",
+  },
 };
 
 export const NightTabBar = ({ state, navigation }) => {
@@ -18,39 +32,82 @@ export const NightTabBar = ({ state, navigation }) => {
 
   return (
     <View
-      style={[styles.container, { paddingBottom: Math.max(insets.bottom, Spacing.sm) }]}
+      style={[
+        styles.container,
+        { paddingBottom: Math.max(insets.bottom, Spacing.sm) },
+      ]}
       accessibilityRole="tablist"
     >
       {state.routes.map((route, index) => {
         const isActive = index === activeIndex;
-        const cfg = TAB_CONFIG[route.name] || { icon: "❖", label: route.name };
+        const cfg = TAB_CONFIG[route.name] || {
+          inactive: "ellipse-outline",
+          active: "ellipse",
+          label: route.name,
+        };
+        const isMain = cfg.isMain;
+
+        // Taille plus grande pour le bouton Créer
+        const iconSize = isMain ? 36 : 24;
 
         return (
           <TouchableOpacity
             key={route.key}
-            style={styles.tab}
-            onPress={() => navigation.navigate(route.name)}
-            activeOpacity={0.8}
+            style={[styles.tab, isMain && styles.mainTab]}
+            onPress={() => {
+              if (!isActive) navigation.navigate(route.name);
+            }}
+            activeOpacity={0.85}
             accessibilityRole="tab"
             accessibilityState={{ selected: isActive }}
             hitSlop={10}
           >
-            {isActive ? (
+            {/* Icône Créer spéciale avec jaune Sleepie */}
+            {isMain ? (
               <LinearGradient
-                colors={Colors.accentPrimary} // ['#4A8BFF', '#1EC8FF']
+                colors={["#1064DB", "#00A0F7"]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={[
+                  styles.mainIconWrapper,
+                  isActive && styles.mainIconActive,
+                ]}
+              >
+                <Ionicons
+                  name={cfg.active}
+                  size={iconSize}
+                  color={Colors.textSleepieYellow} // ✅ Jaune Sleepie ici
+                />
+              </LinearGradient>
+            ) : isActive ? (
+              <LinearGradient
+                colors={["#1064DB", "#00A0F7"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.iconActive}
               >
-                <Text style={styles.icon}>{cfg.icon}</Text>
+                <Ionicons name={cfg.active} size={iconSize} color={"#FFFFFF"} />
               </LinearGradient>
             ) : (
               <View style={styles.iconContainer}>
-                <Text style={styles.icon}>{cfg.icon}</Text>
+                <Ionicons
+                  name={cfg.inactive}
+                  size={iconSize}
+                  color={Colors.textSecondary}
+                />
               </View>
             )}
 
-            <Text style={[styles.label, isActive && styles.labelActive]}>{cfg.label}</Text>
+            {/* Label */}
+            <Text
+              style={[
+                styles.label,
+                isActive && styles.labelActive,
+                isMain && styles.mainLabel,
+              ]}
+            >
+              {cfg.label}
+            </Text>
           </TouchableOpacity>
         );
       })}
@@ -58,7 +115,7 @@ export const NightTabBar = ({ state, navigation }) => {
   );
 };
 
-const ICON = 40;
+const ICON = 44;
 
 const styles = StyleSheet.create({
   container: {
@@ -78,11 +135,13 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md,
     paddingHorizontal: Spacing.md,
   },
+  mainTab: {
+    marginTop: -20, // bouton créer flottant
+  },
   iconContainer: {
     width: ICON,
     height: ICON,
     borderRadius: ICON / 2,
-    backgroundColor: Colors.transparent,
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 4,
@@ -94,23 +153,29 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 4,
-    shadowColor: Colors.accentSecondarySolid,
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 6,
+    ...Shadows.soft,
   },
-  icon: {
-    fontSize: Typography.iconLarge ?? 22,
+  mainIconWrapper: {
+    width: ICON + 14,
+    height: ICON + 14,
+    borderRadius: (ICON + 14) / 2,
+    alignItems: "center",
+    justifyContent: "center",
+    ...Shadows.soft,
   },
   label: {
     color: Colors.textSecondary,
     fontSize: Typography.micro.fontSize,
-    lineHeight: Typography.micro.lineHeight,
     fontWeight: "400",
   },
   labelActive: {
-    color: Colors.textTitle,
+    color: "#FFFFFF",
     fontWeight: "700",
+    textShadowColor: "rgba(255,255,255,0.5)", // Glow subtil
+    textShadowOffset: { width: 0, height: 0 },
+    textShadowRadius: 6,
+  },
+  mainLabel: {
+    fontSize: Typography.caption.fontSize,
   },
 });
