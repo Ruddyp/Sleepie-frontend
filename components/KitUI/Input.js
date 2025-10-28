@@ -10,6 +10,7 @@ export default function Input({
   password = false,
   error,
   keyboardType = "default",
+  autoCapitalize = "sentences",
 }) {
   const [focused, setFocused] = useState(false);
 
@@ -27,6 +28,7 @@ export default function Input({
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
         keyboardType={keyboardType}
+        autoCapitalize={autoCapitalize}
       />
 
       {error && <Text style={styles.errorText}>{error}</Text>}

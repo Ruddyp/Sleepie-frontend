@@ -6,12 +6,15 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import TrackPlayer from "react-native-track-player";
 import { useEffect } from "react";
 
+
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
 import Discover from "./screens/Discover";
 import Favorites from "./screens/Favorites";
 import Login from "./screens/Login";
+import Header from "./components/header";
+import Profil from "./screens/Profil";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -60,9 +63,23 @@ export default function App() {
     <Provider store={store}>
       <SafeAreaProvider>
         <NavigationContainer>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Login" component={Login} />
-            <Stack.Screen name="TabNavigator" component={TabNavigator} />
+          <Stack.Navigator >
+            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+            <Stack.Screen name="Profil" component={Profil} options={{ headerShown: false }} />
+            <Stack.Screen
+              name="TabNavigator"
+              component={TabNavigator}
+              options={({ navigation }) => ({
+                headerHideOnScroll: true,
+                header: () => (
+                  <Header
+                    title="Sleepie"
+                    navigation={navigation}
+                  />
+                )
+              }
+              )}
+            />
           </Stack.Navigator>
         </NavigationContainer>
       </SafeAreaProvider>
