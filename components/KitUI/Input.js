@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "./tokens";
 
@@ -9,6 +9,7 @@ export default function Input({
   onChangeText,
   password = false,
   error,
+  keyboardType = "default",
 }) {
   const [focused, setFocused] = useState(false);
 
@@ -17,11 +18,7 @@ export default function Input({
       {label && <Text style={styles.label}>{label}</Text>}
 
       <TextInput
-        style={[
-          styles.input,
-          focused && styles.inputFocused,
-          error && styles.inputError,
-        ]}
+        style={[styles.input, focused && styles.inputFocused, error && styles.inputError]}
         placeholder={placeholder}
         placeholderTextColor={Colors.textDisabled}
         value={value}
@@ -29,6 +26,7 @@ export default function Input({
         secureTextEntry={password}
         onFocus={() => setFocused(true)}
         onBlur={() => setFocused(false)}
+        keyboardType={keyboardType}
       />
 
       {error && <Text style={styles.errorText}>{error}</Text>}

@@ -5,11 +5,11 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 
 const TAB_CONFIG = {
-  Accueil: { icon: "🏠", label: "Accueil" },
-  Écouter: { icon: "🎧", label: "Écouter" },
-  Créer: { icon: "✨", label: "Créer" },
-  Favoris: { icon: "⭐", label: "Favoris" },
-  KitScreen: { icon: "🧪", label: "Kit" },
+  home: { icon: "🏠", label: "Accueil" },
+  discover: { icon: "🎧", label: "Découvrir" },
+  create: { icon: "✨", label: "Créer" },
+  favorites: { icon: "⭐", label: "Favoris" },
+  kitScreen: { icon: "🧪", label: "KitScreen" },
 };
 
 export const NightTabBar = ({ state, navigation }) => {
@@ -18,10 +18,7 @@ export const NightTabBar = ({ state, navigation }) => {
 
   return (
     <View
-      style={[
-        styles.container,
-        { paddingBottom: Math.max(insets.bottom, Spacing.sm) },
-      ]}
+      style={[styles.container, { paddingBottom: Math.max(insets.bottom, Spacing.sm) }]}
       accessibilityRole="tablist"
     >
       {state.routes.map((route, index) => {
@@ -53,9 +50,7 @@ export const NightTabBar = ({ state, navigation }) => {
               </View>
             )}
 
-            <Text style={[styles.label, isActive && styles.labelActive]}>
-              {cfg.label}
-            </Text>
+            <Text style={[styles.label, isActive && styles.labelActive]}>{cfg.label}</Text>
           </TouchableOpacity>
         );
       })}

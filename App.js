@@ -9,8 +9,8 @@ import { useEffect } from "react";
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
-import Listen from "./screens/Listen";
-import Favoris from "./screens/Favoris";
+import Discover from "./screens/Discover";
+import Favorites from "./screens/Favorites";
 import Login from "./screens/Login";
 
 import { Provider } from "react-redux";
@@ -31,11 +31,11 @@ const TabNavigator = () => {
       screenOptions={{ headerShown: false }}
       tabBar={({ state, navigation }) => <NightTabBar state={state} navigation={navigation} />}
     >
-      <Tab.Screen name="Accueil" component={Home} />
-      <Tab.Screen name="Écouter" component={Listen} />
-      <Tab.Screen name="Créer" component={Create} />
-      <Tab.Screen name="Favoris" component={Favoris} />
-      <Tab.Screen name="KitScreen" component={KitScreen} />
+      <Tab.Screen name="home" component={Home} />
+      <Tab.Screen name="discover" component={Discover} />
+      <Tab.Screen name="create" component={Create} />
+      <Tab.Screen name="favorites" component={Favorites} />
+      <Tab.Screen name="kitScreen" component={KitScreen} />
     </Tab.Navigator>
   );
 };

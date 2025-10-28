@@ -31,7 +31,7 @@ const track2 = {
 };
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
-export default function Listen() {
+export default function Discover() {
   const [playerState, setPlayerState] = useState(null);
   const [track, setTrack] = useState(track1);
   const activeTrack = useActiveTrack();
