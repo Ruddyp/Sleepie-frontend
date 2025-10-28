@@ -52,6 +52,8 @@ export default function SignIn({ navigation }) {
             const data = await response.json()
             if (data.result) {
                 dispatch(updateUser(data.data))
+                setEmail({ error: false, value: "" })
+                setPassword('')
                 navigation.navigate("TabNavigator")
             } else {
                 setMessageFromBack(data.error)
@@ -59,8 +61,7 @@ export default function SignIn({ navigation }) {
         } catch (error) {
             console.log("error from SignIn", error)
         }
-        setEmail({ error: false, value: "" })
-        setPassword('')
+
     }
     return (
         <View style={styles.container}>
@@ -70,7 +71,7 @@ export default function SignIn({ navigation }) {
                     error: false,
                     value: value
                 })}
-                value={email}
+                value={email.value}
                 error={email.error}
                 keyboardType="email-address"
                 autoCapitalize="none"

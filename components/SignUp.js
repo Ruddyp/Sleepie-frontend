@@ -71,6 +71,10 @@ export default function SignUp({ navigation }) {
             const data = await response.json();
             if (data.result) {
                 dispatch(updateUser(data.data))
+                setUsername("")
+                setPassword("")
+                setConfirmationPassword("")
+                setEmail({ error: false, value: "" })
                 navigation.navigate("TabNavigator")
             } else {
                 setMessageFromBack(data.error)
@@ -79,9 +83,7 @@ export default function SignUp({ navigation }) {
             console.log("error from SignUp", error)
         }
 
-        setUsername("")
-        setPassword("")
-        setConfirmationPassword("")
+
     }
 
     return (
@@ -98,7 +100,7 @@ export default function SignUp({ navigation }) {
                     error: false,
                     value: value
                 })}
-                value={email}
+                value={email.value}
                 error={email.error}
                 keyboardType="email-address" /*Ne fonctionne pas*/
                 autoCapitalize="none" /*Ne fonctionne pas*/
