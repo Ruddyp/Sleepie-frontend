@@ -21,7 +21,7 @@ export default function Input({
       <TextInput
         style={[styles.input, focused && styles.inputFocused, error && styles.inputError]}
         placeholder={placeholder}
-        placeholderTextColor={Colors.textDisabled}
+        placeholderTextColor={Colors.textSecondary}
         value={value}
         onChangeText={onChangeText}
         secureTextEntry={password}
@@ -48,7 +48,7 @@ const styles = StyleSheet.create({
   },
   input: {
     height: 56,
-    backgroundColor: Colors.bgSecondarySolid,
+    backgroundColor: Colors.bgTertiarySolid,
     borderRadius: BorderRadius.medium,
     paddingHorizontal: Spacing.lg,
     color: Colors.textBody,

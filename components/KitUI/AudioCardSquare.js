@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 
@@ -47,9 +46,7 @@ export default function AudioCardSquare({
           style={[styles.fabSmall, styles.likeFab, Shadows.soft]}
           accessibilityRole="button"
           accessibilityLabel={
-            isFavorite
-              ? `Retirer ${title} des favoris`
-              : `Ajouter ${title} aux favoris`
+            isFavorite ? `Retirer ${title} des favoris` : `Ajouter ${title} aux favoris`
           }
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
