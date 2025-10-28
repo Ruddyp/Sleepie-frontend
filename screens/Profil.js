@@ -10,7 +10,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
 
 
-export default function Login({ navigation }) {
+export default function Login({ navigation, route }) {
 
     const user = useSelector((state) => state.user.value);
     const dispatch = useDispatch();
@@ -25,41 +25,44 @@ export default function Login({ navigation }) {
     }
 
     return (
-        <SafeAreaView style={styles.area}>
-            <LinearGradient
-                colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.main}>
-                <View style={styles.containerTop}>
-                    <Text style={styles.textTop}>{user.username}</Text>
+        // <SafeAreaView style={styles.area}>
+        <LinearGradient
+            colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.main}>
+            <View style={styles.containerTop}>
+                <Text style={styles.textTop}>{user.username}</Text>
+            </View>
+            <View style={styles.container}>
+                <Text style={styles.text}>Compte</Text>
+                <View>
+                    <Text style={styles.textSmall}> Email : {user.email}</Text>
                 </View>
-                <View style={styles.container}>
-                    <Text style={styles.text}>Compte</Text>
-                    <View>
-                        <Text style={styles.textSmall}> Email : {user.email}</Text>
-                    </View>
-                </View>
-                <View style={styles.container}>
-                    <Text style={styles.text}>Mon abonnement</Text>
-                </View>
-                <View style={styles.containerBottom}>
-                    <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
-                    <Button title="Supprimer mon compte" onPress={() => handlePressDelete()} />
-                </View>
-            </LinearGradient>
-        </SafeAreaView>
+            </View>
+            <View style={styles.container}>
+                <Text style={styles.text}>Mon abonnement</Text>
+            </View>
+            <View style={styles.containerBottom}>
+                <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
+                <Button title="Supprimer mon compte" onPress={() => handlePressDelete()} />
+            </View>
+        </LinearGradient>
+        // </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     area: {
         flex: 1,
-        width: "100%",
-        height: "100%",
+        margin: 0,
+        padding: 0,
+        backgroundColor: "blue"
     },
     main: {
         flex: 1,
+        height: "100%",
+        marginTop: 0,
         alignContent: "center",
         justifyContent: "center",
         padding: 15,
