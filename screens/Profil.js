@@ -6,19 +6,21 @@ import {
 } from "../components/KitUI/tokens";
 import Button from '../components/KitUI/Button'
 import { LinearGradient } from "expo-linear-gradient";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { deleteUser } from "../reducers/users";
 
 
 export default function Login({ navigation }) {
 
     const user = useSelector((state) => state.user.value);
+    const dispatch = useDispatch();
 
     const handlePressDeconnect = () => {
-        //intégrer la route de déconnection + vider le reducer
+        dispatch(deleteUser());
         navigation.navigate("Login");
     }
     const handlePressDelete = () => {
-        //intégrer la route de suppression de compte + vider le reducer
+        dispatch(deleteUser());
         navigation.navigate("Login");
     }
 

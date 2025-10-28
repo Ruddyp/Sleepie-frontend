@@ -1,16 +1,11 @@
 import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, Switch } from "react-native";
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateUser } from '../reducers/users';
 import {
   Colors,
   Typography,
 } from "../components/KitUI/tokens";
-import Button from '../components/KitUI/Button'
-import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { checkInput } from "../modules/checkInput";
 import SignUp from "../components/SignUp";
 import SignIn from "../components/SignIn";
 
