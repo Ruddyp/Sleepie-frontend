@@ -44,8 +44,9 @@ const TabNavigator = () => {
         name="profil"
         component={Profil}
         options={{
-          headerShown: false,
-          tabBarButton: () => null, // cache le bouton Profil
+          headerShown: false, // ne fonctionne pas avec un header personnalisé
+          tabBarItemStyle: { display: 'none' }
+          // tabBarButton: () => null, // cache le bouton Profil
         }}
       />
     </Tab.Navigator>
