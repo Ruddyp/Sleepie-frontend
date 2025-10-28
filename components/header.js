@@ -8,8 +8,8 @@ export default function Header({ title, navigation }) {
         <View style={styles.container}>
 
             <View>
-                <Text> </Text>
-            </View> {/* Pour centrer le titre */}
+                <Text></Text>
+            </View>
 
             <Text
                 style={styles.title}
