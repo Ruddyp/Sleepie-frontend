@@ -1,78 +1,37 @@
+import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { Player } from "../components/KitUI/Player";
+import { LinearGradient } from "expo-linear-gradient";
+import { Colors } from "../components/KitUI/tokens";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import TrackPlayer, {
-  useTrackPlayerEvents,
-  useActiveTrack,
-  Event,
-  State,
-} from "react-native-track-player";
-import { getIsPlaying } from "../modules/trackPlayerHandler";
 
 const track1 = {
-  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761571176/Rick_Roll_Different_link_no_ads_cbpgdh.mp3", // Load media from the network
-  title: "RickRoll",
-  artist: "deadmau5",
-  album: "while(1<2)",
-  genre: "Progressive House, Electro House",
+  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761644049/D%C3%A9couvrez_le_clip_restaur%C3%A9_de_C_est_%C3%A9crit_de_Francis_Cabrel_extrait_de_son_album_Sarbacane._rqdy9p.mp3", // Load media from the network
+  title: "C'est écrit",
+  artist: "Francis cabrel",
+  album: "Poulet braisé",
+  genre: "Variété française",
   date: "2014-05-20T07:00:00+00:00", // RFC 3339
-  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208189/cld-sample-4.jpg",
-  id: "rick-roll-id", // Load artwork from the network
+  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
+  id: "francis",
+  duration: 60,
 };
 
 const track2 = {
-  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761576007/Baby_Shark_Doo_Doo_Doo_Mommy_Shark_Joins_In_Baby_Twinkle_shorts_m2undo.mp3", // Load media from the network
-  title: "Baby_shark",
-  artist: "deadmau5",
-  album: "while(1<2)",
-  genre: "Progressive House, Electro House",
+  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761643955/Beat_It_Dance_Mix_-_Michael_Jackson_MoonwalkMagic_pg9j3x.mp3", // Load media from the network
+  title: "Beat it",
+  artist: "Michael Jackson",
+  album: "Thrillllllllller",
+  genre: "Pop",
   date: "2014-05-20T07:00:00+00:00", // RFC 3339
-  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208189/cld-sample-4.jpg", // Load artwork from the network
-  id: "baby-shark-id",
+  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208184/samples/man-portrait.jpg", // Load artwork from the network
+  id: "MJ",
 };
-const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
 export default function Discover() {
-  const [playerState, setPlayerState] = useState(null);
   const [track, setTrack] = useState(track1);
-  const activeTrack = useActiveTrack();
-
-  useTrackPlayerEvents(events, (event) => {
-    if (event.type === Event.PlaybackError) {
-      console.warn("An error occured while playing the current track.");
-    }
-    if (event.type === Event.PlaybackState) {
-      setPlayerState(event.state);
-    }
-  });
-
-  const isPlaying = playerState === State.Playing;
-  async function handlePlay() {
-    console.log("playerState", playerState);
-    console.log("active track", activeTrack);
-    console.log("track", track.title);
-
-    const shouldChangeTrack =
-      !activeTrack || activeTrack.id !== track.id || playerState === State.Ended;
-    if (shouldChangeTrack) {
-      console.log("Action: Changement de piste / Ajout initial");
-      // Réinitialise le lecteur et ajoute la nouvelle piste
-      await TrackPlayer.reset();
-      await TrackPlayer.add([track]);
-      await TrackPlayer.play();
-    } else {
-      // 2. Contrôle Lecture/Pause de la piste courante
-      if (isPlaying) {
-        console.log("Action: Pause");
-        await TrackPlayer.pause();
-      } else {
-        console.log("Action: Lecture");
-        await TrackPlayer.play();
-      }
-    }
-  }
 
   function handleTrack() {
-    if (track.title === "RickRoll") {
+    if (track.title === "C'est écrit") {
       setTrack(track2);
     } else {
       setTrack(track1);
@@ -80,37 +39,37 @@ export default function Discover() {
   }
 
   return (
-    <View style={styles.main}>
+    <LinearGradient
+      colors={Colors.bgPrimary}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+    >
       <Text>LISTEN PAGE</Text>
-      <View style={styles.card}>
-        <TouchableOpacity style={styles.button} onPress={() => handlePlay()}>
-          <Text>PLAY</Text>
-        </TouchableOpacity>
-        <Text>The TrackPlayer is {isPlaying ? "playing" : "not playing"}</Text>
-        <TouchableOpacity style={styles.button} onPress={() => handleTrack()}>
-          <Text>Track: {track.title}</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+      <Player track={track} />
+      <TouchableOpacity style={styles.button} onPress={() => handleTrack()}>
+        <Text style={{ color: "white" }}>Change track</Text>
+      </TouchableOpacity>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: Colors.bgPrimary,
+    // justifyContent: "center",
+    // alignItems: "center",
   },
   card: {
     width: 300,
     height: 300,
-    backgroundColor: "red",
     justifyContent: "center",
     alignItems: "center",
   },
   button: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 75,
     backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
