@@ -16,8 +16,15 @@ export const usersSlice = createSlice({
         updateUser: (state, action) => {
             state.value = action.payload
         },
+        deleteUser: (state) => {
+            state.value = {
+                token: null,
+                email: null,
+                username: null
+            }
+        }
     },
 });
 
-export const { updateUser } = usersSlice.actions;
+export const { updateUser, deleteUser } = usersSlice.actions;
 export default usersSlice.reducer;
