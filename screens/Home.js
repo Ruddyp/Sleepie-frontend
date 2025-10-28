@@ -1,11 +1,13 @@
-import React, { useMemo, useState } from "react";
-import { StyleSheet, View, FlatList, Dimensions } from "react-native";
+import React, { useState, useMemo } from "react";
+import { StyleSheet, View, Dimensions, ScrollView } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import AudioCardSquare from "../components/KitUI/AudioCardSquare";
+import CategoryCarousel from "../components/KitUI/CategoryCarousel";
+import { useNavigation } from "@react-navigation/native";
+import CreateStoryCard from "../components/KitUI/CreateStoryCard";
 import { Colors, Spacing } from "../components/KitUI/tokens";
 
-const DATA = [
+const DATA_BEST = [
   {
     id: "1",
     title: "Pluie d’été au chalet",
@@ -38,34 +40,21 @@ const DATA = [
 
 export default function Home() {
   const [favorites, setFavorites] = useState({});
+  const navigation = useNavigation();
 
-  const onToggleFavorite = (id) =>
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  const handlePlayItem = (item) => {
+    console.log("Play:", item.title);
+  };
 
-  const width = Dimensions.get("window").width;
-  const PADDING = Spacing.xl || 24;
-  const GAP = Spacing.lg || 12;
+  const handleToggleFavorite = (item) => {
+    setFavorites((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
+  };
 
-  // Taille de la carte pour 2 colonnes (padding + gap)
-  const CARD_SIZE = useMemo(
-    () => Math.floor((width - PADDING * 2 - GAP) / 2),
-    [width, PADDING, GAP]
-  );
-
-  const renderItem = ({ item }) => (
-    <View style={{ marginBottom: GAP }}>
-      <AudioCardSquare
-        title={item.title}
-        duration={item.duration}
-        voice={item.voice}
-        imageUrl={item.imageUrl}
-        isFavorite={!!favorites[item.id]}
-        onPlay={() => console.log("Play:", item.title)}
-        onToggleFavorite={() => onToggleFavorite(item.id)}
-        size={CARD_SIZE}
-      />
-    </View>
-  );
+  // injecte la prop isFavorite dans les data si tu veux
+  const mapped = DATA_BEST.map((it) => ({
+    ...it,
+    isFavorite: !!favorites[it.id],
+  }));
 
   return (
     <LinearGradient
@@ -74,19 +63,34 @@ export default function Home() {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      <SafeAreaView style={styles.safeArea}>
-        <FlatList
-          data={DATA}
-          keyExtractor={(it) => it.id}
-          renderItem={renderItem}
-          numColumns={2}
-          columnWrapperStyle={{ gap: GAP }}
-          contentContainerStyle={{
-            padding: PADDING,
-            paddingBottom: PADDING * 2,
-          }}
-          showsVerticalScrollIndicator={false}
-        />
+      <SafeAreaView style={styles.safe}>
+        <ScrollView contentContainerStyle={styles.content}>
+          {/* ---- Card "Créer mon histoire" au-dessus, séparée ---- */}
+          <View style={styles.createRow}>
+            <CreateStoryCard onPress={() => navigation.navigate("create")} />
+          </View>
+
+          <CategoryCarousel
+            title="Histoires apaisantes"
+            icon={{
+              uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
+            }}
+            data={mapped}
+            onPlayItem={handlePlayItem}
+            onToggleFavorite={handleToggleFavorite}
+            // cardWidth={220} // option : force une largeur fixe
+          />
+          <CategoryCarousel
+            title="Histoires apaisantes"
+            icon={{
+              uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
+            }}
+            data={mapped}
+            onPlayItem={handlePlayItem}
+            onToggleFavorite={handleToggleFavorite}
+            // cardWidth={220} // option : force une largeur fixe
+          />
+        </ScrollView>
       </SafeAreaView>
     </LinearGradient>
   );
@@ -94,5 +98,10 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   main: { flex: 1 },
-  safeArea: { flex: 1, backgroundColor: "transparent" },
+  safe: { flex: 1, backgroundColor: "transparent" },
+  content: {
+    flex: 1,
+    // paddingVertical: Spacing.lg,
+    gap: Spacing.lg,
+  },
 });
