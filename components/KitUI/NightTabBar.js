@@ -32,10 +32,7 @@ export const NightTabBar = ({ state, navigation }) => {
 
   return (
     <View
-      style={[
-        styles.container,
-        { paddingBottom: Math.max(insets.bottom, Spacing.sm) },
-      ]}
+      style={[styles.container, { paddingBottom: Spacing.xs }]}
       accessibilityRole="tablist"
     >
       {state.routes.map((route, index) => {
