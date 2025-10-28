@@ -58,8 +58,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     backgroundColor: Colors.bgPrimary,
-    // justifyContent: "center",
-    // alignItems: "center",
   },
   card: {
     width: 300,

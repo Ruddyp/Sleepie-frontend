@@ -1,22 +1,10 @@
 // components/KitUI/CreateStoryCardFull.js
-import React, { useEffect, useRef } from "react";
-import {
-  Pressable,
-  Text,
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated,
-  Platform,
-} from "react-native";
+import { useEffect, useRef } from "react";
+import { Pressable, Text, View, StyleSheet, Dimensions, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 
-export default function CreateStoryCard({
-  onPress,
-  title = "Créer mon histoire",
-}) {
+export default function CreateStoryCard({ onPress, title = "Créer mon histoire" }) {
   const screenHeight = Dimensions.get("window").height;
   const CARD_HEIGHT = Math.floor(screenHeight / 3);
 
@@ -73,15 +61,6 @@ export default function CreateStoryCard({
           end={{ x: 1, y: 1 }}
           style={styles.gradient}
         >
-          {/* Icône lune (haut-droite)
-          <View style={styles.moonWrap} pointerEvents="none">
-            <Ionicons
-              name={Platform.OS === "ios" ? "ios-moon" : "moon"}
-              size={28}
-              color="rgba(255,255,255,0.95)"
-            />
-          </View> */}
-
           {/* Pastille + (haut-gauche) */}
           <View style={styles.plusCircle}>
             <Text style={styles.plusText}>＋</Text>
@@ -100,11 +79,7 @@ export default function CreateStoryCard({
           {/* Overlay respirant AU-DESSUS du gradient */}
           <Animated.View
             pointerEvents="none"
-            style={[
-              StyleSheet.absoluteFill,
-              styles.breathOverlay,
-              { opacity: overlayOpacity },
-            ]}
+            style={[StyleSheet.absoluteFill, styles.breathOverlay, { opacity: overlayOpacity }]}
           />
         </LinearGradient>
       </Animated.View>

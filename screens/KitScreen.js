@@ -1,17 +1,10 @@
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { useState } from "react";
+import { StyleSheet, View } from "react-native";
 import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
 
-import {
-  Colors,
-  Typography,
-  Spacing,
-  BorderRadius,
-  Shadows,
-  Sizes,
-} from "../components/KitUI/tokens";
+import { Colors } from "../components/KitUI/tokens";
 
 export default function KitScreen() {
   const [inputValue, setInputValue] = useState("");
@@ -29,16 +22,8 @@ export default function KitScreen() {
           variant="secondary"
           onPress={() => console.log("TEST")}
         />
-        <Button
-          title="Button medium primary test"
-          size="medium"
-          variant="primary"
-        />
-        <Button
-          title="Button large primary test"
-          size="large"
-          variant="primary"
-        />
+        <Button title="Button medium primary test" size="medium" variant="primary" />
+        <Button title="Button large primary test" size="large" variant="primary" />
         <Input
           label="Mon champ de test"
           placeholder="Tape quelque chose..."

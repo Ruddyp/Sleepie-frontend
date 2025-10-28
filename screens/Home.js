@@ -1,6 +1,5 @@
-import React, { useState, useMemo } from "react";
-import { StyleSheet, View, Dimensions, ScrollView } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { useState } from "react";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import { useNavigation } from "@react-navigation/native";
@@ -63,42 +62,39 @@ export default function Home() {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      <SafeAreaView style={styles.safe}>
-        <ScrollView contentContainerStyle={styles.content}>
-          {/* ---- Card "Créer mon histoire" au-dessus, séparée ---- */}
-          <View style={styles.createRow}>
-            <CreateStoryCard onPress={() => navigation.navigate("create")} />
-          </View>
+      <ScrollView contentContainerStyle={styles.content}>
+        {/* ---- Card "Créer mon histoire" au-dessus, séparée ---- */}
+        <View style={styles.createRow}>
+          <CreateStoryCard onPress={() => navigation.navigate("create")} />
+        </View>
 
-          <CategoryCarousel
-            title="Histoires apaisantes"
-            icon={{
-              uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
-            }}
-            data={mapped}
-            onPlayItem={handlePlayItem}
-            onToggleFavorite={handleToggleFavorite}
-            // cardWidth={220} // option : force une largeur fixe
-          />
-          <CategoryCarousel
-            title="Histoires apaisantes"
-            icon={{
-              uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
-            }}
-            data={mapped}
-            onPlayItem={handlePlayItem}
-            onToggleFavorite={handleToggleFavorite}
-            // cardWidth={220} // option : force une largeur fixe
-          />
-        </ScrollView>
-      </SafeAreaView>
+        <CategoryCarousel
+          title="Histoires apaisantes"
+          icon={{
+            uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
+          }}
+          data={mapped}
+          onPlayItem={handlePlayItem}
+          onToggleFavorite={handleToggleFavorite}
+          // cardWidth={220} // option : force une largeur fixe
+        />
+        <CategoryCarousel
+          title="Histoires apaisantes"
+          icon={{
+            uri: "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?w=64&q=80",
+          }}
+          data={mapped}
+          onPlayItem={handlePlayItem}
+          onToggleFavorite={handleToggleFavorite}
+          // cardWidth={220} // option : force une largeur fixe
+        />
+      </ScrollView>
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   main: { flex: 1 },
-  safe: { flex: 1, backgroundColor: "transparent" },
   content: {
     flex: 1,
     // paddingVertical: Spacing.lg,

@@ -1,21 +1,8 @@
-import { TouchableOpacity, Text, StyleSheet, View } from "react-native";
-import {
-  Colors,
-  Typography,
-  Spacing,
-  BorderRadius,
-  Shadows,
-  Sizes,
-} from "./tokens";
+import { TouchableOpacity, Text, StyleSheet } from "react-native";
+import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
 import { LinearGradient } from "expo-linear-gradient";
 
-export default function Button({
-  title,
-  variant = "primary",
-  size = "medium",
-  onPress,
-  disable,
-}) {
+export default function Button({ title, variant = "primary", size = "medium", onPress, disable }) {
   const buttonStyle = getButtonStyle(variant, size);
   if (disable) onPress = undefined;
 

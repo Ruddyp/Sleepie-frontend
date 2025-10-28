@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet } from "react-native";
 import { Colors, Spacing, Typography } from "./tokens";
 import AudioCardSquare from "./AudioCardSquare"; // <-- ton composant
@@ -45,9 +45,7 @@ export default function CategoryCarousel({
   return (
     <View
       style={styles.container}
-      onLayout={(e) =>
-        setContainerW(e.nativeEvent.layout.width - sidePadding * 2)
-      }
+      onLayout={(e) => setContainerW(e.nativeEvent.layout.width - sidePadding * 2)}
     >
       {/* HEADER : icône + titre */}
       <View style={styles.header}>

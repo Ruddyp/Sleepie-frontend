@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { StyleSheet, View, FlatList, Dimensions } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -39,8 +39,7 @@ const DATA = [
 export default function Home() {
   const [favorites, setFavorites] = useState({});
 
-  const onToggleFavorite = (id) =>
-    setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
+  const onToggleFavorite = (id) => setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const width = Dimensions.get("window").width;
   const PADDING = Spacing.xl || 24;
@@ -74,25 +73,22 @@ export default function Home() {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      <SafeAreaView style={styles.safeArea}>
-        <FlatList
-          data={DATA}
-          keyExtractor={(it) => it.id}
-          renderItem={renderItem}
-          numColumns={2}
-          columnWrapperStyle={{ gap: GAP }}
-          contentContainerStyle={{
-            padding: PADDING,
-            paddingBottom: PADDING * 2,
-          }}
-          showsVerticalScrollIndicator={false}
-        />
-      </SafeAreaView>
+      <FlatList
+        data={DATA}
+        keyExtractor={(it) => it.id}
+        renderItem={renderItem}
+        numColumns={2}
+        columnWrapperStyle={{ gap: GAP }}
+        contentContainerStyle={{
+          padding: PADDING,
+          paddingBottom: PADDING * 2,
+        }}
+        showsVerticalScrollIndicator={false}
+      />
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   main: { flex: 1 },
-  safeArea: { flex: 1, backgroundColor: "transparent" },
 });
