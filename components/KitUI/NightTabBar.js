@@ -26,16 +26,25 @@ const TAB_CONFIG = {
   },
 };
 
-export const NightTabBar = ({ state, navigation }) => {
-  const insets = useSafeAreaInsets();
+
+
+
+export const NightTabBar = ({ state, navigation, descriptors }) => {
   const activeIndex = state.index;
+
+  const visibleRoutes = state.routes.filter(route => {
+    const opts = descriptors[route.key].options;
+    if (opts.tabBarButton === null) return false;
+    if (opts.tabBarItemStyle && opts.tabBarItemStyle.display === "none") return false;
+    return true;
+  });
 
   return (
     <View
       style={[styles.container, { paddingBottom: Spacing.xs }]}
       accessibilityRole="tablist"
     >
-      {state.routes.map((route, index) => {
+      {visibleRoutes.map((route, index) => {
         const isActive = index === activeIndex;
         const cfg = TAB_CONFIG[route.name] || {
           inactive: "ellipse-outline",

@@ -33,7 +33,7 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false }}
-      tabBar={({ state, navigation }) => <NightTabBar state={state} navigation={navigation} />}
+      tabBar={({ state, navigation, descriptors }) => <NightTabBar state={state} navigation={navigation} descriptors={descriptors} />}
     >
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="discover" component={Discover} />
@@ -45,8 +45,8 @@ const TabNavigator = () => {
         component={Profil}
         options={{
           headerShown: false, // ne fonctionne pas avec un header personnalisé
-          tabBarItemStyle: { display: 'none' }
-          // tabBarButton: () => null, // cache le bouton Profil
+          tabBarItemStyle: { display: 'none' },
+          tabBarButton: () => null, // cache le bouton Profil
         }}
       />
     </Tab.Navigator>
