@@ -2,7 +2,7 @@ import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer from "react-native-track-player";
 import { useEffect } from "react";
 
@@ -15,6 +15,7 @@ import Favorites from "./screens/Favorites";
 import Login from "./screens/Login";
 import Header from "./components/header";
 import Profil from "./screens/Profil";
+import { Colors } from "./components/KitUI/tokens";
 
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
@@ -39,6 +40,14 @@ const TabNavigator = () => {
       <Tab.Screen name="create" component={Create} />
       <Tab.Screen name="favorites" component={Favorites} />
       <Tab.Screen name="kitScreen" component={KitScreen} />
+      <Tab.Screen
+        name="profil"
+        component={Profil}
+        options={{
+          headerShown: false,
+          tabBarButton: () => null, // cache le bouton Profil
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -62,26 +71,29 @@ export default function App() {
   return (
     <Provider store={store}>
       <SafeAreaProvider>
-        <NavigationContainer>
-          <Stack.Navigator >
-            <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-            <Stack.Screen name="Profil" component={Profil} options={{ headerShown: false }} />
-            <Stack.Screen
-              name="TabNavigator"
-              component={TabNavigator}
-              options={({ navigation }) => ({
-                headerHideOnScroll: true,
-                header: () => (
-                  <Header
-                    title="Sleepie"
-                    navigation={navigation}
-                  />
-                )
-              }
-              )}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}>
+          <NavigationContainer>
+            <Stack.Navigator >
+              <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+              {/* <Stack.Screen name="Profil" component={Profil} options={{ headerShown: false }} /> */}
+              <Stack.Screen
+                name="TabNavigator"
+                component={TabNavigator}
+                options={({ navigation, route }) => ({
+                  headerHideOnScroll: true,
+                  header: () => (
+                    <Header
+                      title="Sleepie"
+                      navigation={navigation}
+                      route={route}
+                    />
+                  )
+                }
+                )}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
       </SafeAreaProvider>
     </Provider>
   );

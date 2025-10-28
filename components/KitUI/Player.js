@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
-import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
+import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
 import TrackPlayer, {
   useTrackPlayerEvents,
   useActiveTrack,
@@ -10,6 +10,7 @@ import TrackPlayer, {
 } from "react-native-track-player";
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
+import { Ionicons } from "@expo/vector-icons";
 
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
@@ -29,7 +30,6 @@ export function Player({ track }) {
   });
 
   const isPlaying = playerState === State.Playing;
-  const [progress, setProgress] = useState(35);
 
   async function handlePlay() {
     const shouldChangeTrack = !activeTrack || activeTrack.id !== id || playerState === State.Ended;
@@ -49,6 +49,15 @@ export function Player({ track }) {
         await TrackPlayer.play();
       }
     }
+  }
+
+  // Gestion de -10 secondes sur la track
+  function handlePlayBack() {
+    position - 10 >= 0 ? TrackPlayer.seekTo(position - 10) : TrackPlayer.seekTo(0);
+  }
+  // Gestion de +10 secondes sur la track
+  function handlePlayForward() {
+    position + 10 <= duration ? TrackPlayer.seekTo(position + 10) : TrackPlayer.seekTo(duration);
   }
 
   return (
@@ -75,41 +84,56 @@ export function Player({ track }) {
       </View>
 
       {/* Progress Bar */}
-      {/* <View style={styles.progressSection}>
-        <View style={styles.progressTrack}>
-          <View style={[styles.progressFill, { width: `${(position * 100) / duration}%` }]} />
-          <View style={[styles.progressThumb, { left: `${(position * 100) / duration}%` }]} />
-        </View>
-
-        <View style={styles.timeRow}>
-          <Text style={styles.timeText}>{Math.round(position)}s</Text>
-          <Text style={styles.timeText}>{Math.round(duration)}s</Text>
-        </View>
-      </View> */}
       <Slider
-        style={{ width: 200, height: 40 }}
         minimumValue={0}
-        maximumValue={1}
-        minimumTrackTintColor="#FFFFFF"
-        maximumTrackTintColor="#000000"
+        maximumValue={duration}
+        value={position}
+        onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
+        minimumTrackTintColor={Colors.accentPrimarySolid}
+        maximumTrackTintColor={Colors.textTitle}
+        thumbTintColor={Colors.textSleepieYellow}
       />
 
       {/* Controls */}
       <View style={styles.controls}>
-        <TouchableOpacity style={styles.controlButton} activeOpacity={0.8}>
-          <Text style={styles.controlIcon}>⏪</Text>
+        <TouchableOpacity
+          style={styles.controlButton}
+          activeOpacity={0.8}
+          onPress={() => handlePlayBack()}
+        >
+          <Ionicons
+            name="refresh"
+            size={Spacing.xxl}
+            color={Colors.textBody}
+            style={{ transform: [{ scaleX: -1 }] }}
+          />
+          <Text style={styles.controlIcon}>-10s</Text>
         </TouchableOpacity>
+
+        <LinearGradient
+          colors={[Colors.accentPrimary[0], Colors.accentPrimary[1]]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={styles.playButton}
+        >
+          <TouchableOpacity onPress={() => handlePlay()} activeOpacity={0.8}>
+            <Text style={styles.playIcon}>
+              {isPlaying ? (
+                <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
+              ) : (
+                <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
+              )}
+            </Text>
+          </TouchableOpacity>
+        </LinearGradient>
 
         <TouchableOpacity
-          style={styles.playButton}
-          onPress={() => handlePlay()}
+          style={styles.controlButton}
           activeOpacity={0.8}
+          onPress={() => handlePlayForward()}
         >
-          <Text style={styles.playIcon}>{isPlaying ? "⏸" : "▶"}</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.controlButton} activeOpacity={0.8}>
-          <Text style={styles.controlIcon}>⏩</Text>
+          <Ionicons name="refresh" size={Spacing.xxl} color={Colors.textBody} />
+          <Text style={styles.controlIcon}>+10s</Text>
         </TouchableOpacity>
       </View>
 
@@ -184,39 +208,6 @@ const styles = StyleSheet.create({
     lineHeight: Typography.caption.lineHeight,
     textAlign: "center",
   },
-  progressSection: {
-    gap: Spacing.md,
-  },
-  progressTrack: {
-    height: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.08)",
-    borderRadius: 4,
-    position: "relative",
-  },
-  progressFill: {
-    position: "absolute",
-    height: 8,
-    backgroundColor: Colors.accentPrimarySolid,
-    borderRadius: 4,
-  },
-  progressThumb: {
-    position: "absolute",
-    width: 16,
-    height: 16,
-    borderRadius: 8,
-    backgroundColor: Colors.white,
-    top: -4,
-    transform: [{ translateX: -8 }],
-    ...Shadows.focus,
-  },
-  timeRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-  },
-  timeText: {
-    color: Colors.textBody,
-    fontSize: Typography.caption.fontSize,
-  },
   controls: {
     flexDirection: "row",
     alignItems: "center",
@@ -224,29 +215,29 @@ const styles = StyleSheet.create({
     gap: Spacing.xxl,
   },
   controlButton: {
-    width: 48,
-    height: 48,
+    width: Sizes.buttonDefault,
+    height: Sizes.buttonDefault,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.accentGlow,
+    backgroundColor: Colors.audioWave,
+    borderWidth: 1,
+    borderColor: Colors.borderSubtle,
     alignItems: "center",
     justifyContent: "center",
   },
   controlIcon: {
-    color: Colors.textBody,
-    fontSize: 20,
+    ...Typography.micro,
+    color: Colors.textTitle,
   },
   playButton: {
-    width: 56,
-    height: 56,
+    width: 78,
+    height: 78,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.accentPrimarySolid,
+    // backgroundColor: Colors.accentPrimarySolid,
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.soft,
   },
   playIcon: {
-    color: Colors.white,
-    fontSize: 24,
     marginLeft: 2,
   },
   timerSection: {
