@@ -5,7 +5,6 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer from "react-native-track-player";
 import { useEffect } from "react";
 
-
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
@@ -19,12 +18,11 @@ import { Colors } from "./components/KitUI/tokens";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/users";
+import createForm from "./reducers/createForm";
 import { NightTabBar } from "./components/KitUI/NightTabBar";
 
-
-
 const store = configureStore({
-  reducer: { user },
+  reducer: { user, createForm },
 });
 
 const Stack = createNativeStackNavigator();
@@ -34,7 +32,9 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{ headerShown: false }}
-      tabBar={({ state, navigation, descriptors }) => <NightTabBar state={state} navigation={navigation} descriptors={descriptors} />}
+      tabBar={({ state, navigation, descriptors }) => (
+        <NightTabBar state={state} navigation={navigation} descriptors={descriptors} />
+      )}
     >
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="discover" component={Discover} />
@@ -45,7 +45,7 @@ const TabNavigator = () => {
         name="profil"
         component={Profil}
         options={{
-          tabBarItemStyle: { display: 'none' },
+          tabBarItemStyle: { display: "none" },
           tabBarButton: () => null, // cache le bouton Profil de la tab bar
         }}
       />
@@ -74,7 +74,7 @@ export default function App() {
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}>
           <NavigationContainer>
-            <Stack.Navigator >
+            <Stack.Navigator>
               <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
               <Stack.Screen
                 name="TabNavigator"
@@ -82,7 +82,7 @@ export default function App() {
                 options={({ navigation, route }) => {
                   const routeName = getFocusedRouteNameFromRoute(route) || "home";
                   //ajouter ci-dessous pour cacher le header les différentes pages sans header
-                  if (routeName === 'profil') {
+                  if (routeName === "profil") {
                     return { headerShown: false };
                   } else {
                     return {

@@ -1,12 +1,58 @@
 import { StyleSheet, Text, View } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/KitUI/Button";
+import { updateCurrentStep } from "../reducers/createForm";
+import CreateFormStep from "../components/CreateForm/CreateFormStep";
+import { formStyles } from "../components/CreateForm/CreateFormStyle";
+import Step1 from "../components/CreateForm/Step1";
+import Step2 from "../components/CreateForm/Step2";
+import Step3 from "../components/CreateForm/Step3";
+import Step4 from "../components/CreateForm/Step4";
+import Step5 from "../components/CreateForm/Step5";
+import Step6 from "../components/CreateForm/Step6";
+
+const steps = [
+  {
+    title: "Type d’histoire",
+    subtitle: "Quel type d’histoire souhaitez-vous vivre ?",
+    stepComponent: <Step1 />,
+  },
+  {
+    title: "Protagoniste",
+    subtitle: "Qui souhaitez-vous suivre ?",
+    stepComponent: <Step2 />,
+  },
+  {
+    title: "Univers / Lieu",
+    subtitle: "Où se déroule l’histoire ?",
+    stepComponent: <Step3 />,
+  },
+  {
+    title: "Effet recherché",
+    subtitle: "Vers quel état souhaitez-vous être guidé ?",
+    stepComponent: <Step4 />,
+  },
+  {
+    title: "Durée",
+    subtitle: "Quelle durée pour votre histoire ?",
+    stepComponent: <Step5 />,
+  },
+  {
+    title: "Configuration",
+    subtitle: "Quelle durée pour votre histoire ?",
+    stepComponent: <Step6 />,
+  },
+];
 
 export default function Create() {
-  const [formStep, setFormStep] = useState(0);
-  const isInitialStep = formStep === 0 ? true : false;
+  const dispatch = useDispatch();
+  const form = useSelector((state) => state.createForm.value);
+  console.log("Form", form);
+  const { currentStep } = form;
+  const isInitialStep = currentStep === 0;
+  const isPartiallyFilled = form.steps.length > 0;
   return (
     <LinearGradient
       colors={Colors.bgPrimary}
@@ -15,33 +61,20 @@ export default function Create() {
       style={styles.main}
     >
       {isInitialStep && (
-        <View style={styles.createContainer}>
+        <View style={formStyles.createContainer}>
           <View>
-            <Text style={styles.title}>Créer mon histoire</Text>
-            <Text style={styles.subtitle}>Personnalisée en 3 minutes</Text>
+            <Text style={formStyles.title}>Créer mon histoire</Text>
+            <Text style={formStyles.subtitle}>Personnalisée en 3 minutes</Text>
           </View>
           <Button
-            title="Création de l'histoire"
+            title={!isPartiallyFilled ? "Création de l'histoire" : "Reprendre mon histoire"}
             size="large"
             variant="primary"
-            onPress={() => setFormStep(1)}
+            onPress={() => dispatch(updateCurrentStep(1))}
           />
         </View>
       )}
-      {!isInitialStep && (
-        <View style={styles.formContainer}>
-          <View>
-            <Text style={styles.title}>Créer mon histoire</Text>
-            <Text style={styles.subtitle}>Personnalisée en 3 minutes</Text>
-          </View>
-          <Button
-            title="Création de l'histoire"
-            size="large"
-            variant="primary"
-            onPress={() => setFormStep(1)}
-          />
-        </View>
-      )}
+      {!isInitialStep && <CreateFormStep {...steps[currentStep - 1]} />}
     </LinearGradient>
   );
 }
@@ -49,27 +82,5 @@ export default function Create() {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-  },
-  title: {
-    color: Colors.textSleepieYellow,
-    ...Typography.h1,
-    textAlign: "center",
-  },
-  subtitle: {
-    color: Colors.textTitle,
-    ...Typography.bodyMedium,
-    textAlign: "center",
-  },
-  createContainer: {
-    flex: 1,
-    gap: Spacing.xl,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  formContainer: {
-    flex: 1,
-    justifyContent: "flex-start",
-    alignItems: "center",
-    padding: Spacing.huge,
   },
 });

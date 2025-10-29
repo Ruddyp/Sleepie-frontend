@@ -1,30 +1,26 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    value: {
-        token: null,
-        email: null,
-        username: null
-    },
+  value: {
+    currentStep: 0,
+    steps: [],
+  },
 };
 
-export const usersSlice = createSlice({
-    name: 'user',
+export const createFormSlice = createSlice({
+  name: "createForm",
 
-    initialState,
-    reducers: {
-        updateUser: (state, action) => {
-            state.value = action.payload
-        },
-        deleteUser: (state) => {
-            state.value = {
-                token: null,
-                email: null,
-                username: null
-            }
-        }
+  initialState,
+  reducers: {
+    updateCurrentStep: (state, action) => {
+      state.value.currentStep = action.payload;
     },
+    updateStep: (state, action) => {
+      const stepToUpdate = action.payload.currentStep - 1;
+      state.value.steps[stepToUpdate] = { response: action.payload.response };
+    },
+  },
 });
 
-export const { updateUser, deleteUser } = usersSlice.actions;
-export default usersSlice.reducer;
+export const { updateCurrentStep, updateStep } = createFormSlice.actions;
+export default createFormSlice.reducer;
