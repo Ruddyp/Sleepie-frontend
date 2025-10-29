@@ -1,5 +1,5 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, Switch } from "react-native";
-import { Colors, Typography } from "../components/KitUI/tokens";
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, Switch, TouchableOpacity, Pressable } from "react-native";
+import { BorderRadius, Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import SignUp from "../components/SignUp";
@@ -19,7 +19,27 @@ export default function Login({ navigation }) {
         end={{ x: 1, y: 1 }}
         style={styles.main}
       >
-        <View style={styles.switchContainer}>
+        <View style={styles.optionsContainer}>
+
+          <Pressable
+            style={[
+              styles.buttonLeft,
+              { backgroundColor: isEnabled ? Colors.bgPrimarySolid : Colors.bgSleepieBlue2 },
+            ]}
+            onPress={() => setIsEnabled(false)}>
+            <Text style={styles.textButton}>Sign Up</Text>
+          </Pressable>
+          <Pressable
+            style={[
+              styles.buttonRight,
+              { backgroundColor: !isEnabled ? Colors.bgPrimarySolid : Colors.bgSleepieBlue2 }
+            ]}
+            onPress={() => setIsEnabled(true)}>
+            <Text style={styles.textButton}>Sign In</Text>
+          </Pressable>
+
+        </View>
+        {/* <View style={styles.switchContainer}>
           <Text style={styles.textToggle}>Sign Up</Text>
           <Switch
             trackColor={{ false: Colors.textTitle, true: Colors.textSecondary }}
@@ -27,10 +47,10 @@ export default function Login({ navigation }) {
             ios_backgroundColor="#3e3e3e"
             onValueChange={() => setIsEnabled((previousState) => !previousState)}
             value={isEnabled}
-            style={{ transform: [{ scaleX: 3 }, { scaleY: 3 }] }}
+            style={{ transform: [{ scaleX: 2 }, { scaleY: 2 }] }}
           />
           <Text style={styles.textToggle}>Sign In</Text>
-        </View>
+        </View> */}
         {!isEnabled ? (
           //affichage du SignUp
           <SignUp navigation={navigation} />
@@ -53,16 +73,16 @@ const styles = StyleSheet.create({
     ...Typography.body,
     fontFamily: Typography.fontBody,
   },
-  switchContainer: {
-    width: "100%",
-    height: "100",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 40,
-    padding: 0,
-    flexDirection: "row",
-    marginTop: 20,
-  },
+  // switchContainer: {
+  //   width: "100%",
+  //   height: "100",
+  //   alignItems: "center",
+  //   justifyContent: "center",
+  //   gap: 40,
+  //   padding: 0,
+  //   flexDirection: "row",
+  //   marginTop: 20,
+  // },
   textToggle: {
     color: Colors.textTitle,
     fontFamily: Typography.fontHeading,
@@ -73,7 +93,36 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 15,
   },
-  button: {
-    marginTop: 30,
+  buttonLeft: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
   },
+  buttonRight: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+
+  },
+  optionsContainer: {
+    marginTop: Spacing.maximale,
+    marginBottom: Spacing.xxl,
+    backgroundColor: Colors.bgSleepieBlue2,
+    flexDirection: "row",
+    height: 70,
+    width: "80%",
+    borderRadius: BorderRadius.xlarge,
+    alignSelf: "center",
+    flexDirection: "row",
+    overflow: "hidden",
+    borderColor: Colors.textSecondary,
+    borderWidth: 1,
+  },
+  textButton: {
+    color: Colors.textTitle,
+    fontFamily: Typography.fontHeading,
+    ...Typography.h2,
+  }
 });

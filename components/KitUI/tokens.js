@@ -92,12 +92,14 @@ export const Spacing = {
   xxxl: 32,
   huge: 40,
   massive: 48,
+  maximale: 60,
 };
 
 export const BorderRadius = {
   small: 16,
   medium: 24,
   large: 32,
+  xlarge: 40,
   round: 9999,
 };
 
