@@ -38,7 +38,6 @@ const styles = StyleSheet.create({
     ...Shadows.soft,
   },
   text: {
-    fontSize: Typography.body.fontSize,
     fontFamily: Typography.fontBody,
     fontWeight: "500",
   },
@@ -61,14 +60,17 @@ function getButtonStyle(variant, size) {
 
   if (size === "small") {
     sizeButton = { height: Sizes.buttonSmall };
+    text = { ...text, fontSize: Typography.body.fontSize };
   }
 
   if (size === "medium") {
     sizeButton = { height: Sizes.buttonDefault };
+    text = { ...text, fontSize: Typography.body.fontSize };
   }
 
   if (size === "large") {
     sizeButton = { height: Sizes.buttonLarge };
+    text = { ...text, fontSize: Typography.h3.fontSize };
   }
 
   return {
