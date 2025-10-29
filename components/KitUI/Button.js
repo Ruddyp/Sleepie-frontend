@@ -49,7 +49,7 @@ function getButtonStyle(variant, size) {
   let sizeButton = {};
 
   if (variant === "secondary") {
-    color = [Colors.accentGlow, Colors.accentGlow];
+    color = [Colors.audioWave, Colors.audioWave];
     text = { color: Colors.textBody };
   }
 
