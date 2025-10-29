@@ -3,7 +3,7 @@ import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tok
 import { LinearGradient } from "expo-linear-gradient";
 
 export default function Button({ title, variant = "primary", size = "medium", onPress, disable }) {
-  const buttonStyle = getButtonStyle(variant, size);
+  const buttonStyle = getButtonStyle(variant, size, disable);
   if (disable) onPress = undefined;
 
   return (
@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
   },
 });
 
-function getButtonStyle(variant, size) {
+function getButtonStyle(variant, size, disable) {
   let color = [];
   let text = {};
   let sizeButton = {};
@@ -56,6 +56,11 @@ function getButtonStyle(variant, size) {
   if (variant === "primary") {
     color = Colors.accentPrimary;
     text = { color: Colors.textBody };
+  }
+
+  if (disable) {
+    color = [Colors.accentGlow, Colors.accentGlow];
+    text = { color: Colors.textDisabled };
   }
 
   if (size === "small") {

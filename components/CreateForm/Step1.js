@@ -3,7 +3,7 @@ import { Colors } from "../KitUI/tokens";
 import ChoiceCard from "./ChoiceCard";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateCurrentStep, updateStep } from "../../reducers/createForm";
+import { updateStep } from "../../reducers/createForm";
 
 export default function Step1() {
   const dispatch = useDispatch();

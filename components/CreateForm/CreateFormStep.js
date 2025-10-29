@@ -4,10 +4,14 @@ import Button from "../KitUI/Button";
 import { updateCurrentStep } from "../../reducers/createForm";
 import { formStyles } from "./CreateFormStyle";
 
-export default function CreateFormStep({ stepComponent, title, subtitle, isFocused }) {
+export default function CreateFormStep({ stepComponent, title, subtitle }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep } = form;
+  // Si on a aucune valeur dans le redux on disable le button next
+  const disableButton = !form.steps[currentStep - 1];
+  console.log(form.steps[currentStep - 1]);
+
   return (
     <View style={formStyles.mainFormContainer}>
       <View>
@@ -27,6 +31,7 @@ export default function CreateFormStep({ stepComponent, title, subtitle, isFocus
           size="medium"
           variant="secondary"
           onPress={() => dispatch(updateCurrentStep(currentStep + 1))}
+          disable={disableButton}
         />
       </View>
     </View>

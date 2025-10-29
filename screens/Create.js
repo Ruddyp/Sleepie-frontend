@@ -8,6 +8,10 @@ import CreateFormStep from "../components/CreateForm/CreateFormStep";
 import { formStyles } from "../components/CreateForm/CreateFormStyle";
 import Step1 from "../components/CreateForm/Step1";
 import Step2 from "../components/CreateForm/Step2";
+import Step3 from "../components/CreateForm/Step3";
+import Step4 from "../components/CreateForm/Step4";
+import Step5 from "../components/CreateForm/Step5";
+import Step6 from "../components/CreateForm/Step6";
 
 const steps = [
   {
@@ -16,14 +20,29 @@ const steps = [
     stepComponent: <Step1 />,
   },
   {
-    title: "On mange quoi?",
-    subtitle: "Quel type de nourriture",
+    title: "Protagoniste",
+    subtitle: "Qui souhaitez-vous suivre ?",
     stepComponent: <Step2 />,
   },
   {
-    title: "Type d’histoire",
-    subtitle: "Quel type d’histoire souhaitez-vous vivre ?",
-    stepComponent: <Text>aefaefafaefaefaefaefaefaefae</Text>,
+    title: "Univers / Lieu",
+    subtitle: "Où se déroule l’histoire ?",
+    stepComponent: <Step3 />,
+  },
+  {
+    title: "Effet recherché",
+    subtitle: "Vers quel état souhaitez-vous être guidé ?",
+    stepComponent: <Step4 />,
+  },
+  {
+    title: "Durée",
+    subtitle: "Quelle durée pour votre histoire ?",
+    stepComponent: <Step5 />,
+  },
+  {
+    title: "Configuration",
+    subtitle: "Quelle durée pour votre histoire ?",
+    stepComponent: <Step6 />,
   },
 ];
 
@@ -33,6 +52,7 @@ export default function Create() {
   console.log("Form", form);
   const { currentStep } = form;
   const isInitialStep = currentStep === 0;
+  const isPartiallyFilled = form.steps.length > 0;
   return (
     <LinearGradient
       colors={Colors.bgPrimary}
@@ -47,7 +67,7 @@ export default function Create() {
             <Text style={formStyles.subtitle}>Personnalisée en 3 minutes</Text>
           </View>
           <Button
-            title="Création de l'histoire"
+            title={!isPartiallyFilled ? "Création de l'histoire" : "Reprendre mon histoire"}
             size="large"
             variant="primary"
             onPress={() => dispatch(updateCurrentStep(1))}

@@ -30,6 +30,7 @@ export const formStyles = StyleSheet.create({
     alignItems: "center",
     paddingVertical: Spacing.sm,
     gap: Spacing.sm,
+    marginTop: Spacing.md,
   },
   nextBackContainer: {
     width: "100%",

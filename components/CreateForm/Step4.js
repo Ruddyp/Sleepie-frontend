@@ -3,10 +3,8 @@ import ChoiceCard from "./ChoiceCard";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStep } from "../../reducers/createForm";
-import { Ionicons } from "@expo/vector-icons";
-import { Spacing } from "../KitUI/tokens";
 
-export default function Step2() {
+export default function Step4() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
@@ -20,16 +18,16 @@ export default function Step2() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "Un homme",
-      icon: <Ionicons name="male" size={Spacing.xxl} color={"cornflowerblue"} />,
+      title: "Sécurité et apaisement",
     },
     {
-      title: "Une femme",
-      icon: <Ionicons name="female" size={Spacing.xxl} color={"pink"} />,
+      title: "Lâcher-prise",
     },
     {
-      title: "Narrateur neutre",
-      icon: <Ionicons name="person" size={Spacing.xxl} color={"darkgray"} />,
+      title: "Réconciliation intérieure",
+    },
+    {
+      title: "Sentiment d’émerveillement",
     },
   ];
 

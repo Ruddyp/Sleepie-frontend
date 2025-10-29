@@ -1,6 +1,6 @@
 import { Text, View, StyleSheet } from "react-native";
 import { BorderRadius, Colors, Spacing, Typography } from "../KitUI/tokens";
-export default function ChoiceCard({ title, subtitle, isFocused }) {
+export default function ChoiceCard({ title, subtitle, isFocused, icon }) {
   const focusStyle = isFocused
     ? {
         // Style de bordure pour l'état focus
@@ -10,15 +10,17 @@ export default function ChoiceCard({ title, subtitle, isFocused }) {
     : {};
   return (
     <View style={{ ...styles.main, ...focusStyle }}>
-      <Text style={styles.title}>{title}</Text>
-      <Text style={styles.subtitle}>{subtitle}</Text>
+      <Text style={styles.title}>
+        {icon} {title}
+      </Text>
+      {subtitle && <Text style={styles.subtitle}>{subtitle}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
-    width: "85%",
+    width: "90%",
     backgroundColor: Colors.bgTertiarySolid,
     borderRadius: BorderRadius.small,
     padding: Spacing.sm,

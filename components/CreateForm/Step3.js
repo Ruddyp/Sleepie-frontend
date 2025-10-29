@@ -4,9 +4,9 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStep } from "../../reducers/createForm";
 import { Ionicons } from "@expo/vector-icons";
-import { Spacing } from "../KitUI/tokens";
+import { Colors, Spacing } from "../KitUI/tokens";
 
-export default function Step2() {
+export default function Step3() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
@@ -20,16 +20,20 @@ export default function Step2() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "Un homme",
-      icon: <Ionicons name="male" size={Spacing.xxl} color={"cornflowerblue"} />,
+      title: "Balade forêstière",
+      icon: <Ionicons name="leaf" size={Spacing.xxl} color={Colors.textBody} />,
     },
     {
-      title: "Une femme",
-      icon: <Ionicons name="female" size={Spacing.xxl} color={"pink"} />,
+      title: "Crique aux reflets azur",
+      icon: <Ionicons name="boat" size={Spacing.xxl} color={Colors.textBody} />,
     },
     {
-      title: "Narrateur neutre",
-      icon: <Ionicons name="person" size={Spacing.xxl} color={"darkgray"} />,
+      title: "Village de pêcheur",
+      icon: <Ionicons name="fish" size={Spacing.xxl} color={Colors.textBody} />,
+    },
+    {
+      title: "Cîmes verdoyantes",
+      icon: <Ionicons name="flower" size={Spacing.xxl} color={Colors.textBody} />,
     },
   ];
 
