@@ -4,10 +4,14 @@ import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
 
+
 import { Colors } from "../components/KitUI/tokens";
 
 export default function KitScreen() {
+
   const [inputValue, setInputValue] = useState("");
+
+
   return (
     <LinearGradient
       colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
