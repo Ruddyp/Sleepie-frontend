@@ -1,4 +1,4 @@
-import { StyleSheet, Pressable } from "react-native";
+import { StyleSheet, Pressable, View } from "react-native";
 import ChoiceCard from "./ChoiceCard";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,10 +39,10 @@ export default function Step2() {
   }
 
   return (
-    <>
+    <View style={styles.main}>
       {choices.map((choice, index) => (
         // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.main}>
+        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
           {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
           <ChoiceCard
             title={choice.title}
@@ -52,12 +52,16 @@ export default function Step2() {
           />
         </Pressable>
       ))}
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   main: {
+    width: "100%",
+    gap: Spacing.lg,
+  },
+  pressable: {
     width: "100%",
     justifyContent: "center",
     alignItems: "center",

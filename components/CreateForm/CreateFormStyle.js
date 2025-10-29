@@ -1,6 +1,16 @@
 import { StyleSheet } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
+
 export const formStyles = StyleSheet.create({
+  fullScreenContainer: {
+    flex: 1,
+  },
+  mainFormContainerScrollable: {
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: Spacing.sm,
+    paddingHorizontal: Spacing.md,
+  },
   title: {
     color: Colors.textSleepieYellow,
     ...Typography.h1,
@@ -17,12 +27,6 @@ export const formStyles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  mainFormContainer: {
-    flex: 1,
-    justifyContent: "space-between",
-    alignItems: "center",
-    gap: Spacing.sm,
-  },
   formContainer: {
     flex: 1,
     width: "100%",
@@ -38,5 +42,10 @@ export const formStyles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-evenly",
     paddingBottom: Spacing.sm,
+    position: "absolute",
+    bottom: 0,
+  },
+  scrollViewContent: {
+    paddingBottom: Spacing.maximale,
   },
 });
