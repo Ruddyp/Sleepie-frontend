@@ -62,7 +62,7 @@ export default function Home() {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      <ScrollView contentContainerStyle={styles.content}>
+      <ScrollView>
         {/* ---- Card "Créer mon histoire" au-dessus, séparée ---- */}
         <View style={styles.createRow}>
           <CreateStoryCard onPress={() => navigation.navigate("create")} />
@@ -95,9 +95,4 @@ export default function Home() {
 
 const styles = StyleSheet.create({
   main: { flex: 1 },
-  content: {
-    flex: 1,
-    // paddingVertical: Spacing.lg,
-    gap: Spacing.lg,
-  },
 });
