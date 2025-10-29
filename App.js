@@ -1,5 +1,4 @@
-import { StyleSheet } from "react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
@@ -21,6 +20,8 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/users";
 import { NightTabBar } from "./components/KitUI/NightTabBar";
+
+
 
 const store = configureStore({
   reducer: { user },
@@ -44,9 +45,8 @@ const TabNavigator = () => {
         name="profil"
         component={Profil}
         options={{
-          headerShown: false, // ne fonctionne pas avec un header personnalisé
           tabBarItemStyle: { display: 'none' },
-          tabBarButton: () => null, // cache le bouton Profil
+          tabBarButton: () => null, // cache le bouton Profil de la tab bar
         }}
       />
     </Tab.Navigator>
@@ -76,21 +76,27 @@ export default function App() {
           <NavigationContainer>
             <Stack.Navigator >
               <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-              {/* <Stack.Screen name="Profil" component={Profil} options={{ headerShown: false }} /> */}
               <Stack.Screen
                 name="TabNavigator"
                 component={TabNavigator}
-                options={({ navigation, route }) => ({
-                  headerHideOnScroll: true,
-                  header: () => (
-                    <Header
-                      title="Sleepie"
-                      navigation={navigation}
-                      route={route}
-                    />
-                  )
-                }
-                )}
+                options={({ navigation, route }) => {
+                  const routeName = getFocusedRouteNameFromRoute(route) || "home";
+                  //ajouter ci-dessous pour cacher le header les différentes pages sans header
+                  if (routeName === 'profil') {
+                    return { headerShown: false };
+                  } else {
+                    return {
+                      header: () => (
+                        <Header
+                          title="Sleepie"
+                          navigation={navigation}
+                          route={route}
+                          descriptors={route.descriptors}
+                        />
+                      ),
+                    };
+                  }
+                }}
               />
             </Stack.Navigator>
           </NavigationContainer>

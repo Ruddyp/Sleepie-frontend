@@ -2,9 +2,8 @@ import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons"; // pour les icônes
 import { Colors, Typography } from "./KitUI/tokens";
 
-export default function Header({ title, navigation, route }) {
-  console.log(route);
-  console.log(navigation);
+export default function Header({ title, navigation, route, descriptors }) {
+
   return (
     <View style={styles.container}>
       <View>
