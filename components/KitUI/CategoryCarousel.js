@@ -7,8 +7,6 @@ export default function CategoryCarousel({
   title = "",
   icon, // { uri: "..." } ou require(".../icon.png")
   data = [], // [{ id, title, duration, voice, imageUrl, isFavorite }, ...]
-  onPlayItem, // (item) => void
-  onToggleFavorite, // (item) => void
   gap = Spacing.lg || 12,
   sidePadding = Spacing.xl || 24,
   cardWidth, // optionnel: largeur fixe des cards; sinon calcul auto
@@ -25,22 +23,27 @@ export default function CategoryCarousel({
 
   const itemFullWidth = useMemo(() => cardSize + gap, [cardSize, gap]);
 
-  const keyExtractor = (it, idx) => (it.id ? String(it.id) : String(idx));
+  // const keyExtractor = (it, idx) => (it.id ? String(it.id) : String(idx));
 
-  const renderItem = ({ item }) => (
-    <View style={{ width: cardSize }}>
-      <AudioCardSquare
-        title={item.title}
-        duration={item.duration}
-        voice={item.voice}
-        imageUrl={item.imageUrl}
-        isFavorite={!!item.isFavorite}
-        onPlay={() => onPlayItem?.(item)}
-        onToggleFavorite={() => onToggleFavorite?.(item)}
-        size={cardSize}
-      />
-    </View>
-  );
+  const renderItem = ({ item }) => {
+    console.log(item, "item in renderItem")
+    return (
+      <View style={{ width: cardSize }}>
+        <AudioCardSquare
+          {...item}
+          // title={item.title}
+          // duration={item.duration}
+          // voice={item.voice}
+          // imageUrl={item.imageUrl}
+          // isFavorite={!!item.isFavorite}
+          // onPlay={() => onPlayItem?.(item)}
+          // onToggleFavorite={() => onToggleFavorite?.(item)}
+          size={cardSize}
+        />
+      </View>
+    )
+  };
+
 
   return (
     <View
@@ -60,7 +63,7 @@ export default function CategoryCarousel({
         <FlatList
           ref={listRef}
           data={data}
-          keyExtractor={keyExtractor}
+          // keyExtractor={keyExtractor}
           renderItem={renderItem}
           horizontal
           showsHorizontalScrollIndicator={false}

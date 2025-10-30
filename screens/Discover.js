@@ -1,42 +1,57 @@
-import { StyleSheet, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Player } from "../components/KitUI/Player";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../components/KitUI/tokens";
-import { useState } from "react";
+import { useState, useEffect, use } from "react";
+import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 
-const track1 = {
-  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761644049/D%C3%A9couvrez_le_clip_restaur%C3%A9_de_C_est_%C3%A9crit_de_Francis_Cabrel_extrait_de_son_album_Sarbacane._rqdy9p.mp3", // Load media from the network
-  title: "C'est écrit",
-  artist: "Francis cabrel",
-  album: "Poulet braisé",
-  genre: "Variété française",
-  date: "2014-05-20T07:00:00+00:00", // RFC 3339
-  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
-  id: "francis",
-  duration: 60,
-};
 
-const track2 = {
-  url: "https://res.cloudinary.com/dr6rfk2nz/video/upload/v1761643955/Beat_It_Dance_Mix_-_Michael_Jackson_MoonwalkMagic_pg9j3x.mp3", // Load media from the network
-  title: "Beat it",
-  artist: "Michael Jackson",
-  album: "Thrillllllllller",
-  genre: "Pop",
-  date: "2014-05-20T07:00:00+00:00", // RFC 3339
-  artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208184/samples/man-portrait.jpg", // Load artwork from the network
-  id: "MJ",
-};
 
 export default function Discover() {
-  const [track, setTrack] = useState(track1);
+  const IP = process.env.EXPO_PUBLIC_IP;
+  const port = process.env.EXPO_PUBLIC_PORT;
+  const sleepyUserId = process.env.EXPO_PUBLIC_SLEEPIEID;
 
-  function handleTrack() {
-    if (track.title === "C'est écrit") {
-      setTrack(track2);
-    } else {
-      setTrack(track1);
+  const [storiesSleepie, setStoriesSleepie] = useState([]);
+  const [labelArray, setLabelArray] = useState([]);
+
+  useEffect(() => {
+    const body = { author: sleepyUserId }
+
+    fetch(`http://${IP}:${port}/stories/getbyauthor`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((response) => response.json())
+      .then((data) => {
+        // console.log("data from fetch", data);
+        setStoriesSleepie(data.stories);
+      })
+      .catch((error) => {
+        console.log("error from fetch", error);
+      });
+  }, []);
+
+  console.log("storiesSleepie", storiesSleepie);
+
+  for (const story of storiesSleepie) {
+    for (const label of story.label) {
+      if (!labelArray.includes(label.name)) {
+        setLabelArray([...labelArray, label.name]);
+      }
     }
   }
+  console.log("labelArray", labelArray);
+
+  const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
+    return <CategoryCarousel
+      key={i}
+      title={labelName}
+      data={storiesSleepie.filter(story => story.label.some(label => label.name === labelName))
+      }
+    />
+  });
+
 
   return (
     <LinearGradient
@@ -45,11 +60,9 @@ export default function Discover() {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
-      <Text>LISTEN PAGE</Text>
-      <Player track={track} />
-      <TouchableOpacity style={styles.button} onPress={() => handleTrack()}>
-        <Text style={{ color: "white" }}>Change track</Text>
-      </TouchableOpacity>
+      <View style={styles.carrousel}>
+        {categoryCarrouselToDisplay}
+      </View>
     </LinearGradient>
   );
 }
@@ -71,5 +84,10 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     justifyContent: "center",
     alignItems: "center",
+  },
+  carrousel: {
+    flex: 1,
+    width: "100%",
+    paddingTop: 50,
   },
 });

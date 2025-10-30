@@ -3,37 +3,29 @@ import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 
 export default function AudioCardSquare({
   title,
-  duration,
-  voice,
-  imageUrl,
-  isFavorite = false,
-  onPlay,
-  onToggleFavorite,
+  image,
+  author,
   size = 220,
 }) {
   return (
     <TouchableOpacity
       style={[styles.card, { width: size }]}
       activeOpacity={0.9}
-      onPress={onPlay} // ← cliquer n'importe où (hors cœur) lance la lecture
       accessibilityRole="button"
       accessibilityLabel={`Lire ${title}`}
     >
       {/* IMAGE CARRÉE + boutons superposés */}
       <View style={[styles.imageWrap, { width: size, height: size }]}>
-        {imageUrl ? (
-          <Image source={{ uri: imageUrl }} style={styles.image} />
+        {image ? (
+          <Image source={{ uri: image }} style={styles.image} />
         ) : (
           <View style={styles.imagePlaceholder} />
         )}
 
         {/* Bouton Play (petit, bas-gauche) */}
         <TouchableOpacity
-          onPress={onPlay}
           activeOpacity={0.9}
           style={[styles.fabSmall, styles.playFab, Shadows.soft]}
-          accessibilityRole="button"
-          accessibilityLabel={`Lire ${title}`}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
           <Text style={styles.playIcon}>▶</Text>
@@ -41,17 +33,12 @@ export default function AudioCardSquare({
 
         {/* Bouton Favori (bas-droite) — NE LANCE PAS onPlay */}
         <TouchableOpacity
-          onPress={onToggleFavorite}
           activeOpacity={0.9}
           style={[styles.fabSmall, styles.likeFab, Shadows.soft]}
-          accessibilityRole="button"
-          accessibilityLabel={
-            isFavorite ? `Retirer ${title} des favoris` : `Ajouter ${title} aux favoris`
-          }
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Text style={[styles.likeIcon, isFavorite && styles.likeIconActive]}>
-            {isFavorite ? "♥" : "♡"}
+          <Text style={[styles.likeIcon, true && styles.likeIconActive]}>
+            {true ? "♥" : "♡"}
           </Text>
         </TouchableOpacity>
       </View>
@@ -62,7 +49,7 @@ export default function AudioCardSquare({
           {title}
         </Text>
         <Text style={styles.meta} numberOfLines={1}>
-          ⏱ {duration} • {voice}
+          ⏱ {author}
         </Text>
       </View>
     </TouchableOpacity>
