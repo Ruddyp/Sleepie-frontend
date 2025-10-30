@@ -2,8 +2,8 @@ import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-naviga
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import TrackPlayer from "react-native-track-player";
-import { useEffect } from "react";
+import TrackPlayer, { Capability } from "react-native-track-player";
+import { useEffect, useRef } from "react";
 
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
@@ -19,10 +19,11 @@ import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/users";
 import createForm from "./reducers/createForm";
+import track from "./reducers/track";
 import { NightTabBar } from "./components/KitUI/NightTabBar";
 
 const store = configureStore({
-  reducer: { user, createForm },
+  reducer: { user, createForm, track },
 });
 
 const Stack = createNativeStackNavigator();
@@ -53,20 +54,26 @@ const TabNavigator = () => {
   );
 };
 
+const setupTrackPlayer = async () => {
+  try {
+    await TrackPlayer.setupPlayer();
+    await TrackPlayer.updateOptions({
+      capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+      compactCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+    });
+    console.log("setup track player ok.");
+  } catch (error) {
+    console.log("Error happened while setting up track player => ", error);
+  }
+};
+
 export default function App() {
+  const isPlayerSetup = useRef(false);
   useEffect(() => {
-    (async function () {
-      try {
-        await TrackPlayer.setupPlayer();
-        await TrackPlayer.updateOptions({
-          capabilities: [TrackPlayer.Capability.Play, TrackPlayer.Capability.Pause],
-          compactCapabilities: [TrackPlayer.Capability.Play, TrackPlayer.Capability.Pause],
-        });
-        console.log("setup track player ok.");
-      } catch (error) {
-        console.log("Error happended while seting up track player => ", error);
-      }
-    })();
+    if (!isPlayerSetup.current) {
+      setupTrackPlayer();
+      isPlayerSetup.current = true;
+    }
   }, []);
 
   return (

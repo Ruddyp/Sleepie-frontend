@@ -1,9 +1,9 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/KitUI/Button";
-import { updateCurrentStep } from "../reducers/createForm";
+import { updateCurrentStep, updateIsFinished } from "../reducers/createForm";
 import CreateFormStep from "../components/CreateForm/CreateFormStep";
 import { formStyles } from "../components/CreateForm/CreateFormStyle";
 import Step1 from "../components/CreateForm/Step1";
@@ -12,6 +12,10 @@ import Step3 from "../components/CreateForm/Step3";
 import Step4 from "../components/CreateForm/Step4";
 import Step5 from "../components/CreateForm/Step5";
 import Step6 from "../components/CreateForm/Step6";
+import WaitingStory from "../components/CreateForm/WaitingStory";
+import { useEffect } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { updateModalState } from "../reducers/track";
 
 const steps = [
   {
@@ -46,13 +50,27 @@ const steps = [
   },
 ];
 
-export default function Create() {
+export default function Create({ navigation }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
+  const track = useSelector((state) => state.track.value);
   console.log("Form", form);
-  const { currentStep } = form;
+  const { currentStep, isGenerating, isFinished } = form;
   const isInitialStep = currentStep === 0;
   const isPartiallyFilled = form.steps.length > 0;
+  const windowHeight = Dimensions.get("window").height;
+
+  useEffect(() => {
+    if (isFinished) {
+      dispatch(updateModalState(true));
+    }
+  }, [isFinished]);
+
+  function handleClose() {
+    dispatch(updateCurrentStep(0));
+    dispatch(updateIsFinished());
+    navigation.navigate("home");
+  }
   return (
     <LinearGradient
       colors={Colors.bgPrimary}
@@ -74,7 +92,52 @@ export default function Create() {
           />
         </View>
       )}
-      {!isInitialStep && <CreateFormStep {...steps[currentStep - 1]} />}
+      {!isInitialStep && !isGenerating && !isFinished && (
+        <CreateFormStep {...steps[currentStep - 1]} />
+      )}
+      {isGenerating && !isFinished && <WaitingStory />}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={track.modalState}
+        onRequestClose={() => handleClose()}
+      >
+        <LinearGradient
+          colors={Colors.bgPrimary}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.bottomSheet, { height: windowHeight }]}
+        >
+          <View style={styles.mainModalContainer}>
+            <View>
+              <Text></Text>
+            </View>
+            <View style={styles.middleModalContainer}>
+              <Ionicons name="checkmark-circle" size={Spacing.maximale} color={Colors.success} />
+              <View>
+                <Text style={styles.text}>Votre histoire a bien été générée.</Text>
+                <Text style={styles.text}>Retrouvez-la dans vos favoris.</Text>
+              </View>
+
+              <Button
+                title={"Ecoutez votre histoire"}
+                size="large"
+                variant="primary"
+                onPress={() => handleClose()}
+              />
+            </View>
+            <View style={styles.bottomModalContainer}>
+              <TouchableOpacity onPress={() => handleClose()}>
+                <Ionicons
+                  name="close-circle-outline"
+                  size={Spacing.maximale}
+                  color={Colors.textBody}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </LinearGradient>
+      </Modal>
     </LinearGradient>
   );
 }
@@ -82,5 +145,35 @@ export default function Create() {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+  },
+  bottomModalContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  mainModalContainer: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "space-around",
+    alignItems: "center",
+  },
+  middleModalContainer: {
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.huge,
+    paddingHorizontal: Spacing.lg,
+  },
+  text: {
+    ...Typography.body,
+    color: Colors.textBody,
+    textAlign: "center",
+  },
+  bottomSheet: {
+    position: "absolute",
+    left: 0,
+    right: 0,
+    justifyContent: "center",
+    alignItems: "center",
+    bottom: 0,
   },
 });

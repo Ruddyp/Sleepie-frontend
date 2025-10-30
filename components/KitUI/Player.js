@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
 import TrackPlayer, {
   useTrackPlayerEvents,
@@ -11,11 +11,13 @@ import TrackPlayer, {
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
+import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
+const windowWidth = Dimensions.get("window").width;
 
 export function Player({ track }) {
-  const { id, url, title, description, date, artwork, artist } = track;
+  const { _id, title, image, author } = track;
   const { position, buffered, duration } = useProgress();
   const [playerState, setPlayerState] = useState(null);
   const activeTrack = useActiveTrack();
@@ -32,12 +34,13 @@ export function Player({ track }) {
   const isPlaying = playerState === State.Playing;
 
   async function handlePlay() {
-    const shouldChangeTrack = !activeTrack || activeTrack.id !== id || playerState === State.Ended;
+    const shouldChangeTrack = !activeTrack || activeTrack.id !== _id || playerState === State.Ended;
     if (shouldChangeTrack) {
       console.log("Action: Changement de piste / Ajout initial");
       // Réinitialise le lecteur et ajoute la nouvelle piste
       await TrackPlayer.reset();
-      await TrackPlayer.add([track]);
+      // On décompose track et on ajoute un id: _id car le track player attend une cled id et non _id
+      await TrackPlayer.add([{ ...track, id: _id }]);
       await TrackPlayer.play();
     } else {
       // 2. Contrôle Lecture/Pause de la piste courante
@@ -73,26 +76,36 @@ export function Player({ track }) {
           <Image
             style={styles.artwork}
             source={{
-              uri: artwork,
+              uri:
+                image ||
+                "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
             }}
           />
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{artist}</Text>
+          <Text style={styles.subtitle}>{author || "Paul Fernier"}</Text>
         </View>
       </View>
 
       {/* Progress Bar */}
-      <Slider
-        minimumValue={0}
-        maximumValue={duration}
-        value={position}
-        onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
-        minimumTrackTintColor={Colors.accentPrimarySolid}
-        maximumTrackTintColor={Colors.textTitle}
-        thumbTintColor={Colors.textSleepieYellow}
-      />
+      <View>
+        <Slider
+          minimumValue={0}
+          maximumValue={duration}
+          value={position}
+          onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
+          minimumTrackTintColor={Colors.accentPrimarySolid}
+          maximumTrackTintColor={Colors.textTitle}
+          thumbTintColor={Colors.textSleepieYellow}
+        />
+        <View style={styles.progressTextContainer}>
+          <Text style={styles.progressText}>{formatSecondsToMinutes(Math.round(position))}</Text>
+          <Text style={styles.progressText}>
+            {formatSecondsToMinutes(Math.round(duration - position))}
+          </Text>
+        </View>
+      </View>
 
       {/* Controls */}
       <View style={styles.controls}>
@@ -170,20 +183,31 @@ export function Player({ track }) {
 
 const styles = StyleSheet.create({
   container: {
-    width: "80%",
-    height: "80%",
+    width: windowWidth * 0.9,
+    height: "100%",
     borderRadius: BorderRadius.large,
-    padding: Spacing.xxxl,
-    gap: Spacing.xxxl,
+    padding: Spacing.xl,
+    gap: Spacing.xxl,
     ...Shadows.soft,
+  },
+  progressTextContainer: {
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: Spacing.lg,
+  },
+  progressText: {
+    ...Typography.caption,
+    color: Colors.textBody,
   },
   header: {
     alignItems: "center",
-    gap: Spacing.lg,
+    gap: Spacing.xl,
   },
   cover: {
-    width: 160,
-    height: 160,
+    width: 200,
+    height: 200,
     borderRadius: BorderRadius.medium,
   },
   artwork: {
@@ -196,16 +220,13 @@ const styles = StyleSheet.create({
   },
   title: {
     color: Colors.textTitle,
-    fontSize: Typography.h2.fontSize,
-    lineHeight: Typography.h2.lineHeight,
+    ...Typography.h2,
     fontFamily: Typography.fontHeading,
-    fontWeight: "700",
     textAlign: "center",
   },
   subtitle: {
     color: Colors.textSecondary,
-    fontSize: Typography.caption.fontSize,
-    lineHeight: Typography.caption.lineHeight,
+    ...Typography.body,
     textAlign: "center",
   },
   controls: {
@@ -232,7 +253,6 @@ const styles = StyleSheet.create({
     width: 78,
     height: 78,
     borderRadius: BorderRadius.round,
-    // backgroundColor: Colors.accentPrimarySolid,
     alignItems: "center",
     justifyContent: "center",
     ...Shadows.soft,

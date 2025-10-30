@@ -9,10 +9,9 @@ export default function Step5() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
+  const intialValue = steps[currentStep - 1]?.response;
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met 5
-  const [position, setPosition] = useState(
-    steps[currentStep - 1] !== undefined ? steps[currentStep - 1].response : 5
-  );
+  const [position, setPosition] = useState(intialValue || 1);
 
   useEffect(() => {
     dispatch(updateStep({ currentStep: form.currentStep, response: position }));
@@ -21,7 +20,7 @@ export default function Step5() {
   return (
     <View style={styles.main}>
       <Slider
-        minimumValue={5}
+        minimumValue={1}
         maximumValue={30}
         value={position}
         onSlidingComplete={(value) => setPosition(value)}

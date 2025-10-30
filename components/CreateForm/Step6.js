@@ -1,11 +1,19 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
+import { useDispatch } from "react-redux";
 import Button from "../KitUI/Button";
+import { updateIsGenerating } from "../../reducers/createForm";
 
 export default function Step6() {
+  const dispatch = useDispatch();
   return (
     <View style={styles.main}>
-      <Button title="Génère ton histoire" size="large" variant="primary" />
+      <Button
+        title="Génère ton histoire"
+        size="large"
+        variant="primary"
+        onPress={() => dispatch(updateIsGenerating())}
+      />
       <View style={styles.dividerContainer}>
         <View style={styles.divider}></View>
         <Text style={styles.textDivider}>Autres paramètres</Text>

@@ -4,7 +4,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import { useNavigation } from "@react-navigation/native";
 import CreateStoryCard from "../components/KitUI/CreateStoryCard";
-import { Colors, Spacing } from "../components/KitUI/tokens";
+import { Colors } from "../components/KitUI/tokens";
+import PlayerModal from "../components/PlayerModal";
+import { useDispatch, useSelector } from "react-redux";
 
 const DATA_BEST = [
   {
@@ -38,6 +40,10 @@ const DATA_BEST = [
 ];
 
 export default function Home() {
+  // const dispatch = useDispatch();
+  // const form = useSelector((state) => state.createForm.value);
+  const trackData = useSelector((state) => state.track.value);
+  console.log({ trackData });
   const [favorites, setFavorites] = useState({});
   const navigation = useNavigation();
 
@@ -89,6 +95,7 @@ export default function Home() {
           // cardWidth={220} // option : force une largeur fixe
         />
       </ScrollView>
+      <PlayerModal />
     </LinearGradient>
   );
 }
