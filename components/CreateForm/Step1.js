@@ -12,29 +12,30 @@ export default function Step1() {
   const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
+  const [selectedCardTitle, setSelectedCardTitle] = useState(
+    intialValue || null
+  );
 
   // Définir les données des cartes
   const choices = [
     {
-      title: "Voyage apaisant dans la nature",
-      subtitle:
-        "Une marche, une traversée en train ou en bateau, un déplacement calme dans un paysage réel et apaisant.",
+      title: "🪶 Un voyage",
+      subtitle: "Découverte des paysages, des sons, des sensations.",
     },
     {
-      title: "Rencontre inspirante et humaine",
+      title: "🤝 Une rencontre",
       subtitle:
-        "Le protagoniste croise une personne bienveillante qui partage une histoire, une philosophie de vie, une sagesse.",
+        "Une histoire centrée sur une relation ou un échange bienveillant.",
     },
     {
-      title: "Retour à un lieu du passé",
+      title: "🏡 Un lieu à explorer",
       subtitle:
-        "Le protagoniste revient dans un endroit chargé de souvenirs, redécouvre des émotions positives, se réconcilie avec lui-même.",
+        "Une histoire qui se déroule dans un endroit particulier : un village, une île, une maison, un paysage.",
     },
     {
-      title: "Quête de sens intérieur",
+      title: "☀️ Un moment de vie",
       subtitle:
-        "Une histoire de reconnexion à soi, d’acceptation, de paix intérieure, à travers un voyage concret (retraite, bord de mer, montagne).",
+        "Une histoire qui se déroule sur une journée calme : matin, après-midi, ou soirée.",
     },
   ];
 
@@ -47,7 +48,11 @@ export default function Step1() {
     <View style={styles.main}>
       {choices.map((choice, index) => (
         // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
+        <Pressable
+          key={index}
+          onPress={() => handleChoice(choice.title)}
+          style={styles.pressable}
+        >
           {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
           <ChoiceCard
             title={choice.title}

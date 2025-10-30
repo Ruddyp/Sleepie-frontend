@@ -13,25 +13,29 @@ export default function Step3() {
   const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
+  const [selectedCardTitle, setSelectedCardTitle] = useState(
+    intialValue || null
+  );
 
   // Définir les données des cartes
   const choices = [
     {
-      title: "Balade forêstière",
-      icon: <Ionicons name="leaf" size={Spacing.xxl} color={Colors.textBody} />,
+      title: "🌊 Près de la mer",
+      subtitle: "L’air salé, le souffle du vent, les vagues régulières.",
     },
     {
-      title: "Crique aux reflets azur",
-      icon: <Ionicons name="boat" size={Spacing.xxl} color={Colors.textBody} />,
+      title: "🌲 Dans la nature",
+      subtitle:
+        "Forêts, montagnes, sentiers, lacs, plaines — des paysages vastes et vivants.",
     },
     {
-      title: "Village de pêcheur",
-      icon: <Ionicons name="fish" size={Spacing.xxl} color={Colors.textBody} />,
+      title: "🏡 À la campagne ou dans un village",
+      subtitle:
+        "La douceur d’un environnement calme, loin de l’agitation urbaine.",
     },
     {
-      title: "Cîmes verdoyantes",
-      icon: <Ionicons name="flower" size={Spacing.xxl} color={Colors.textBody} />,
+      title: "✨ Dans un lieu imaginaire ",
+      subtitle: "Un endroit inventé, magique, hors du temps.",
     },
   ];
 
@@ -44,7 +48,11 @@ export default function Step3() {
     <View style={styles.main}>
       {choices.map((choice, index) => (
         // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
+        <Pressable
+          key={index}
+          onPress={() => handleChoice(choice.title)}
+          style={styles.pressable}
+        >
           {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
           <ChoiceCard
             title={choice.title}

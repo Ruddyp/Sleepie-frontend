@@ -13,21 +13,27 @@ export default function Step2() {
   const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
+  const [selectedCardTitle, setSelectedCardTitle] = useState(
+    intialValue || null
+  );
 
   // Définir les données des cartes
   const choices = [
     {
-      title: "Un homme",
-      icon: <Ionicons name="male" size={Spacing.xxl} color={"cornflowerblue"} />,
+      title: "🚶‍♂️ Un.e voyageur.euse",
+      subtitle: "Explore le monde et ses merveilles.",
     },
     {
-      title: "Une femme",
-      icon: <Ionicons name="female" size={Spacing.xxl} color={"pink"} />,
+      title: "🪴 Un.e habitant.e",
+      subtitle: "Découvre la vie quotidienne d’un lieu.",
     },
     {
-      title: "Narrateur neutre",
-      icon: <Ionicons name="person" size={Spacing.xxl} color={"darkgray"} />,
+      title: "💬 Un.e confident.e",
+      subtitle: "Il partage un instant, une parole, un moment de vie.",
+    },
+    {
+      title: "✨ Un.e rêveur.euse",
+      subtitle: "Il voit la vie autrement, avec imagination et douceur.",
     },
   ];
 
@@ -40,7 +46,11 @@ export default function Step2() {
     <View style={styles.main}>
       {choices.map((choice, index) => (
         // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
+        <Pressable
+          key={index}
+          onPress={() => handleChoice(choice.title)}
+          style={styles.pressable}
+        >
           {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
           <ChoiceCard
             title={choice.title}
