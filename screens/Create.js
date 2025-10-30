@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { BorderRadius, Colors, Spacing, Typography } from "../components/KitUI/tokens";
+import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/KitUI/Button";
 import { updateCurrentStep, updateIsFinished } from "../reducers/createForm";
@@ -13,9 +13,9 @@ import Step4 from "../components/CreateForm/Step4";
 import Step5 from "../components/CreateForm/Step5";
 import Step6 from "../components/CreateForm/Step6";
 import WaitingStory from "../components/CreateForm/WaitingStory";
-import { Player } from "../components/KitUI/Player";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
+import { updateModalState } from "../reducers/track";
 
 const steps = [
   {
@@ -54,9 +54,7 @@ export default function Create({ navigation }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const track = useSelector((state) => state.track.value);
-  const [isOpen, setIsOpen] = useState(false);
   console.log("Form", form);
-  console.log("isOpen", isOpen);
   const { currentStep, isGenerating, isFinished } = form;
   const isInitialStep = currentStep === 0;
   const isPartiallyFilled = form.steps.length > 0;
@@ -64,13 +62,11 @@ export default function Create({ navigation }) {
 
   useEffect(() => {
     if (isFinished) {
-      setIsOpen(true);
+      dispatch(updateModalState(true));
     }
   }, [isFinished]);
 
   function handleClose() {
-    // naviguer vers home
-    setIsOpen(false);
     dispatch(updateCurrentStep(0));
     dispatch(updateIsFinished());
     navigation.navigate("home");
@@ -103,8 +99,8 @@ export default function Create({ navigation }) {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={isOpen}
-        onRequestClose={() => setIsOpen(!isOpen)}
+        visible={track.modalState}
+        onRequestClose={() => handleClose()}
       >
         <LinearGradient
           colors={Colors.bgPrimary}
@@ -130,7 +126,7 @@ export default function Create({ navigation }) {
                 onPress={() => handleClose()}
               />
             </View>
-            <View style={styles.topModalContainer}>
+            <View style={styles.bottomModalContainer}>
               <TouchableOpacity onPress={() => handleClose()}>
                 <Ionicons
                   name="close-circle-outline"
@@ -150,7 +146,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
   },
-  topModalContainer: {
+  bottomModalContainer: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",

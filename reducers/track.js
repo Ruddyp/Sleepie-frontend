@@ -2,15 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   value: {
-    _id: null,
-    url: null,
-    author: null,
-    created_at: null,
-    like: null,
-    listen_counter: null,
-    label: null,
-    title: null,
-    configuration: null,
+    track: {
+      _id: null,
+      url: null,
+      author: null,
+      created_at: null,
+      like: null,
+      listen_counter: null,
+      label: null,
+      title: null,
+      configuration: null,
+      image: null,
+    },
+    modalState: null,
   },
 };
 
@@ -20,10 +24,13 @@ export const trackSlice = createSlice({
   initialState,
   reducers: {
     updateTrack: (state, action) => {
-      state.value = action.payload;
+      state.value.track = action.payload;
+    },
+    updateModalState: (state, action) => {
+      state.value.modalState = action.payload;
     },
   },
 });
 
-export const { updateTrack } = trackSlice.actions;
+export const { updateTrack, updateModalState } = trackSlice.actions;
 export default trackSlice.reducer;
