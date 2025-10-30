@@ -15,7 +15,7 @@ import { Ionicons } from "@expo/vector-icons";
 const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
 
 export function Player({ track }) {
-  const { id, url, title, description, date, artwork, artist } = track;
+  const { _id, title, artwork, artist } = track;
   const { position, buffered, duration } = useProgress();
   const [playerState, setPlayerState] = useState(null);
   const activeTrack = useActiveTrack();
@@ -32,12 +32,13 @@ export function Player({ track }) {
   const isPlaying = playerState === State.Playing;
 
   async function handlePlay() {
-    const shouldChangeTrack = !activeTrack || activeTrack.id !== id || playerState === State.Ended;
+    const shouldChangeTrack = !activeTrack || activeTrack.id !== _id || playerState === State.Ended;
     if (shouldChangeTrack) {
       console.log("Action: Changement de piste / Ajout initial");
       // Réinitialise le lecteur et ajoute la nouvelle piste
       await TrackPlayer.reset();
-      await TrackPlayer.add([track]);
+      // On décompose track et on ajoute un id: _id car le track player attend une cled id et non _id
+      await TrackPlayer.add([{ ...track, id: _id }]);
       await TrackPlayer.play();
     } else {
       // 2. Contrôle Lecture/Pause de la piste courante
@@ -73,13 +74,15 @@ export function Player({ track }) {
           <Image
             style={styles.artwork}
             source={{
-              uri: artwork,
+              uri:
+                artwork ||
+                "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
             }}
           />
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{artist}</Text>
+          <Text style={styles.subtitle}>{artist || "Paul Fernier"}</Text>
         </View>
       </View>
 

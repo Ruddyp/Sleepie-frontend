@@ -12,7 +12,7 @@ const track1 = {
   genre: "Variété française",
   date: "2014-05-20T07:00:00+00:00", // RFC 3339
   artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
-  id: "francis",
+  _id: "francis",
   duration: 60,
 };
 
@@ -24,7 +24,7 @@ const track2 = {
   genre: "Pop",
   date: "2014-05-20T07:00:00+00:00", // RFC 3339
   artwork: "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208184/samples/man-portrait.jpg", // Load artwork from the network
-  id: "MJ",
+  _id: "MJ",
 };
 
 export default function Discover() {

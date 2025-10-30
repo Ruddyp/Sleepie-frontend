@@ -10,12 +10,10 @@ export default function Step2() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
+  const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(
-    steps[currentStep - 1] !== undefined ? steps[currentStep - 1].response : null
-  );
-  console.log({ selectedCardTitle });
+  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
 
   // Définir les données des cartes
   const choices = [
