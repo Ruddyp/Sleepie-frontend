@@ -1,11 +1,13 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/PlayerModal";
 import { useSelector } from "react-redux";
 import MiniPlayer from "../components/KitUI/MiniPlayer";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -17,16 +19,25 @@ export default function Discover() {
   console.log({ trackData });
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  useEffect(() => {
-    fetch(`http://${IP}:${port}/stories/sleepiestories`)
-      .then((response) => response.json())
-      .then((data) => {
-        setStoriesSleepie(data.stories);
-      })
-      .catch((error) => {
-        console.log("error from fetch", error);
-      });
-  }, []);
+
+
+  useFocusEffect(
+    useCallback(() => {
+      fetch(`http://${IP}:${port}/stories/sleepiestories`)
+        .then((response) => response.json())
+        .then((data) => {
+          setStoriesSleepie(data.stories);
+        })
+        .catch((error) => {
+          console.log("error from fetch", error);
+        });
+
+      return () => {
+        console.log("Écran quitté !");
+      };
+    }, [])
+  );
+
 
   // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {
