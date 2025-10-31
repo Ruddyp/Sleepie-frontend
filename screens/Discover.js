@@ -1,11 +1,13 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
-import { useState, useEffect } from "react";
+import { useState, useCallback } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/PlayerModal";
 import { useSelector } from "react-redux";
 import MiniPlayer from "../components/KitUI/MiniPlayer";
+import { useFocusEffect } from '@react-navigation/native';
+
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -13,19 +15,40 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
-  console.log({ trackData });
-  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
+  const modal = useSelector((state) => state.modal.value);
+  const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
+  const user = useSelector((state) => state.user.value)
 
-  useEffect(() => {
-    fetch(`http://${IP}:${port}/stories/sleepiestories`)
-      .then((response) => response.json())
-      .then((data) => {
-        setStoriesSleepie(data.stories);
-      })
-      .catch((error) => {
-        console.log("error from fetch", error);
-      });
-  }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      // Do something when the screen is focused
+      fetch(`http://${IP}:${port}/stories/sleepiestories`)
+        .then((response) => response.json())
+        .then((data) => {
+          setStoriesSleepie(data.stories);
+        })
+    }, [])
+  );
+
+
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetch(`http://${IP}:${port}/stories/sleepiestories`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setStoriesSleepie(data.stories);
+  //       })
+  //       .catch((error) => {
+  //         console.log("error from fetch", error);
+  //       });
+
+  //     return () => {
+  //       console.log("Écran quitté !");
+  //     };
+  //   }, []));
+
 
   // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {
@@ -37,9 +60,12 @@ export default function Discover() {
   }
 
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
-    const stories = storiesSleepie.filter((story) =>
-      story.label.some((label) => label.name === labelName)
-    );
+    const stories = storiesSleepie
+      .filter((story) => story.label.some((label) => label.name === labelName))
+      .map((story) => ({
+        ...story,
+        hasLiked: story.like.some((e) => e.token === user.token),
+      }));
     return <CategoryCarousel key={i} title={labelName} data={stories} />;
   });
 

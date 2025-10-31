@@ -14,7 +14,6 @@ const initialState = {
       configuration: null,
       image: null,
     },
-    modalState: null,
   },
 };
 
@@ -26,11 +25,8 @@ export const trackSlice = createSlice({
     updateTrack: (state, action) => {
       state.value.track = action.payload;
     },
-    updateModalState: (state, action) => {
-      state.value.modalState = action.payload;
-    },
   },
 });
 
-export const { updateTrack, updateModalState } = trackSlice.actions;
+export const { updateTrack } = trackSlice.actions;
 export default trackSlice.reducer;
