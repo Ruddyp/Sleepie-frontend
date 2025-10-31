@@ -15,7 +15,7 @@ import Step6 from "../components/CreateForm/Step6";
 import WaitingStory from "../components/CreateForm/WaitingStory";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { updateModalState } from "../reducers/track";
+import { updateModalState } from "../reducers/modal";
 
 const steps = [
   {
@@ -53,14 +53,12 @@ const steps = [
 export default function Create({ navigation }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
-  const track = useSelector((state) => state.track.value);
-  console.log("Form", form);
+  const modal = useSelector((state) => state.modal.value);
   const { currentStep, isGenerating, isFinished } = form;
   const isInitialStep = currentStep === 0;
   const isPartiallyFilled = form.steps.length > 0;
   const windowHeight = Dimensions.get("window").height;
-  const displayModal = track.modalState && isFinished;
-  console.log("finished", isFinished);
+  const displayModal = modal.modalState && isFinished;
 
   useEffect(() => {
     if (isFinished) {

@@ -2,7 +2,7 @@ import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-naviga
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import TrackPlayer, { Capability } from "react-native-track-player";
+import TrackPlayer, { Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
 import { useEffect } from "react";
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
@@ -18,10 +18,11 @@ import { configureStore } from "@reduxjs/toolkit";
 import user from "./reducers/users";
 import createForm from "./reducers/createForm";
 import track from "./reducers/track";
+import modal from "./reducers/modal";
 import { NightTabBar } from "./components/KitUI/NightTabBar";
 
 const store = configureStore({
-  reducer: { user, createForm, track },
+  reducer: { user, createForm, track, modal },
 });
 
 const Stack = createNativeStackNavigator();
@@ -52,43 +53,22 @@ const TabNavigator = () => {
   );
 };
 
-// const setupTrackPlayer = async () => {
-//   try {
-//     await TrackPlayer.setupPlayer();
-//     await TrackPlayer.updateOptions({
-//       capabilities: [
-//         TrackPlayer.Capability.Play,
-//         TrackPlayer.Capability.Pause,
-//         TrackPlayer.Capability.SeekTo,
-//       ],
-//       compactCapabilities: [
-//         TrackPlayer.Capability.Play,
-//         TrackPlayer.Capability.Pause,
-//         TrackPlayer.Capability.SeekTo,
-//       ],
-//       notificationCapabilities: [
-//         TrackPlayer.Capability.Play,
-//         TrackPlayer.Capability.Pause,
-//         TrackPlayer.Capability.SeekTo,
-//       ],
-//       android: {
-//         appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
-//       },
-//     });
-//     console.log("setup track player ok.");
-//   } catch (error) {
-//     console.log("Error happened while setting up track player => ", error);
-//   }
-// };
-
 export default function App() {
   useEffect(() => {
     (async function () {
       try {
         await TrackPlayer.setupPlayer();
         await TrackPlayer.updateOptions({
-          capabilities: [Capability.Play, Capability.Pause],
-          compactCapabilities: [Capability.Play, Capability.Pause],
+          capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+          // compactCapabilities: [
+          //   Capability.Play,
+          //   Capability.Pause,
+          //   Capability.SeekTo,
+          // ],
+          notificationCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+          android: {
+            appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+          },
         });
         console.log("setup track player ok.");
       } catch (error) {

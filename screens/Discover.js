@@ -13,8 +13,8 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
-  console.log({ trackData });
-  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
+  const modal = useSelector((state) => state.modal.value);
+  const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
 
   useEffect(() => {
     fetch(`http://${IP}:${port}/stories/sleepiestories`)

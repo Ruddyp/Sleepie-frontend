@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { updateModalState } from "../reducers/track";
+import { updateModalState } from "../reducers/modal";
 import { Player } from "./KitUI/Player";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -10,6 +10,7 @@ const windowHeight = Dimensions.get("window").height;
 export default function PlayerModal() {
   const dispatch = useDispatch();
   const trackData = useSelector((state) => state.track.value);
+  const modal = useSelector((state) => state.modal.value);
   function handleClose() {
     dispatch(updateModalState(false));
   }
@@ -17,7 +18,7 @@ export default function PlayerModal() {
     <Modal
       animationType="slide"
       transparent={true}
-      visible={trackData.modalState}
+      visible={modal.modalState}
       onRequestClose={() => dispatch(updateModalState(false))}
     >
       <LinearGradient
