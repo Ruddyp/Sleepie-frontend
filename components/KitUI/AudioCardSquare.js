@@ -1,12 +1,10 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
+import { useDispatch } from "react-redux";
+import { updateModalState, updateTrack } from "../../reducers/track";
 
-export default function AudioCardSquare({
-  title,
-  image,
-  author,
-  size = 220,
-}) {
+export default function AudioCardSquare({ title, image, author, _id, url, size = 220 }) {
+  const dispatch = useDispatch();
   return (
     <TouchableOpacity
       style={[styles.card, { width: size }]}
@@ -27,6 +25,10 @@ export default function AudioCardSquare({
           activeOpacity={0.9}
           style={[styles.fabSmall, styles.playFab, Shadows.soft]}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+          onPress={() => {
+            dispatch(updateTrack({ _id, image, title, author, url }));
+            dispatch(updateModalState(true));
+          }}
         >
           <Text style={styles.playIcon}>▶</Text>
         </TouchableOpacity>
@@ -37,9 +39,7 @@ export default function AudioCardSquare({
           style={[styles.fabSmall, styles.likeFab, Shadows.soft]}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Text style={[styles.likeIcon, true && styles.likeIconActive]}>
-            {true ? "♥" : "♡"}
-          </Text>
+          <Text style={[styles.likeIcon, true && styles.likeIconActive]}>{true ? "♥" : "♡"}</Text>
         </TouchableOpacity>
       </View>
 

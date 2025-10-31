@@ -5,14 +5,17 @@ import { Colors } from "../components/KitUI/tokens";
 import { useState, useEffect, use } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/PlayerModal";
+import { useSelector } from "react-redux";
+import MiniPlayer from "../components/KitUI/MiniPlayer";
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
   const sleepyUserId = process.env.EXPO_PUBLIC_SLEEPIEID;
-
-  const [storiesSleepie, setStoriesSleepie] = useState([]);
   const [labelArray, setLabelArray] = useState([]);
+  const [storiesSleepie, setStoriesSleepie] = useState([]);
+  const trackData = useSelector((state) => state.track.value);
+  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
   useEffect(() => {
     const body = { author: sleepyUserId };
@@ -32,7 +35,7 @@ export default function Discover() {
       });
   }, []);
 
-  console.log("storiesSleepie", storiesSleepie);
+  // console.log("storiesSleepie", storiesSleepie);
 
   for (const story of storiesSleepie) {
     for (const label of story.label) {
@@ -41,7 +44,7 @@ export default function Discover() {
       }
     }
   }
-  console.log("labelArray", labelArray);
+  // console.log("labelArray", labelArray);
 
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
     return (
@@ -63,6 +66,7 @@ export default function Discover() {
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <View style={styles.carrousel}>{categoryCarrouselToDisplay}</View>
+      {displayMiniPlayer && <MiniPlayer track={trackData.track} />}
       <PlayerModal />
     </LinearGradient>
   );

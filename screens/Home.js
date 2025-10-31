@@ -6,7 +6,8 @@ import { useNavigation } from "@react-navigation/native";
 import CreateStoryCard from "../components/KitUI/CreateStoryCard";
 import { Colors } from "../components/KitUI/tokens";
 import PlayerModal from "../components/PlayerModal";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
+import MiniPlayer from "../components/KitUI/MiniPlayer";
 
 const DATA_BEST = [
   {
@@ -43,7 +44,11 @@ export default function Home() {
   // const dispatch = useDispatch();
   // const form = useSelector((state) => state.createForm.value);
   const trackData = useSelector((state) => state.track.value);
-  console.log({ trackData });
+  // console.log("url", trackData.track.url);
+  // console.log("modalState", trackData.modalState);
+  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
+  console.log("displayMiniPlayer", displayMiniPlayer);
+  // console.log("trackData", trackData);
   const [favorites, setFavorites] = useState({});
   const navigation = useNavigation();
 
@@ -95,6 +100,7 @@ export default function Home() {
           // cardWidth={220} // option : force une largeur fixe
         />
       </ScrollView>
+      {displayMiniPlayer && <MiniPlayer track={trackData.track} />}
       <PlayerModal />
     </LinearGradient>
   );

@@ -26,7 +26,7 @@ export default function CategoryCarousel({
   // const keyExtractor = (it, idx) => (it.id ? String(it.id) : String(idx));
 
   const renderItem = ({ item }) => {
-    console.log(item, "item in renderItem")
+    // console.log(item, "item in renderItem")
     return (
       <View style={{ width: cardSize }}>
         <AudioCardSquare
@@ -41,9 +41,8 @@ export default function CategoryCarousel({
           size={cardSize}
         />
       </View>
-    )
+    );
   };
-
 
   return (
     <View

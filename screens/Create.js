@@ -59,6 +59,7 @@ export default function Create({ navigation }) {
   const isInitialStep = currentStep === 0;
   const isPartiallyFilled = form.steps.length > 0;
   const windowHeight = Dimensions.get("window").height;
+  const displayModal = track.modalState && isFinished;
   console.log("finished", isFinished);
 
   useEffect(() => {
@@ -101,7 +102,7 @@ export default function Create({ navigation }) {
       <Modal
         animationType="slide"
         transparent={true}
-        visible={track.modalState}
+        visible={displayModal}
         onRequestClose={() => handleClose()}
       >
         <LinearGradient

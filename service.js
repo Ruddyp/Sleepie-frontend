@@ -4,5 +4,7 @@ module.exports = async function () {
   TrackPlayer.addEventListener(Event.RemotePlay, () => TrackPlayer.play());
   TrackPlayer.addEventListener(Event.RemotePause, () => TrackPlayer.pause());
   TrackPlayer.addEventListener(Event.RemoteStop, () => TrackPlayer.destroy());
-  TrackPlayer.addEventListener(Event.RemoteSeek, () => TrackPlayer.seekTo());
+  TrackPlayer.addEventListener(Event.RemoteSeek, async (event) => {
+    TrackPlayer.seekTo(event.position);
+  });
 };

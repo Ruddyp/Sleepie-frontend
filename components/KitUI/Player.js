@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
 import TrackPlayer, {
@@ -7,27 +6,33 @@ import TrackPlayer, {
   useProgress,
   Event,
   State,
+  usePlaybackState,
 } from "react-native-track-player";
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 
-const events = [Event.PlaybackState, Event.PlaybackError, Event.PlaybackActiveTrackChanged];
+const events = [
+  Event.RemotePlay,
+  Event.RemotePause,
+  Event.RemotePlayPause,
+  Event.PlaybackState,
+  Event.PlaybackError,
+  Event.PlaybackActiveTrackChanged,
+];
 const windowWidth = Dimensions.get("window").width;
 
 export function Player({ track }) {
   const { _id, title, image, author } = track;
   const { position, buffered, duration } = useProgress();
-  const [playerState, setPlayerState] = useState(null);
   const activeTrack = useActiveTrack();
+  const playbackState = usePlaybackState();
+  const playerState = playbackState.state;
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
       console.warn("An error occured while playing the current track.");
-    }
-    if (event.type === Event.PlaybackState) {
-      setPlayerState(event.state);
     }
   });
 
@@ -39,8 +44,10 @@ export function Player({ track }) {
       console.log("Action: Changement de piste / Ajout initial");
       // Réinitialise le lecteur et ajoute la nouvelle piste
       await TrackPlayer.reset();
-      // On décompose track et on ajoute un id: _id car le track player attend une cled id et non _id
-      await TrackPlayer.add([{ ...track, id: _id }]);
+      // On décompose track et on ajoute un id: _id car le track player attend une clef id et non _id
+      // Trackplayer attend une clef artwork et non image donc on lui donne
+      // Trackplayer attend une clef artist et non author donc on lui donne
+      await TrackPlayer.add([{ ...track, id: _id, artwork: image, artist: author }]);
       await TrackPlayer.play();
     } else {
       // 2. Contrôle Lecture/Pause de la piste courante
