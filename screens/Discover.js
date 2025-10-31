@@ -4,8 +4,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../components/KitUI/tokens";
 import { useState, useEffect, use } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
-
-
+import PlayerModal from "../components/PlayerModal";
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -16,13 +15,14 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
 
   useEffect(() => {
-    const body = { author: sleepyUserId }
+    const body = { author: sleepyUserId };
 
     fetch(`http://${IP}:${port}/stories/getbyauthor`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
-    }).then((response) => response.json())
+    })
+      .then((response) => response.json())
       .then((data) => {
         // console.log("data from fetch", data);
         setStoriesSleepie(data.stories);
@@ -44,14 +44,16 @@ export default function Discover() {
   console.log("labelArray", labelArray);
 
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
-    return <CategoryCarousel
-      key={i}
-      title={labelName}
-      data={storiesSleepie.filter(story => story.label.some(label => label.name === labelName))
-      }
-    />
+    return (
+      <CategoryCarousel
+        key={i}
+        title={labelName}
+        data={storiesSleepie.filter((story) =>
+          story.label.some((label) => label.name === labelName)
+        )}
+      />
+    );
   });
-
 
   return (
     <LinearGradient
@@ -60,9 +62,8 @@ export default function Discover() {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
-      <View style={styles.carrousel}>
-        {categoryCarrouselToDisplay}
-      </View>
+      <View style={styles.carrousel}>{categoryCarrouselToDisplay}</View>
+      <PlayerModal />
     </LinearGradient>
   );
 }
