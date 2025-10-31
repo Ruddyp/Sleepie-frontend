@@ -27,9 +27,17 @@ export const createFormSlice = createSlice({
     updateIsFinished: (state) => {
       state.value.isFinished = !state.value.isFinished;
     },
+    resetCreateForm: (state) => {
+      state.value = initialState.value;
+    },
   },
 });
 
-export const { updateCurrentStep, updateStep, updateIsGenerating, updateIsFinished } =
-  createFormSlice.actions;
+export const {
+  updateCurrentStep,
+  updateStep,
+  updateIsGenerating,
+  updateIsFinished,
+  resetCreateForm,
+} = createFormSlice.actions;
 export default createFormSlice.reducer;

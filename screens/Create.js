@@ -3,7 +3,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/KitUI/Button";
-import { updateCurrentStep, updateIsFinished } from "../reducers/createForm";
+import { resetCreateForm, updateCurrentStep } from "../reducers/createForm";
 import CreateFormStep from "../components/CreateForm/CreateFormStep";
 import { formStyles } from "../components/CreateForm/CreateFormStyle";
 import Step1 from "../components/CreateForm/Step1";
@@ -59,16 +59,18 @@ export default function Create({ navigation }) {
   const isInitialStep = currentStep === 0;
   const isPartiallyFilled = form.steps.length > 0;
   const windowHeight = Dimensions.get("window").height;
+  console.log("finished", isFinished);
 
   useEffect(() => {
     if (isFinished) {
+      // On vient set a true pour quand on va naviguer sur la home afficher direct la modal en pleine ecran avec le player
       dispatch(updateModalState(true));
     }
   }, [isFinished]);
 
   function handleClose() {
-    dispatch(updateCurrentStep(0));
-    dispatch(updateIsFinished());
+    // On reset les params de create form
+    dispatch(resetCreateForm());
     navigation.navigate("home");
   }
   return (

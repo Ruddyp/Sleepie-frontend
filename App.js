@@ -60,6 +60,7 @@ const setupTrackPlayer = async () => {
     await TrackPlayer.updateOptions({
       capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
       compactCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+      notificationCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
     });
     console.log("setup track player ok.");
   } catch (error) {
