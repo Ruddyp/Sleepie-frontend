@@ -2,54 +2,56 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 import { useDispatch } from "react-redux";
 import { updateModalState, updateTrack } from "../../reducers/track";
+import { Ionicons } from "@expo/vector-icons";
+import { LinearGradient } from "expo-linear-gradient";
 
-export default function AudioCardSquare({ title, image, author, _id, url, size = 220 }) {
+export default function AudioCardSquare({ title, image, author, _id, url, size }) {
   const dispatch = useDispatch();
   return (
-    <TouchableOpacity
-      style={[styles.card, { width: size }]}
-      activeOpacity={0.9}
-      accessibilityRole="button"
-      accessibilityLabel={`Lire ${title}`}
-    >
-      {/* IMAGE CARRÉE + boutons superposés */}
-      <View style={[styles.imageWrap, { width: size, height: size }]}>
+    <TouchableOpacity style={[styles.card, { width: size }]} activeOpacity={0.8}>
+      {/* IMAGE */}
+      <View style={[styles.imageContainer, { width: size, height: size }]}>
         {image ? (
           <Image source={{ uri: image }} style={styles.image} />
         ) : (
           <View style={styles.imagePlaceholder} />
         )}
 
-        {/* Bouton Play (petit, bas-gauche) */}
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={[styles.fabSmall, styles.playFab, Shadows.soft]}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
-          onPress={() => {
-            dispatch(updateTrack({ _id, image, title, author, url }));
-            dispatch(updateModalState(true));
-          }}
+        {/* Bouton Play */}
+        <LinearGradient
+          colors={[Colors.accentPrimary[0], Colors.accentPrimary[1]]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.iconContainer, styles.playLeftSpace, Shadows.soft]}
         >
-          <Text style={styles.playIcon}>▶</Text>
-        </TouchableOpacity>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => {
+              dispatch(updateTrack({ _id, image, title, author, url }));
+            }}
+          >
+            <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
+          </TouchableOpacity>
+        </LinearGradient>
 
-        {/* Bouton Favori (bas-droite) — NE LANCE PAS onPlay */}
-        <TouchableOpacity
-          activeOpacity={0.9}
-          style={[styles.fabSmall, styles.likeFab, Shadows.soft]}
-          hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+        {/* Bouton Favori */}
+        <LinearGradient
+          colors={[Colors.bgTertiary[0], Colors.bgTertiary[1]]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.iconContainer, styles.likeRightSpace, Shadows.soft]}
         >
-          <Text style={[styles.likeIcon, true && styles.likeIconActive]}>{true ? "♥" : "♡"}</Text>
-        </TouchableOpacity>
+          <TouchableOpacity activeOpacity={0.8}>
+            <Ionicons name="heart" size={Spacing.xxl} color={Colors.error} />
+            {/* <Ionicons name="heart-outline" size={Spacing.xxl} color={Colors.textTitle} /> */}
+          </TouchableOpacity>
+        </LinearGradient>
       </View>
 
       {/* Texte sous l'image (fond transparent) */}
       <View style={styles.info}>
         <Text style={styles.title} numberOfLines={1}>
           {title}
-        </Text>
-        <Text style={styles.meta} numberOfLines={1}>
-          ⏱ {author}
         </Text>
       </View>
     </TouchableOpacity>
@@ -58,13 +60,12 @@ export default function AudioCardSquare({ title, image, author, _id, url, size =
 
 const styles = StyleSheet.create({
   card: {
-    // pas de background ici: zone cliquable transparente autour si souhaité
+    width: "100%",
   },
-  imageWrap: {
+  imageContainer: {
     position: "relative",
     borderRadius: BorderRadius.large,
     overflow: "hidden",
-    backgroundColor: Colors.bgSecondarySolid,
   },
   image: {
     width: "100%",
@@ -76,49 +77,27 @@ const styles = StyleSheet.create({
   },
 
   // FABs superposés
-  fabSmall: {
+  iconContainer: {
     position: "absolute",
     bottom: Spacing.md,
-    width: 36,
-    height: 36,
+    width: 46,
+    height: 46,
     borderRadius: BorderRadius.round,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: Colors.bgSecondarySolid, // mets Colors.transparent si tu veux zéro fond
   },
-  playFab: {
+  playLeftSpace: {
     left: Spacing.md,
-    backgroundColor: Colors.bgSleepieBlue2,
   },
-  likeFab: {
+  likeRightSpace: {
     right: Spacing.md,
   },
-  playIcon: {
-    color: Colors.white,
-    fontSize: 16,
-    marginLeft: 1,
-  },
-  likeIcon: {
-    color: Colors.white,
-    fontSize: 18,
-  },
-  likeIconActive: {
-    color: Colors.success,
-  },
-
-  // Texte sous l'image
   info: {
-    marginTop: Spacing.sm,
+    marginTop: Spacing.xs,
+    paddingHorizontal: Spacing.md,
   },
   title: {
-    color: Colors.textTitle,
-    fontSize: Typography.body.fontSize,
-    fontFamily: Typography.fontHeading,
-    fontWeight: "700",
-    marginBottom: 2,
-  },
-  meta: {
-    color: Colors.textSecondary,
-    fontSize: Typography.caption.fontSize,
+    color: Colors.textBody,
+    ...Typography.body,
   },
 });

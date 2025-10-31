@@ -1,8 +1,7 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { Player } from "../components/KitUI/Player";
+import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../components/KitUI/tokens";
-import { useState, useEffect, use } from "react";
+import { Colors, Spacing } from "../components/KitUI/tokens";
+import { useState, useEffect } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/PlayerModal";
 import { useSelector } from "react-redux";
@@ -11,18 +10,16 @@ import MiniPlayer from "../components/KitUI/MiniPlayer";
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
-  const sleepyUserId = process.env.EXPO_PUBLIC_SLEEPIEID;
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
+  console.log({ trackData });
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
   useEffect(() => {
-
     fetch(`http://${IP}:${port}/stories/sleepiestories`)
       .then((response) => response.json())
       .then((data) => {
-        // console.log("data from fetch", data);
         setStoriesSleepie(data.stories);
       })
       .catch((error) => {
@@ -30,8 +27,7 @@ export default function Discover() {
       });
   }, []);
 
-  // console.log("storiesSleepie", storiesSleepie);
-
+  // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {
     for (const label of story.label) {
       if (!labelArray.includes(label.name)) {
@@ -39,18 +35,12 @@ export default function Discover() {
       }
     }
   }
-  // console.log("labelArray", labelArray);
 
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
-    return (
-      <CategoryCarousel
-        key={i}
-        title={labelName}
-        data={storiesSleepie.filter((story) =>
-          story.label.some((label) => label.name === labelName)
-        )}
-      />
+    const stories = storiesSleepie.filter((story) =>
+      story.label.some((label) => label.name === labelName)
     );
+    return <CategoryCarousel key={i} title={labelName} data={stories} />;
   });
 
   return (
@@ -60,7 +50,9 @@ export default function Discover() {
       end={{ x: 1, y: 1 }}
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
-      <View style={styles.carrousel}>{categoryCarrouselToDisplay}</View>
+      <ScrollView>
+        <View style={styles.carrousel}>{categoryCarrouselToDisplay}</View>
+      </ScrollView>
       {displayMiniPlayer && <MiniPlayer track={trackData.track} />}
       <PlayerModal />
     </LinearGradient>
@@ -72,22 +64,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bgPrimary,
   },
-  card: {
-    width: 300,
-    height: 300,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  button: {
-    width: 100,
-    height: 75,
-    backgroundColor: "green",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   carrousel: {
     flex: 1,
     width: "100%",
     paddingTop: 50,
+    gap: Spacing.xl,
   },
 });

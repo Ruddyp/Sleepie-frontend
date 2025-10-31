@@ -1,73 +1,42 @@
-import { useMemo, useRef, useState } from "react";
-import { View, Text, Image, FlatList, StyleSheet } from "react-native";
+import { View, Text, Pressable, FlatList, StyleSheet, Dimensions } from "react-native";
 import { Colors, Spacing, Typography } from "./tokens";
-import AudioCardSquare from "./AudioCardSquare"; // <-- ton composant
+import AudioCardSquare from "./AudioCardSquare";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CategoryCarousel({
   title = "",
-  icon, // { uri: "..." } ou require(".../icon.png")
-  data = [], // [{ id, title, duration, voice, imageUrl, isFavorite }, ...]
-  gap = Spacing.lg || 12,
-  sidePadding = Spacing.xl || 24,
-  cardWidth, // optionnel: largeur fixe des cards; sinon calcul auto
+  data = [], // Ensemble des histoires a afficher dans le carroussel
 }) {
-  const listRef = useRef(null);
-  const [containerW, setContainerW] = useState(null);
+  const sidePadding = Spacing.lg;
+  const gapBetweenCard = Spacing.lg;
+  const cardSize = Dimensions.get("window").width * 0.45;
 
-  const cardSize = useMemo(() => {
-    if (cardWidth) return cardWidth;
-    if (!containerW) return 0;
-    // Par défaut: 75% de la largeur disponible
-    return Math.round(containerW * 0.45);
-  }, [containerW, cardWidth]);
+  const itemFullWidth = cardSize + gapBetweenCard;
 
-  const itemFullWidth = useMemo(() => cardSize + gap, [cardSize, gap]);
-
-  // const keyExtractor = (it, idx) => (it.id ? String(it.id) : String(idx));
-
-  const renderItem = ({ item }) => {
-    console.log(item, "item in renderItem")
-    return (
-      <View style={{ width: cardSize }}>
-        <AudioCardSquare
-          {...item}
-          // title={item.title}
-          // duration={item.duration}
-          // voice={item.voice}
-          // imageUrl={item.imageUrl}
-          // isFavorite={!!item.isFavorite}
-          // onPlay={() => onPlayItem?.(item)}
-          // onToggleFavorite={() => onToggleFavorite?.(item)}
-          size={cardSize}
-        />
-      </View>
-    );
-  };
+  const renderItem = ({ item }) => <AudioCardSquare {...item} size={cardSize} />;
 
   return (
-    <View
-      style={styles.container}
-      onLayout={(e) => setContainerW(e.nativeEvent.layout.width - sidePadding * 2)}
-    >
-      {/* HEADER : icône + titre */}
+    <View style={styles.container}>
+      {/* HEADER : titre de la catégories + voir plus*/}
       <View style={styles.header}>
-        {icon ? <Image source={icon} style={styles.icon} /> : null}
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
+        <Pressable style={styles.moreContainer}>
+          <Ionicons name="add-circle-outline" size={Spacing.xl} color={Colors.textTitle} />
+          <Text style={styles.more}>Voir plus</Text>
+        </Pressable>
       </View>
 
       {/* CARROUSEL */}
       {cardSize > 0 && (
         <FlatList
-          ref={listRef}
           data={data}
-          // keyExtractor={keyExtractor}
+          keyExtractor={(item) => item._id}
           renderItem={renderItem}
           horizontal
-          showsHorizontalScrollIndicator={false}
           contentContainerStyle={{ paddingHorizontal: sidePadding }}
-          ItemSeparatorComponent={() => <View style={{ width: gap }} />}
+          ItemSeparatorComponent={() => <View style={{ width: gapBetweenCard }} />}
           snapToAlignment="start"
           snapToInterval={itemFullWidth}
           decelerationRate="fast"
@@ -80,25 +49,27 @@ export default function CategoryCarousel({
 const styles = StyleSheet.create({
   container: {
     gap: Spacing.md,
-    backgroundColor: "transparent",
   },
   header: {
     flexDirection: "row",
     alignItems: "center",
+    justifyContent: "space-between",
     gap: Spacing.md,
-    paddingHorizontal: Spacing.xl || 24,
-  },
-  icon: {
-    width: 28,
-    height: 28,
-    borderRadius: 6,
-    resizeMode: "cover",
+    paddingHorizontal: Spacing.xl,
   },
   title: {
     color: Colors.textTitle,
-    fontSize: Typography.h3?.fontSize || 20,
-    lineHeight: Typography.h3?.lineHeight || 26,
+    ...Typography.h3,
+    fontWeight: Typography.h2.fontWeight,
     fontFamily: Typography.fontHeading,
-    fontWeight: "800",
+  },
+  moreContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.xs,
+  },
+  more: {
+    color: Colors.textBody,
+    ...Typography.caption,
   },
 });
