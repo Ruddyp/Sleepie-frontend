@@ -50,7 +50,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
           <TouchableOpacity
             activeOpacity={0.8}
             onPress={() => {
-              dispatch(updateTrack({ _id, image, title, author, url }));
+              dispatch(updateTrack({ _id, image, title, author: author.username, url }));
             }}
           >
             <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />

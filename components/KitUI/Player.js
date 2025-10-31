@@ -48,7 +48,7 @@ export function Player({ track }) {
       // Trackplayer attend une clef artwork et non image donc on lui donne
       // Trackplayer attend une clef artist et non author donc on lui donne
       await TrackPlayer.add([
-        { id: _id, artwork: image, artist: author, url: url, description: title },
+        { id: _id, artwork: image, artist: author.username, url: url, description: title },
       ]);
       await TrackPlayer.play();
     } else {
@@ -95,7 +95,7 @@ export function Player({ track }) {
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{author || "Paul Fernier"}</Text>
+          <Text style={styles.subtitle}>{author.username || "Auteur Inconnu"}</Text>
         </View>
       </View>
 

@@ -50,7 +50,7 @@ export default function MiniPlayer({ track }) {
           {
             id: _id,
             artwork: image,
-            artist: author,
+            artist: author.username,
             url: url,
             title: title,
           },
@@ -75,7 +75,7 @@ export default function MiniPlayer({ track }) {
       // On décompose track et on ajoute un id: _id car le track player attend une cled id et non _id
       // Trackplayer attend une clef artwork et non image donc on lui donne
       // Trackplayer attend une clef artist et non author donc on lui donne
-      await TrackPlayer.add([{ id: _id, artwork: image, artist: author, url: url, title: title }]);
+      await TrackPlayer.add([{ id: _id, artwork: image, artist: author.username, url: url, title: title }]);
       await TrackPlayer.play();
     } else {
       // 2. Contrôle Lecture/Pause de la piste courante
@@ -122,7 +122,7 @@ export default function MiniPlayer({ track }) {
           </View>
           <View>
             <Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{author}</Text>
+            <Text style={styles.subtitle}>{author.username}</Text>
           </View>
         </Pressable>
         <View>

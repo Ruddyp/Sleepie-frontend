@@ -17,25 +17,37 @@ export default function Discover() {
   const trackData = useSelector((state) => state.track.value);
   const modal = useSelector((state) => state.modal.value);
   const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
-
+  const user = useSelector((state) => state.user.value)
 
 
   useFocusEffect(
     useCallback(() => {
+      // Do something when the screen is focused
       fetch(`http://${IP}:${port}/stories/sleepiestories`)
         .then((response) => response.json())
         .then((data) => {
           setStoriesSleepie(data.stories);
         })
-        .catch((error) => {
-          console.log("error from fetch", error);
-        });
-
-      return () => {
-        console.log("Écran quitté !");
-      };
     }, [])
   );
+
+
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     fetch(`http://${IP}:${port}/stories/sleepiestories`)
+  //       .then((response) => response.json())
+  //       .then((data) => {
+  //         setStoriesSleepie(data.stories);
+  //       })
+  //       .catch((error) => {
+  //         console.log("error from fetch", error);
+  //       });
+
+  //     return () => {
+  //       console.log("Écran quitté !");
+  //     };
+  //   }, []));
 
 
   // Récupère un tableau des labels de toutes les histoires sleepie
