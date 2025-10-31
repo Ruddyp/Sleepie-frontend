@@ -18,7 +18,6 @@ export default function Discover() {
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
   useEffect(() => {
-    const body = { author: sleepyUserId };
 
     fetch(`http://${IP}:${port}/stories/sleepiestories`)
       .then((response) => response.json())
