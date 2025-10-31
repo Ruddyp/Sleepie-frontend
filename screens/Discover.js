@@ -37,9 +37,12 @@ export default function Discover() {
   }
 
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
-    const stories = storiesSleepie.filter((story) =>
-      story.label.some((label) => label.name === labelName)
-    );
+    const stories = storiesSleepie
+      .filter((story) => story.label.some((label) => label.name === labelName))
+      .map((story) => ({
+        ...story,
+        hasLiked: story.like.some((e) => e.token === user.token),
+      }));
     return <CategoryCarousel key={i} title={labelName} data={stories} />;
   });
 
