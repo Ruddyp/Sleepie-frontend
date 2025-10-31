@@ -15,9 +15,8 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
-  const user = useSelector((state) => state.user.value)
-  console.log({ trackData });
-  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
+  const modal = useSelector((state) => state.modal.value);
+  const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
 
 
 
@@ -48,16 +47,13 @@ export default function Discover() {
     }
   }
 
-
   const categoryCarrouselToDisplay = labelArray.map((labelName, i) => {
     const stories = storiesSleepie
       .filter((story) => story.label.some((label) => label.name === labelName))
-      .map((story) =>
-      ({
+      .map((story) => ({
         ...story,
-        hasLiked: story.like.some(e => e.token === user.token),
-      })
-      )
+        hasLiked: story.like.some((e) => e.token === user.token),
+      }));
     return <CategoryCarousel key={i} title={labelName} data={stories} />;
   });
 
