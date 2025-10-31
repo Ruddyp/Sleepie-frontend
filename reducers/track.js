@@ -15,7 +15,6 @@ const initialState = {
       image: null,
     },
     modalState: null,
-    playerState: null,
   },
 };
 

@@ -24,7 +24,7 @@ const events = [
 const windowWidth = Dimensions.get("window").width;
 
 export function Player({ track }) {
-  const { _id, title, image, author } = track;
+  const { _id, title, image, author, url } = track;
   const { position, buffered, duration } = useProgress();
   const activeTrack = useActiveTrack();
   const playbackState = usePlaybackState();
@@ -47,7 +47,9 @@ export function Player({ track }) {
       // On décompose track et on ajoute un id: _id car le track player attend une clef id et non _id
       // Trackplayer attend une clef artwork et non image donc on lui donne
       // Trackplayer attend une clef artist et non author donc on lui donne
-      await TrackPlayer.add([{ ...track, id: _id, artwork: image, artist: author }]);
+      await TrackPlayer.add([
+        { id: _id, artwork: image, artist: author, url: url, description: title },
+      ]);
       await TrackPlayer.play();
     } else {
       // 2. Contrôle Lecture/Pause de la piste courante
@@ -62,12 +64,14 @@ export function Player({ track }) {
   }
 
   // Gestion de -10 secondes sur la track
-  function handlePlayBack() {
-    position - 10 >= 0 ? TrackPlayer.seekTo(position - 10) : TrackPlayer.seekTo(0);
+  async function handlePlayBack() {
+    position - 10 >= 0 ? await TrackPlayer.seekTo(position - 10) : await TrackPlayer.seekTo(0);
   }
   // Gestion de +10 secondes sur la track
-  function handlePlayForward() {
-    position + 10 <= duration ? TrackPlayer.seekTo(position + 10) : TrackPlayer.seekTo(duration);
+  async function handlePlayForward() {
+    position + 10 <= duration
+      ? await TrackPlayer.seekTo(position + 10)
+      : await TrackPlayer.seekTo(duration);
   }
 
   return (
