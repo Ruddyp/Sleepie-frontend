@@ -3,7 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer, { Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
@@ -55,17 +55,18 @@ const TabNavigator = () => {
 };
 
 export default function App() {
+  const isSetup = useRef(false);
   useEffect(() => {
     (async function () {
+      if (isSetup.current) {
+        console.log("Setup déjà effectué, on ignore la seconde exécution.");
+        return;
+      }
       try {
         await TrackPlayer.setupPlayer();
         await TrackPlayer.updateOptions({
           capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
-          // compactCapabilities: [
-          //   Capability.Play,
-          //   Capability.Pause,
-          //   Capability.SeekTo,
-          // ],
+          compactCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
           notificationCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
           android: {
             appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
