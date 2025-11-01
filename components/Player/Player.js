@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
-import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "./tokens";
+import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "../KitUI/tokens";
 import TrackPlayer, {
   useTrackPlayerEvents,
   useActiveTrack,
@@ -23,12 +23,12 @@ const events = [
 ];
 const windowWidth = Dimensions.get("window").width;
 
-export function Player({ track }) {
-  const { _id, title, image, author, url } = track;
-  const { position, buffered, duration } = useProgress();
+export function Player() {
   const activeTrack = useActiveTrack();
+  const { position, duration } = useProgress(100); // 100ms de rafraîchissement
   const playbackState = usePlaybackState();
   const playerState = playbackState.state;
+  const { title, artwork, artist } = activeTrack || {};
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -39,27 +39,12 @@ export function Player({ track }) {
   const isPlaying = playerState === State.Playing;
 
   async function handlePlay() {
-    const shouldChangeTrack = !activeTrack || activeTrack.id !== _id || playerState === State.Ended;
-    if (shouldChangeTrack) {
-      console.log("Action: Changement de piste / Ajout initial");
-      // Réinitialise le lecteur et ajoute la nouvelle piste
-      await TrackPlayer.reset();
-      // On décompose track et on ajoute un id: _id car le track player attend une clef id et non _id
-      // Trackplayer attend une clef artwork et non image donc on lui donne
-      // Trackplayer attend une clef artist et non author donc on lui donne
-      await TrackPlayer.add([
-        { id: _id, artwork: image, artist: author.username, url: url, description: title },
-      ]);
-      await TrackPlayer.play();
+    if (isPlaying) {
+      console.log("Action: Pause");
+      await TrackPlayer.pause();
     } else {
-      // 2. Contrôle Lecture/Pause de la piste courante
-      if (isPlaying) {
-        console.log("Action: Pause");
-        await TrackPlayer.pause();
-      } else {
-        console.log("Action: Lecture");
-        await TrackPlayer.play();
-      }
+      console.log("Action: Lecture");
+      await TrackPlayer.play();
     }
   }
 
@@ -88,14 +73,14 @@ export function Player({ track }) {
             style={styles.artwork}
             source={{
               uri:
-                image ||
+                artwork ||
                 "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
             }}
           />
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subtitle}>{author.username || "Auteur Inconnu"}</Text>
+          <Text style={styles.subtitle}>{artist || "Auteur Inconnu"}</Text>
         </View>
       </View>
 

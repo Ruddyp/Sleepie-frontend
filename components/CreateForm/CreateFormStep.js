@@ -10,7 +10,6 @@ export default function CreateFormStep({ stepComponent, title, subtitle }) {
   const { currentStep } = form;
   // Si on a aucune valeur dans le redux on disable le button next
   const disableButton = !form.steps[currentStep - 1];
-  console.log(form.steps[currentStep - 1]);
 
   return (
     <View style={formStyles.fullScreenContainer}>

@@ -16,6 +16,7 @@ import WaitingStory from "../components/CreateForm/WaitingStory";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { updateModalState } from "../reducers/modal";
+import { updateTrack } from "../reducers/track";
 
 const steps = [
   {
@@ -53,6 +54,7 @@ const steps = [
 export default function Create({ navigation }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
+  const trackData = useSelector((state) => state.track.value);
   const modal = useSelector((state) => state.modal.value);
   const { currentStep, isGenerating, isFinished } = form;
   const isInitialStep = currentStep === 0;
@@ -67,7 +69,11 @@ export default function Create({ navigation }) {
     }
   }, [isFinished]);
 
-  function handleClose() {
+  function handleClose(type) {
+    if (type === "start") {
+      // Quand on appuie sur le bouton Ecoutez votre histoire on lance l'histoire automatiquement
+      dispatch(updateTrack({ track: { ...trackData.track }, shouldPlayAutomatically: true }));
+    }
     // On reset les params de create form
     dispatch(resetCreateForm());
     navigation.navigate("home");
@@ -124,11 +130,11 @@ export default function Create({ navigation }) {
                 title={"Ecoutez votre histoire"}
                 size="large"
                 variant="primary"
-                onPress={() => handleClose()}
+                onPress={() => handleClose("start")}
               />
             </View>
             <View style={styles.bottomModalContainer}>
-              <TouchableOpacity onPress={() => handleClose()}>
+              <TouchableOpacity onPress={() => handleClose("close")}>
                 <Ionicons
                   name="close-circle-outline"
                   size={Spacing.maximale}

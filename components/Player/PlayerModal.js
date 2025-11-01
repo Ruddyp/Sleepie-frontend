@@ -1,15 +1,14 @@
-import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { updateModalState } from "../reducers/modal";
-import { Player } from "./KitUI/Player";
+import { updateModalState } from "../../reducers/modal";
+import { Player } from "./Player";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors, Spacing } from "./KitUI/tokens";
+import { Colors, Spacing } from "../KitUI/tokens";
 
 const windowHeight = Dimensions.get("window").height;
 export default function PlayerModal() {
   const dispatch = useDispatch();
-  const trackData = useSelector((state) => state.track.value);
   const modal = useSelector((state) => state.modal.value);
   function handleClose() {
     dispatch(updateModalState(false));
@@ -29,7 +28,7 @@ export default function PlayerModal() {
       >
         <View style={styles.mainModalContainer}>
           <View style={styles.middleModalContainer}>
-            <Player track={trackData.track} />
+            <Player />
           </View>
           <View style={styles.bottomModalContainer}>
             <TouchableOpacity onPress={() => handleClose()}>

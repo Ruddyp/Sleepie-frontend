@@ -20,6 +20,7 @@ import createForm from "./reducers/createForm";
 import track from "./reducers/track";
 import modal from "./reducers/modal";
 import { NightTabBar } from "./components/KitUI/NightTabBar";
+import TrackManager from "./components/Player/TrackManager";
 
 const store = configureStore({
   reducer: { user, createForm, track, modal },
@@ -79,6 +80,7 @@ export default function App() {
 
   return (
     <Provider store={store}>
+      <TrackManager />
       <SafeAreaProvider>
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}>
           <NavigationContainer>

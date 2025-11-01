@@ -14,6 +14,7 @@ const initialState = {
       configuration: null,
       image: null,
     },
+    shouldPlayAutomatically: false,
   },
 };
 
@@ -23,7 +24,7 @@ export const trackSlice = createSlice({
   initialState,
   reducers: {
     updateTrack: (state, action) => {
-      state.value.track = action.payload;
+      state.value = action.payload;
     },
   },
 });

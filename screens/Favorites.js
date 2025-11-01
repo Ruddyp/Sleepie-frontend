@@ -1,7 +1,7 @@
 import { ScrollView, StyleSheet, Text, View } from "react-native";
-import PlayerModal from "../components/PlayerModal";
+import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
-import MiniPlayer from "../components/KitUI/MiniPlayer";
+import MiniPlayer from "../components/Player/MiniPlayer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../components/KitUI/tokens";
 import { useState, useEffect, useMemo } from "react";
@@ -20,8 +20,7 @@ export default function Favorites() {
   const trackData = useSelector((state) => state.track.value);
   const userToken = useSelector((state) => state.user.value.token);
 
-  const displayMiniPlayer =
-    !trackData.modalState && trackData.track.url !== null;
+  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
   useEffect(() => {
     // Récupérer les histoires créées et likées par l'utilisateur

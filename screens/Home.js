@@ -5,9 +5,9 @@ import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import { useNavigation } from "@react-navigation/native";
 import CreateStoryCard from "../components/KitUI/CreateStoryCard";
 import { Colors } from "../components/KitUI/tokens";
-import PlayerModal from "../components/PlayerModal";
+import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
-import MiniPlayer from "../components/KitUI/MiniPlayer";
+import MiniPlayer from "../components/Player/MiniPlayer";
 
 const DATA_BEST = [
   {
@@ -46,14 +46,6 @@ export default function Home() {
   const [favorites, setFavorites] = useState({});
   const navigation = useNavigation();
 
-  const handlePlayItem = (item) => {
-    console.log("Play:", item.title);
-  };
-
-  const handleToggleFavorite = (item) => {
-    setFavorites((prev) => ({ ...prev, [item.id]: !prev[item.id] }));
-  };
-
   // injecte la prop isFavorite dans les data si tu veux
   const mapped = DATA_BEST.map((it) => ({
     ...it,
@@ -82,7 +74,7 @@ export default function Home() {
           data={mapped}
         />
       </ScrollView>
-      {displayMiniPlayer && <MiniPlayer track={trackData.track} />}
+      {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
     </LinearGradient>
   );

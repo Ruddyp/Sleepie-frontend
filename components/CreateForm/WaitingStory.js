@@ -13,6 +13,7 @@ export default function WaitingStory() {
   const form = useSelector((state) => state.createForm.value);
   const user = useSelector((state) => state.user.value);
   const { steps } = form;
+  console.log("user", user);
 
   // A l'initialisation du composant on lance le fetch pour générer une histoire
   useEffect(() => {
@@ -34,7 +35,12 @@ export default function WaitingStory() {
         const data = await response.json();
         if (data.result) {
           dispatch(updateIsGenerating());
-          dispatch(updateTrack(data.story));
+          dispatch(
+            updateTrack({
+              track: { ...data.story, author: data.story.author.username },
+              shouldPlayAutomatically: false,
+            })
+          );
           dispatch(updateIsFinished());
         }
       } catch (error) {
