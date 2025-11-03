@@ -1,19 +1,39 @@
-import { View, Text, Pressable, FlatList, StyleSheet, Dimensions } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  FlatList,
+  StyleSheet,
+  Dimensions,
+} from "react-native";
 import { Colors, Spacing, Typography } from "./tokens";
 import AudioCardSquare from "./AudioCardSquare";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function CategoryCarousel({
   title = "",
   data = [], // Ensemble des histoires a afficher dans le carroussel
 }) {
+  const navigation = useNavigation();
+  const route = useRoute();
   const sidePadding = Spacing.lg;
   const gapBetweenCard = Spacing.lg;
   const cardSize = Dimensions.get("window").width * 0.42;
 
   const itemFullWidth = cardSize + gapBetweenCard;
 
-  const renderItem = ({ item }) => <AudioCardSquare {...item} size={cardSize} />;
+  const renderItem = ({ item }) => (
+    <AudioCardSquare {...item} size={cardSize} />
+  );
+
+  const handleSeeMore = () => {
+    navigation.navigate("playlist", {
+      title,
+      stories: data,
+      origin: route.name,
+    });
+  };
 
   return (
     <View style={styles.container}>
@@ -22,8 +42,12 @@ export default function CategoryCarousel({
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
-        <Pressable style={styles.moreContainer}>
-          <Ionicons name="add-circle-outline" size={Spacing.xl} color={Colors.textTitle} />
+        <Pressable style={styles.moreContainer} onPress={handleSeeMore}>
+          <Ionicons
+            name="add-circle-outline"
+            size={Spacing.xl}
+            color={Colors.textTitle}
+          />
           <Text style={styles.more}>Voir plus</Text>
         </Pressable>
       </View>
@@ -36,7 +60,9 @@ export default function CategoryCarousel({
           renderItem={renderItem}
           horizontal
           contentContainerStyle={{ paddingHorizontal: sidePadding }}
-          ItemSeparatorComponent={() => <View style={{ width: gapBetweenCard }} />}
+          ItemSeparatorComponent={() => (
+            <View style={{ width: gapBetweenCard }} />
+          )}
           snapToAlignment="start"
           snapToInterval={itemFullWidth}
           decelerationRate="fast"
