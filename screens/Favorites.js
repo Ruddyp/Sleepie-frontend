@@ -1,39 +1,26 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView } from "react-native";
 import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../components/KitUI/tokens";
-// import { useState, useEffect, useMemo } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 
 export default function Favorites() {
-  // const IP = process.env.EXPO_PUBLIC_IP;
-  // const port = process.env.EXPO_PUBLIC_PORT;
-
-  const storiesFromRedux = useSelector((state) => state.stories.value)
-
-  // const [createdStoriesArray, setCreatedStoriesArray] = useState([]);
-  // const [likedStories, setLikedStories] = useState([]);
-
-  // console.log("data from created story", createdStoriesArray);
-  // console.log("data from liked story", likedStories);
-
+  const storiesFromRedux = useSelector((state) => state.stories.value);
   const trackData = useSelector((state) => state.track.value);
-  // const userToken = useSelector((state) => state.user.value.token);
 
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
   const createdStories = storiesFromRedux.createdStories.map((story) => ({
     ...story,
-    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id)
-  }))
+    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
+  }));
 
   const likedStories = storiesFromRedux.likedStories.map((story) => ({
     ...story,
-    hasLiked: true
-  }))
-
+    hasLiked: true,
+  }));
 
   return (
     <LinearGradient
@@ -44,13 +31,12 @@ export default function Favorites() {
     >
       <ScrollView style={{ flex: 1, width: "100%", paddingTop: 50, gap: 20 }}>
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
-        {(createdStories.length !== 0) && <CategoryCarousel
-          title="Mes créations"
-          data={createdStories}
-        />}
+        {createdStories.length !== 0 && (
+          <CategoryCarousel title="Mes créations" data={createdStories} />
+        )}
 
         {/* Carrousel 2 : sons/histoires likés */}
-        {(likedStories.length !== 0) && <CategoryCarousel title="Sons likés" data={likedStories} />}
+        {likedStories.length !== 0 && <CategoryCarousel title="Sons likés" data={likedStories} />}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />

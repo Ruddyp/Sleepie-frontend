@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
@@ -25,13 +24,10 @@ const TAB_CONFIG = {
   },
 };
 
-
-
-
 export const NightTabBar = ({ state, navigation, descriptors }) => {
   const activeIndex = state.index;
 
-  const visibleRoutes = state.routes.filter(route => {
+  const visibleRoutes = state.routes.filter((route) => {
     const opts = descriptors[route.key].options;
     if (opts.tabBarButton === null) return false;
     if (opts.tabBarItemStyle && opts.tabBarItemStyle.display === "none") return false;
@@ -39,10 +35,7 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
   });
 
   return (
-    <View
-      style={[styles.container, { paddingBottom: Spacing.xs }]}
-      accessibilityRole="tablist"
-    >
+    <View style={[styles.container, { paddingBottom: Spacing.xs }]} accessibilityRole="tablist">
       {visibleRoutes.map((route, index) => {
         const isActive = index === activeIndex;
         const cfg = TAB_CONFIG[route.name] || {
@@ -73,10 +66,7 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
                 colors={["#1064DB", "#00A0F7"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[
-                  styles.mainIconWrapper,
-                  isActive && styles.mainIconActive,
-                ]}
+                style={[styles.mainIconWrapper, isActive && styles.mainIconActive]}
               >
                 <Ionicons
                   name={cfg.active}
@@ -95,21 +85,13 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
               </LinearGradient>
             ) : (
               <View style={styles.iconContainer}>
-                <Ionicons
-                  name={cfg.inactive}
-                  size={iconSize}
-                  color={Colors.textSecondary}
-                />
+                <Ionicons name={cfg.inactive} size={iconSize} color={Colors.textSecondary} />
               </View>
             )}
 
             {/* Label */}
             <Text
-              style={[
-                styles.label,
-                isActive && styles.labelActive,
-                isMain && styles.mainLabel,
-              ]}
+              style={[styles.label, isActive && styles.labelActive, isMain && styles.mainLabel]}
             >
               {cfg.label}
             </Text>

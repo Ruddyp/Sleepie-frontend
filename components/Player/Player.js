@@ -13,7 +13,6 @@ import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 import { useSelector, useDispatch } from "react-redux";
-import { updateLikedStories } from "../../reducers/stories";
 import { likeStory } from "../../modules/databaseAction";
 
 const events = [
@@ -25,8 +24,6 @@ const events = [
   Event.PlaybackActiveTrackChanged,
 ];
 const windowWidth = Dimensions.get("window").width;
-const IP = process.env.EXPO_PUBLIC_IP;
-const port = process.env.EXPO_PUBLIC_PORT;
 
 export function Player() {
   const activeTrack = useActiveTrack();

@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
 import { updateCurrentStep } from "../../reducers/createForm";
 import { formStyles } from "./CreateFormStyle";
+import Stepper from "./Stepper";
 
-export default function CreateFormStep({ stepComponent, title, subtitle }) {
+export default function CreateFormStep({ stepComponent, title, subtitle, nbSteps }) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep } = form;
@@ -14,6 +15,7 @@ export default function CreateFormStep({ stepComponent, title, subtitle }) {
   return (
     <View style={formStyles.fullScreenContainer}>
       <ScrollView contentContainerStyle={formStyles.scrollViewContent}>
+        <Stepper nbSteps={nbSteps} currentStep={currentStep} />
         <View style={formStyles.mainFormContainerScrollable}>
           <View>
             <Text style={formStyles.title}>{title}</Text>

@@ -1,7 +1,7 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
-import { useState, useCallback, useEffect } from "react";
+import { useState, useEffect } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
@@ -13,14 +13,9 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
-  const storiesFromRedux = useSelector((state) => state.stories.value)
+  const storiesFromRedux = useSelector((state) => state.stories.value);
   const modal = useSelector((state) => state.modal.value);
   const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
-  const user = useSelector((state) => state.user.value);
-  console.log("user", user);
-
-
-
 
   useEffect(() => {
     fetch(`http://${IP}:${port}/stories/sleepiestories`)
@@ -28,9 +23,7 @@ export default function Discover() {
       .then((data) => {
         setStoriesSleepie(data.stories);
       });
-  }, [])
-    ;
-
+  }, []);
 
   // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {
@@ -46,7 +39,7 @@ export default function Discover() {
       .filter((story) => story.label.some((label) => label.name === labelName))
       .map((story) => ({
         ...story,
-        hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id)
+        hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
         // hasLiked: story.like.some((e) => e.token === user.token),
       }));
     return <CategoryCarousel key={i} title={labelName} data={stories} />;

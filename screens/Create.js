@@ -100,7 +100,7 @@ export default function Create({ navigation }) {
         </View>
       )}
       {!isInitialStep && !isGenerating && !isFinished && (
-        <CreateFormStep {...steps[currentStep - 1]} />
+        <CreateFormStep {...steps[currentStep - 1]} nbSteps={steps.length} />
       )}
       {isGenerating && !isFinished && <WaitingStory />}
       <Modal

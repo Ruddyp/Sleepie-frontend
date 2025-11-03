@@ -3,14 +3,10 @@ import { StyleSheet, View } from "react-native";
 import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { LinearGradient } from "expo-linear-gradient";
-
-
 import { Colors } from "../components/KitUI/tokens";
 
 export default function KitScreen() {
-
   const [inputValue, setInputValue] = useState("");
-
 
   return (
     <LinearGradient

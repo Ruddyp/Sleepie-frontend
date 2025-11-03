@@ -3,8 +3,7 @@ import ChoiceCard from "./ChoiceCard";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStep } from "../../reducers/createForm";
-import { Ionicons } from "@expo/vector-icons";
-import { Colors, Spacing } from "../KitUI/tokens";
+import { Spacing } from "../KitUI/tokens";
 
 export default function Step3() {
   const dispatch = useDispatch();
@@ -13,9 +12,7 @@ export default function Step3() {
   const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(
-    intialValue || null
-  );
+  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
 
   // Définir les données des cartes
   const choices = [
@@ -25,13 +22,11 @@ export default function Step3() {
     },
     {
       title: "🌲 Dans la nature",
-      subtitle:
-        "Forêts, montagnes, sentiers, lacs, plaines — des paysages vastes et vivants.",
+      subtitle: "Forêts, montagnes, sentiers, lacs, plaines — des paysages vastes et vivants.",
     },
     {
       title: "🏡 À la campagne ou dans un village",
-      subtitle:
-        "La douceur d’un environnement calme, loin de l’agitation urbaine.",
+      subtitle: "La douceur d’un environnement calme, loin de l’agitation urbaine.",
     },
     {
       title: "✨ Dans un lieu imaginaire ",
@@ -48,11 +43,7 @@ export default function Step3() {
     <View style={styles.main}>
       {choices.map((choice, index) => (
         // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable
-          key={index}
-          onPress={() => handleChoice(choice.title)}
-          style={styles.pressable}
-        >
+        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
           {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
           <ChoiceCard
             title={choice.title}

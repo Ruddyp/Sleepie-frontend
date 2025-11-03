@@ -1,13 +1,4 @@
-import React from "react";
-import {
-  StyleSheet,
-  View,
-  FlatList,
-  Dimensions,
-  ScrollView,
-  TouchableOpacity,
-  Text,
-} from "react-native";
+import { StyleSheet, View, Dimensions, ScrollView, TouchableOpacity, Text } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import AudioCardSquare from "../components/KitUI/AudioCardSquare";
@@ -21,16 +12,12 @@ import { useSelector } from "react-redux";
 export default function Playlist() {
   const navigation = useNavigation();
   const route = useRoute();
-  console.log("params >", route.params);
   const { title = "playlist", stories = [], origin } = route.params;
   const trackData = useSelector((state) => state.track.value);
   const storiesFromRedux = useSelector((state) => state.stories.value);
-  const displayMiniPlayer =
-    !trackData.modalState && trackData.track.url !== null;
+  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  const CARD_SIZE = Math.floor(
-    (Dimensions.get("window").width - Spacing.xl * 2 - Spacing.lg) / 2
-  );
+  const CARD_SIZE = Math.floor((Dimensions.get("window").width - Spacing.xl * 2 - Spacing.lg) / 2);
 
   const handleBack = () => {
     if (origin) return navigation.navigate(origin);

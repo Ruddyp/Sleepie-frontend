@@ -24,12 +24,11 @@ export default function Step5() {
         maximumValue={30}
         value={position}
         onSlidingComplete={(value) => setPosition(value)}
+        onValueChange={(value) => setPosition(value)}
         minimumTrackTintColor={Colors.accentPrimarySolid}
         maximumTrackTintColor={Colors.textTitle}
         thumbTintColor={Colors.textSleepieYellow}
-        step={5}
         style={styles.slider}
-        renderStepNumber
       />
       <Text style={styles.text}>{position}min</Text>
     </View>

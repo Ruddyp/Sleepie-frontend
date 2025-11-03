@@ -47,7 +47,6 @@ export default function SignIn({ navigation }) {
       });
       const data = await response.json();
       if (data.result) {
-        console.log(data);
         dispatch(updateUser(data.data.user));
         dispatch(setCreatedStories(data.data.createdStories));
         dispatch(setLikedStories(data.data.likedStories));
