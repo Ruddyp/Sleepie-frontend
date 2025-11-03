@@ -4,19 +4,20 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateTrack } from "../../reducers/track";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { upadateLikedStories } from "../../reducers/stories"
+import { updateLikedStories } from "../../reducers/stories"
 
-export default function AudioCardSquare({ title, image, author, _id, url, size, hasLiked }) {
+export default function AudioCardSquare(props) {
+  const { title, image, author, _id, url, size, hasLiked } = props;
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
 
-  const likestory = async (storyId) => {
+  const likestory = async (story) => {
     const body = {
       token: user.token,
-      storyId: storyId,
+      storyId: story._Id,
     };
     try {
       const response = await fetch(`http://${IP}:${port}/stories/like`, {
@@ -26,7 +27,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
       });
       const data = await response.json();
       console.log("data", data);
-      dispatch(upadateLikedStories(storyId))
+      dispatch(updateLikedStories(story))
 
     } catch (error) {
       console.log("errorFromFetchlikeStory", error.message);
@@ -70,7 +71,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.likeRightSpace, Shadows.soft]}
         >
-          <TouchableOpacity activeOpacity={0.8} onPress={() => likestory(_id)}>
+          <TouchableOpacity activeOpacity={0.8} onPress={() => likestory(props)}>
             {hasLiked ? (
               <Ionicons name="heart" size={Spacing.xxl} color={Colors.error} />
             ) : (

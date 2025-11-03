@@ -12,7 +12,18 @@ export const storiesSlice = createSlice({
 
     initialState,
     reducers: {
-        updateLikedStories: (state, action) => { },
+        updateLikedStories: (state, action) => {
+            const { _id } = action.payload
+            if (state.value.likedStories.some((e) => e._id === _id)) {
+                state.value.likedStories = state.value.likedStories.filter((e) => e._id !== _id)
+            } else {
+                state.value.likedStories.push(action.payload)
+            }
+        },
+        updateCreatedStories: (state, action) => {
+
+
+        },
         setLikedStories: (state, action) => {
             state.value.likedStories = action.payload;
         },
