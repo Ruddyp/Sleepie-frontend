@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateTrack } from "../../reducers/track";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
+import { upadateLikedStories } from "../../reducers/stories"
 
 export default function AudioCardSquare({ title, image, author, _id, url, size, hasLiked }) {
   const dispatch = useDispatch();
@@ -26,6 +27,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
       });
       const data = await response.json();
       console.log("data", data);
+      dispatch(upadateLikedStories(storyId))
 
     } catch (error) {
       console.log("errorFromFetchlikeStory", error.message);

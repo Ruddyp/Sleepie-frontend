@@ -1,12 +1,11 @@
 import { StyleSheet, View, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -14,21 +13,23 @@ export default function Discover() {
   const [labelArray, setLabelArray] = useState([]);
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const trackData = useSelector((state) => state.track.value);
+  const storiesFromRedux = useSelector((state) => state.stories.value)
   const modal = useSelector((state) => state.modal.value);
   const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
   const user = useSelector((state) => state.user.value);
   console.log("user", user);
 
-  useFocusEffect(
-    useCallback(() => {
-      // Do something when the screen is focused
-      fetch(`http://${IP}:${port}/stories/sleepiestories`)
-        .then((response) => response.json())
-        .then((data) => {
-          setStoriesSleepie(data.stories);
-        });
-    }, [])
-  );
+
+
+
+  useEffect(() => {
+    fetch(`http://${IP}:${port}/stories/sleepiestories`)
+      .then((response) => response.json())
+      .then((data) => {
+        setStoriesSleepie(data.stories);
+      });
+  }, [])
+    ;
 
 
 
@@ -46,7 +47,8 @@ export default function Discover() {
       .filter((story) => story.label.some((label) => label.name === labelName))
       .map((story) => ({
         ...story,
-        hasLiked: story.like.some((e) => e.token === user.token),
+        hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id)
+        // hasLiked: story.like.some((e) => e.token === user.token),
       }));
     return <CategoryCarousel key={i} title={labelName} data={stories} />;
   });

@@ -4,39 +4,52 @@ import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../components/KitUI/tokens";
-import { useState, useEffect, useMemo } from "react";
+// import { useState, useEffect, useMemo } from "react";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 
 export default function Favorites() {
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
+  // const IP = process.env.EXPO_PUBLIC_IP;
+  // const port = process.env.EXPO_PUBLIC_PORT;
 
-  const [createdStoriesArray, setCreatedStoriesArray] = useState([]);
-  const [likedStories, setLikedStories] = useState([]);
+  const storiesFromRedux = useSelector((state) => state.stories.value)
 
-  console.log("data from created story", createdStoriesArray);
-  console.log("data from liked story", likedStories);
+  // const [createdStoriesArray, setCreatedStoriesArray] = useState([]);
+  // const [likedStories, setLikedStories] = useState([]);
+
+  // console.log("data from created story", createdStoriesArray);
+  // console.log("data from liked story", likedStories);
 
   const trackData = useSelector((state) => state.track.value);
-  const userToken = useSelector((state) => state.user.value.token);
+  // const userToken = useSelector((state) => state.user.value.token);
 
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  useEffect(() => {
-    // Récupérer les histoires créées et likées par l'utilisateur
+  // useEffect(() => {
+  //   // Récupérer les histoires créées et likées par l'utilisateur
 
-    fetch(`http://${IP}:${port}/stories/favorites`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ token: userToken }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log("data from favorites fetch", data);
-        setCreatedStoriesArray(data.myStories);
-        setLikedStories(data.storiesLiked);
-      });
-  }, []);
+  //   fetch(`http://${IP}:${port}/stories/favorites`, {
+  //     method: "POST",
+  //     headers: { "Content-Type": "application/json" },
+  //     body: JSON.stringify({ token: userToken }),
+  //   })
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       console.log("data from favorites fetch", data);
+  //       setCreatedStoriesArray(data.myStories);
+  //       setLikedStories(data.storiesLiked);
+  //     });
+  // }, []);
+
+  const createdStories = storiesFromRedux.createdStories.map((story) => ({
+    ...story,
+    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id)
+  }))
+
+  const likedStories = storiesFromRedux.likedStories.map((story) => ({
+    ...story,
+    hasLiked: true
+  }))
+
 
   return (
     <LinearGradient
@@ -47,7 +60,10 @@ export default function Favorites() {
     >
       <ScrollView style={{ flex: 1, width: "100%", paddingTop: 50, gap: 20 }}>
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
-        <CategoryCarousel title="Mes créations" data={createdStoriesArray} />
+        <CategoryCarousel
+          title="Mes créations"
+          data={createdStories}
+        />
 
         {/* Carrousel 2 : sons/histoires likés */}
         <CategoryCarousel title="Sons likés" data={likedStories} />
