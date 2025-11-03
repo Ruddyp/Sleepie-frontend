@@ -1,70 +1,45 @@
-import { useMemo, useState } from "react";
-import { StyleSheet, View, FlatList, Dimensions } from "react-native";
+import React from "react";
+import {
+  StyleSheet,
+  View,
+  FlatList,
+  Dimensions,
+  ScrollView,
+  TouchableOpacity,
+  Text,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import AudioCardSquare from "../components/KitUI/AudioCardSquare";
-import { Colors, Spacing } from "../components/KitUI/tokens";
+import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { Ionicons } from "@expo/vector-icons";
+import MiniPlayer from "../components/Player/MiniPlayer";
+import PlayerModal from "../components/Player/PlayerModal";
+import { useSelector } from "react-redux";
 
-const DATA = [
-  {
-    id: "1",
-    title: "Pluie d’été au chalet",
-    duration: "24 min",
-    voice: "Voix féminine",
-    imageUrl: "https://images.unsplash.com/photo-1503264116251-35a269479413",
-  },
-  {
-    id: "2",
-    title: "Forêt boréale",
-    duration: "22 min",
-    voice: "Voix masculine",
-    imageUrl: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
-  },
-  {
-    id: "3",
-    title: "Vagues nocturnes",
-    duration: "18 min",
-    voice: "Voix féminine",
-    imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-  },
-  {
-    id: "4",
-    title: "Pluie douce",
-    duration: "27 min",
-    voice: "Voix masculine",
-    imageUrl: "https://images.unsplash.com/photo-1490730141103-6cac27aaab94",
-  },
-];
+export default function Playlist() {
+  const navigation = useNavigation();
+  const route = useRoute();
+  console.log("params >", route.params);
+  const { title = "playlist", stories = [], origin } = route.params;
+  const trackData = useSelector((state) => state.track.value);
+  const storiesFromRedux = useSelector((state) => state.stories.value);
+  const displayMiniPlayer =
+    !trackData.modalState && trackData.track.url !== null;
 
-export default function Home() {
-  const [favorites, setFavorites] = useState({});
-
-  const onToggleFavorite = (id) => setFavorites((prev) => ({ ...prev, [id]: !prev[id] }));
-
-  const width = Dimensions.get("window").width;
-  const PADDING = Spacing.xl || 24;
-  const GAP = Spacing.lg || 12;
-
-  // Taille de la carte pour 2 colonnes (padding + gap)
-  const CARD_SIZE = useMemo(
-    () => Math.floor((width - PADDING * 2 - GAP) / 2),
-    [width, PADDING, GAP]
+  const CARD_SIZE = Math.floor(
+    (Dimensions.get("window").width - Spacing.xl * 2 - Spacing.lg) / 2
   );
 
-  const renderItem = ({ item }) => (
-    <View style={{ marginBottom: GAP }}>
-      <AudioCardSquare
-        title={item.title}
-        duration={item.duration}
-        voice={item.voice}
-        imageUrl={item.imageUrl}
-        isFavorite={!!favorites[item.id]}
-        onPlay={() => console.log("Play:", item.title)}
-        onToggleFavorite={() => onToggleFavorite(item.id)}
-        size={CARD_SIZE}
-      />
-    </View>
-  );
+  const handleBack = () => {
+    if (origin) return navigation.navigate(origin);
+    navigation.navigate("home");
+  };
+  const storiesWithLike = stories.map((story) => ({
+    ...story,
+    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
+  }));
 
   return (
     <LinearGradient
@@ -73,22 +48,69 @@ export default function Home() {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      <FlatList
-        data={DATA}
-        keyExtractor={(it) => it.id}
-        renderItem={renderItem}
-        numColumns={2}
-        columnWrapperStyle={{ gap: GAP }}
-        contentContainerStyle={{
-          padding: PADDING,
-          paddingBottom: PADDING * 2,
-        }}
-        showsVerticalScrollIndicator={false}
-      />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={handleBack}>
+            <Ionicons name="chevron-back" size={26} color={Colors.textTitle} />
+          </TouchableOpacity>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title} numberOfLines={1}>
+              {title}
+            </Text>
+            <Text style={styles.subtitle}>{stories.length} morceaux</Text>
+          </View>
+          <View style={{ width: 26 }} />
+        </View>
+
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: Spacing.xl,
+            paddingBottom: Spacing.xl * 2,
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: Spacing.lg,
+            justifyContent: "space-between",
+          }}
+        >
+          {storiesWithLike.map((story) => (
+            <AudioCardSquare
+              key={story._id}
+              _id={story._id}
+              title={story.title}
+              image={story.image}
+              author={story.author}
+              url={story.url}
+              hasLiked={story.hasLiked}
+              size={CARD_SIZE}
+            />
+          ))}
+        </ScrollView>
+      </SafeAreaView>
+      {displayMiniPlayer && <MiniPlayer />}
+      <PlayerModal />
     </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   main: { flex: 1 },
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: Spacing.md,
+    paddingHorizontal: Spacing.xl,
+    paddingTop: Spacing.md,
+    paddingBottom: Spacing.md,
+  },
+  title: {
+    color: Colors.textTitle,
+    ...Typography.h2,
+    fontFamily: Typography.fontHeading,
+  },
+  subtitle: {
+    color: Colors.textSecondary,
+    ...Typography.caption,
+    marginTop: 2,
+  },
 });
