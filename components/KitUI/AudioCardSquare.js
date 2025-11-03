@@ -55,7 +55,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
           colors={[Colors.accentPrimary[0], Colors.accentPrimary[1]]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
-          style={[styles.iconContainer, styles.playLeftSpace, Shadows.soft]}
+          style={[styles.iconContainer, styles.playLeftSpace, Shadows.bold]}
         >
           <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
         </LinearGradient>
