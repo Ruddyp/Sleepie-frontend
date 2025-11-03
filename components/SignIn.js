@@ -79,9 +79,7 @@ export default function SignIn({ navigation }) {
         password
         autoCapitalize="none"
       />
-      <View style={styles.button}>
-        <Button title="Signin" size="large" variant="primary" onPress={() => handlePress()} />
-      </View>
+      <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
       {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}(s)</Text>}
     </View>
@@ -95,11 +93,8 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontBody,
   },
   container: {
-    padding: 30,
+    paddingHorizontal: 30,
     justifyContent: "center",
     gap: 15,
-  },
-  button: {
-    marginTop: 30,
   },
 });

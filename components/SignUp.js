@@ -107,9 +107,12 @@ export default function SignUp({ navigation }) {
         password
         autoCapitalize="none"
       />
-      <View style={styles.button}>
-        <Button title="Signup" size="large" variant="primary" onPress={() => handlepressSignUp()} />
-      </View>
+      <Button
+        title="Créer mon compte"
+        size="large"
+        variant="primary"
+        onPress={() => handlepressSignUp()}
+      />
       {errorPassword && (
         <Text style={styles.errorMessage}>Les mots de passe ne correspondent pas</Text>
       )}
@@ -126,11 +129,8 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontBody,
   },
   container: {
-    padding: 30,
+    paddingHorizontal: 30,
     justifyContent: "center",
     gap: 15,
-  },
-  button: {
-    marginTop: 30,
   },
 });
