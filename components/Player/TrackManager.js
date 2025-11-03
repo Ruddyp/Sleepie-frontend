@@ -1,9 +1,14 @@
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import TrackPlayer from "react-native-track-player";
+import { updateStoryCountAndRecentlyPlayed } from "../../modules/databaseAction";
 
 export default function TrackManager() {
+  const dispatch = useDispatch();
   const trackData = useSelector((state) => state.track.value);
+  const user = useSelector((state) => state.user.value);
+  console.log("array recently: ", user.recently_played);
+  console.log("taille recently: ", user.recently_played.length);
   const { _id, title, image, author, url } = trackData.track;
   const { shouldPlayAutomatically } = trackData;
 
@@ -33,6 +38,7 @@ export default function TrackManager() {
 
             if (shouldPlayAutomatically) {
               console.log("TrackManager: Lancement automatique demandé.");
+              await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
               await TrackPlayer.play();
             } else {
               console.log("TrackManager: Piste chargée, mais pas de lancement automatique.");
@@ -43,6 +49,7 @@ export default function TrackManager() {
             // Appuyer sur le bouton va passer shouldPlayAutomatically a true mais la piste et la même
             if (shouldPlayAutomatically) {
               console.log("TrackManager: Lancement automatique demandé.");
+              await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
               await TrackPlayer.play();
             }
           }
