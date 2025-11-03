@@ -46,7 +46,6 @@ export default function Favorites() {
       style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
     >
       <ScrollView style={{ flex: 1, width: "100%", paddingTop: 50, gap: 20 }}>
-        <Text style={{ color: "white" }}>FAVORIS PAGE</Text>
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
         <CategoryCarousel title="Mes créations" data={createdStoriesArray} />
 

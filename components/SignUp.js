@@ -94,14 +94,14 @@ export default function SignUp({ navigation }) {
         autoCapitalize="none" /*Ne fonctionne pas*/
       />
       <Input
-        placeholder="Mot de Passe"
+        placeholder="Mot de passe"
         onChangeText={(value) => setPassword(value)}
         value={password}
         password
         autoCapitalize="none"
       />
       <Input
-        placeholder="Confirmation Mot de Passe"
+        placeholder="Confirmation mot de passe"
         onChangeText={(value) => setConfirmationPassword(value)}
         value={confirmationPassword}
         password
