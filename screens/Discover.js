@@ -30,21 +30,7 @@ export default function Discover() {
     }, [])
   );
 
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     fetch(`http://${IP}:${port}/stories/sleepiestories`)
-  //       .then((response) => response.json())
-  //       .then((data) => {
-  //         setStoriesSleepie(data.stories);
-  //       })
-  //       .catch((error) => {
-  //         console.log("error from fetch", error);
-  //       });
 
-  //     return () => {
-  //       console.log("Écran quitté !");
-  //     };
-  //   }, []));
 
   // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {

@@ -9,6 +9,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user.value);
 
+
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
 
@@ -25,6 +26,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
       });
       const data = await response.json();
       console.log("data", data);
+
     } catch (error) {
       console.log("errorFromFetchlikeStory", error.message);
     }
@@ -36,7 +38,7 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
       onPress={() => {
         dispatch(
           updateTrack({
-            track: { _id, image, title, author: author.username, url },
+            track: { _id, image, title, author: author, url },
             shouldPlayAutomatically: true,
           })
         );
@@ -57,9 +59,9 @@ export default function AudioCardSquare({ title, image, author, _id, url, size, 
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.playLeftSpace, Shadows.soft]}
         >
-          <TouchableOpacity activeOpacity={0.8}>
-            <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
-          </TouchableOpacity>
+
+          <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
+
         </LinearGradient>
 
         {/* Bouton Favori */}
