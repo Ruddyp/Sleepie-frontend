@@ -10,8 +10,9 @@ import TrackPlayer, {
   State,
 } from "react-native-track-player";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateModalState } from "../../reducers/modal";
+import { likeStory } from "../../modules/databaseAction";
 
 const events = [
   Event.RemotePlay,
@@ -23,13 +24,15 @@ const events = [
 ];
 
 export default function MiniPlayer() {
-  const [isLike, setIsLike] = useState(false);
   const dispatch = useDispatch();
   const playbackState = usePlaybackState();
   const playerState = playbackState.state;
   const activeTrack = useActiveTrack();
 
-  const { title, artwork, artist } = activeTrack || {};
+  const { title, artwork, artist, id } = activeTrack || {};
+  const user = useSelector((state) => state.user.value);
+  const trackData = useSelector((state) => state.track.value);
+  const stories = useSelector((state) => state.stories.value);
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -37,9 +40,17 @@ export default function MiniPlayer() {
     }
   });
 
+  const hasLiked = stories.likedStories.some((story) => story._id === id);
   const isPlaying = playerState === State.Playing;
+  const isEnded = playerState === State.Ended;
 
   async function handlePlay() {
+    if (isEnded) {
+      console.log("Action: Restart");
+      await TrackPlayer.seekTo(0);
+      await TrackPlayer.play();
+    }
+
     if (isPlaying) {
       console.log("Action: Pause");
       await TrackPlayer.pause();
@@ -88,21 +99,16 @@ export default function MiniPlayer() {
           </Pressable>
         </View>
         <View>
-          {isLike ? (
-            <Ionicons
-              onPress={() => setIsLike(false)}
-              name="heart"
-              size={Spacing.xxxl}
-              color={Colors.error}
-            />
-          ) : (
-            <Ionicons
-              onPress={() => setIsLike(true)}
-              name="heart-outline"
-              size={Spacing.xxxl}
-              color={Colors.textTitle}
-            />
-          )}
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => likeStory(trackData.track, user.token, dispatch)}
+          >
+            {hasLiked ? (
+              <Ionicons name="heart" size={Spacing.xxxl} color={Colors.error} />
+            ) : (
+              <Ionicons name="heart-outline" size={Spacing.xxxl} color={Colors.textTitle} />
+            )}
+          </TouchableOpacity>
         </View>
       </View>
     </LinearGradient>

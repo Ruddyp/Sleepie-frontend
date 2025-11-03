@@ -34,7 +34,6 @@ export default function WaitingStory() {
         });
         const data = await response.json();
         if (data.result) {
-          console.log("Data story: ", data.story);
           dispatch(updateIsGenerating());
           dispatch(
             updateTrack({

@@ -24,22 +24,6 @@ export default function Favorites() {
 
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  // useEffect(() => {
-  //   // Récupérer les histoires créées et likées par l'utilisateur
-
-  //   fetch(`http://${IP}:${port}/stories/favorites`, {
-  //     method: "POST",
-  //     headers: { "Content-Type": "application/json" },
-  //     body: JSON.stringify({ token: userToken }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((data) => {
-  //       console.log("data from favorites fetch", data);
-  //       setCreatedStoriesArray(data.myStories);
-  //       setLikedStories(data.storiesLiked);
-  //     });
-  // }, []);
-
   const createdStories = storiesFromRedux.createdStories.map((story) => ({
     ...story,
     hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id)
@@ -60,13 +44,13 @@ export default function Favorites() {
     >
       <ScrollView style={{ flex: 1, width: "100%", paddingTop: 50, gap: 20 }}>
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
-        <CategoryCarousel
+        {(createdStories.length !== 0) && <CategoryCarousel
           title="Mes créations"
           data={createdStories}
-        />
+        />}
 
         {/* Carrousel 2 : sons/histoires likés */}
-        <CategoryCarousel title="Sons likés" data={likedStories} />
+        {(likedStories.length !== 0) && <CategoryCarousel title="Sons likés" data={likedStories} />}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />

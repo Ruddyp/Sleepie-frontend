@@ -56,7 +56,7 @@ export default function CategoryCarousel({
       {cardSize > 0 && (
         <FlatList
           data={data}
-          keyExtractor={(item) => item._id}
+          keyExtractor={(item) => `${title}-${item._id}`}
           renderItem={renderItem}
           horizontal
           contentContainerStyle={{ paddingHorizontal: sidePadding }}

@@ -59,7 +59,7 @@ export default function SignUp({ navigation }) {
       });
       const data = await response.json();
       if (data.result) {
-        dispatch(updateUser(data.data.user));
+        dispatch(updateUser(data.data));
         setUsername("");
         setPassword("");
         setConfirmationPassword("");

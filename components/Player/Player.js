@@ -12,6 +12,9 @@ import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
 import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
+import { useSelector, useDispatch } from "react-redux";
+import { updateLikedStories } from "../../reducers/stories";
+import { likeStory } from "../../modules/databaseAction";
 
 const events = [
   Event.RemotePlay,
@@ -22,13 +25,19 @@ const events = [
   Event.PlaybackActiveTrackChanged,
 ];
 const windowWidth = Dimensions.get("window").width;
+const IP = process.env.EXPO_PUBLIC_IP;
+const port = process.env.EXPO_PUBLIC_PORT;
 
 export function Player() {
   const activeTrack = useActiveTrack();
   const { position, duration } = useProgress(100); // 100ms de rafraîchissement
   const playbackState = usePlaybackState();
   const playerState = playbackState.state;
-  const { title, artwork, artist } = activeTrack || {};
+  const { title, artwork, artist, id } = activeTrack || {};
+  const user = useSelector((state) => state.user.value);
+  const trackData = useSelector((state) => state.track.value);
+  const stories = useSelector((state) => state.stories.value);
+  const dispatch = useDispatch();
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -36,9 +45,17 @@ export function Player() {
     }
   });
 
+  const hasLiked = stories.likedStories.some((story) => story._id === id);
   const isPlaying = playerState === State.Playing;
+  const isEnded = playerState === State.Ended;
 
   async function handlePlay() {
+    if (isEnded) {
+      console.log("Action: Restart");
+      await TrackPlayer.seekTo(0);
+      await TrackPlayer.play();
+    }
+
     if (isPlaying) {
       console.log("Action: Pause");
       await TrackPlayer.pause();
@@ -77,6 +94,23 @@ export function Player() {
                 "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
             }}
           />
+          <LinearGradient
+            colors={[Colors.bgTertiary[0], Colors.bgTertiary[1]]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.heartContainer}
+          >
+            <TouchableOpacity
+              activeOpacity={0.8}
+              onPress={() => likeStory(trackData.track, user.token, dispatch)}
+            >
+              {hasLiked ? (
+                <Ionicons name="heart" size={Spacing.xxxl} color={Colors.error} />
+              ) : (
+                <Ionicons name="heart-outline" size={Spacing.xxxl} color={Colors.textTitle} />
+              )}
+            </TouchableOpacity>
+          </LinearGradient>
         </View>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>{title}</Text>
@@ -202,13 +236,20 @@ const styles = StyleSheet.create({
     gap: Spacing.xl,
   },
   cover: {
-    width: 200,
-    height: 200,
+    width: windowWidth * 0.8,
+    height: windowWidth * 0.7,
     borderRadius: BorderRadius.medium,
   },
   artwork: {
     flex: 1,
     borderRadius: BorderRadius.medium,
+  },
+  heartContainer: {
+    position: "absolute",
+    bottom: Spacing.md,
+    right: Spacing.md,
+    borderRadius: BorderRadius.round,
+    padding: Spacing.sm,
   },
   titleContainer: {
     alignItems: "center",

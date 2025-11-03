@@ -4,35 +4,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateTrack } from "../../reducers/track";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import { updateLikedStories } from "../../reducers/stories"
+import { likeStory } from "../../modules/databaseAction";
+import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 export default function AudioCardSquare(props) {
   const { title, image, author, _id, url, size, hasLiked } = props;
   const dispatch = useDispatch();
+  const activeTrack = useActiveTrack();
+  const playbackState = usePlaybackState();
+  const playerState = playbackState.state;
   const user = useSelector((state) => state.user.value);
 
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
+  const isPlaying = activeTrack?.id === _id && playerState === State.Playing;
 
-  const likestory = async (story) => {
-    const body = {
-      token: user.token,
-      storyId: story._Id,
-    };
-    try {
-      const response = await fetch(`http://${IP}:${port}/stories/like`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
-      const data = await response.json();
-      console.log("data", data);
-      dispatch(updateLikedStories(story))
-
-    } catch (error) {
-      console.log("errorFromFetchlikeStory", error.message);
-    }
-  };
   return (
     <TouchableOpacity
       style={[styles.card, { width: size }]}
@@ -61,7 +45,11 @@ export default function AudioCardSquare(props) {
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.playLeftSpace, Shadows.bold]}
         >
-          <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
+          {!isPlaying ? (
+            <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
+          ) : (
+            <Ionicons name="pause" size={Spacing.xxl} color={Colors.textTitle} />
+          )}
         </LinearGradient>
 
         {/* Bouton Favori */}
@@ -71,7 +59,10 @@ export default function AudioCardSquare(props) {
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.likeRightSpace, Shadows.soft]}
         >
-          <TouchableOpacity activeOpacity={0.8} onPress={() => likestory(props)}>
+          <TouchableOpacity
+            activeOpacity={0.8}
+            onPress={() => likeStory(props, user.token, dispatch)}
+          >
             {hasLiked ? (
               <Ionicons name="heart" size={Spacing.xxl} color={Colors.error} />
             ) : (
