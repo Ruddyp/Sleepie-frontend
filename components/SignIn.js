@@ -6,6 +6,7 @@ import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
+import { setCreatedStories, setLikedStories } from "../reducers/stories";
 
 export default function SignIn({ navigation }) {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -46,7 +47,10 @@ export default function SignIn({ navigation }) {
       });
       const data = await response.json();
       if (data.result) {
-        dispatch(updateUser(data.data));
+        console.log(data);
+        dispatch(updateUser(data.data.user));
+        dispatch(setCreatedStories(data.data.createdStories));
+        dispatch(setLikedStories(data.data.likedStories));
         setEmail({ error: false, value: "" });
         setPassword("");
         navigation.navigate("TabNavigator");

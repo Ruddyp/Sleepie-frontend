@@ -1,13 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  KeyboardAvoidingView,
-  Platform,
-  Switch,
-  TouchableOpacity,
-  Pressable,
-} from "react-native";
+import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, Pressable } from "react-native";
 import { BorderRadius, Colors, Sizes, Spacing, Typography } from "../components/KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
