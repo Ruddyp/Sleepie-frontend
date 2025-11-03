@@ -5,6 +5,7 @@ import { updateIsFinished, updateIsGenerating } from "../../reducers/createForm"
 import { useEffect } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
+import { updateModalState } from "../../reducers/modal";
 
 const IP = process.env.EXPO_PUBLIC_IP;
 const port = process.env.EXPO_PUBLIC_PORT;
@@ -34,15 +35,16 @@ export default function WaitingStory() {
         });
         const data = await response.json();
         if (data.result) {
+          dispatch(updateModalState(false));
           dispatch(updateIsGenerating());
+          dispatch(updateIsFinished());
+          dispatch(updateCreatedStories(data.story));
           dispatch(
             updateTrack({
               track: { ...data.story },
               shouldPlayAutomatically: false,
             })
           );
-          dispatch(updateCreatedStories(data.story));
-          dispatch(updateIsFinished());
         }
       } catch (error) {
         console.log("Error happended while generating story", error);
