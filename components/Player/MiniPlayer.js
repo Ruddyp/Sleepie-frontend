@@ -59,7 +59,7 @@ export default function MiniPlayer() {
       style={styles.main}
     >
       <View style={styles.miniPlayerContainer}>
-        <View>
+        <View style={styles.leftMiniPlayerContainer}>
           <TouchableOpacity onPress={() => handlePlay()} activeOpacity={0.8}>
             {isPlaying ? (
               <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
@@ -67,26 +67,26 @@ export default function MiniPlayer() {
               <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
             )}
           </TouchableOpacity>
+          <Pressable
+            onPress={() => dispatch(updateModalState(true))}
+            style={styles.textIconMiniPlayerContainer}
+          >
+            <View style={styles.cover}>
+              <Image
+                style={styles.artwork}
+                source={{
+                  uri:
+                    artwork ||
+                    "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
+                }}
+              />
+            </View>
+            <View>
+              <Text style={styles.title}>{title}</Text>
+              <Text style={styles.subtitle}>{artist || "Auteur inconnu"}</Text>
+            </View>
+          </Pressable>
         </View>
-        <Pressable
-          onPress={() => dispatch(updateModalState(true))}
-          style={styles.middleMiniPlayerContainer}
-        >
-          <View style={styles.cover}>
-            <Image
-              style={styles.artwork}
-              source={{
-                uri:
-                  artwork ||
-                  "https://res.cloudinary.com/dr6rfk2nz/image/upload/v1761208190/cld-sample-5.jpg",
-              }}
-            />
-          </View>
-          <View>
-            <Text style={styles.title}>{title}</Text>
-            <Text style={styles.subtitle}>{artist}</Text>
-          </View>
-        </Pressable>
         <View>
           {isLike ? (
             <Ionicons
@@ -124,9 +124,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
-  middleMiniPlayerContainer: {
+  leftMiniPlayerContainer: {
     flexDirection: "row",
     gap: Spacing.sm,
+    justifyContent: "flex-start",
+    alignItems: "center",
+    flex: 1,
+  },
+  textIconMiniPlayerContainer: {
+    flexDirection: "row",
+    gap: Spacing.sm,
+    justifyContent: "center",
+    alignItems: "center",
   },
   cover: {
     width: 40,
