@@ -52,9 +52,9 @@ export default function Favorites() {
 
         {/* Carrousel 2 : sons/histoires likés */}
         <CategoryCarousel title="Sons likés" data={likedStories} />
-        {displayMiniPlayer && <MiniPlayer />}
-        <PlayerModal />
       </ScrollView>
+      {displayMiniPlayer && <MiniPlayer />}
+      <PlayerModal />
     </LinearGradient>
   );
 }
