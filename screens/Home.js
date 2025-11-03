@@ -33,10 +33,28 @@ export default function Home() {
       });
   }, [])
 
-  storiesSleepie.sort((a, b) => a.counter - b.counter);
+  storiesSleepie.sort((a, b) => b.listen_counter - a.listen_counter);
   const mostListenedStories = storiesSleepie.slice(0, 10);
   console.log("mostListenedStories", mostListenedStories[0])
   console.log("storiesSleepie", storiesSleepie[0])
+
+  const recently_playedWithLike = user.recently_played.map((story) => {
+    console.log("storyécoutéImage", story.url)
+    return {
+      ...story,
+      hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
+    }
+  })
+
+  const createdStoriesWithLike = stories.createdStories.map((story) => ({
+    ...story,
+    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
+  }))
+
+  const mostListenedStoriesWithLike = mostListenedStories.map((story) => ({
+    ...story,
+    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
+  }))
 
   return (
     <LinearGradient
@@ -51,9 +69,9 @@ export default function Home() {
           <CreateStoryCard onPress={() => navigation.navigate("create")} />
         </View>
         <View style={styles.carouselsContainer}>
-          {(user?.recently_played.length !== 0) && <CategoryCarousel title="Mes dernières écoutes" data={user.recently_played} />}
-          <CategoryCarousel title="Les + écoutées" data={mostListenedStories} />
-          {(stories.createdStories.length !== 0) && <CategoryCarousel title="Mes histoires crées" data={stories.createdStories} />}
+          {(user?.recently_played.length !== 0) && <CategoryCarousel title="Mes dernières écoutes" data={recently_playedWithLike} />}
+          <CategoryCarousel title="Les + écoutées" data={mostListenedStoriesWithLike} />
+          {(stories.createdStories.length !== 0) && <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />}
         </View>
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
