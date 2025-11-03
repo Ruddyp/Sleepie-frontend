@@ -51,8 +51,9 @@ export default function Home() {
           <CreateStoryCard onPress={() => navigation.navigate("create")} />
         </View>
         <View style={styles.carouselsContainer}>
-          <CategoryCarousel title="Mes dernières écoutes" data={user.recently_played} />
+          {(user?.recently_played.length !== 0) && <CategoryCarousel title="Mes dernières écoutes" data={user.recently_played} />}
           <CategoryCarousel title="Les + écoutées" data={mostListenedStories} />
+          {(stories.createdStories.length !== 0) && <CategoryCarousel title="Mes histoires crées" data={stories.createdStories} />}
         </View>
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
