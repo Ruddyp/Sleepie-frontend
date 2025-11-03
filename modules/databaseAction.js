@@ -15,7 +15,6 @@ export async function likeStory(story, token, dispatch) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
-    console.log("data", data);
     dispatch(updateLikedStories(story));
   } catch (error) {
     console.log("errorFromFetchlikeStory", error.message);
@@ -23,8 +22,6 @@ export async function likeStory(story, token, dispatch) {
 }
 
 export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) {
-  console.log({ token });
-  console.log({ story });
   const body = {
     token: token,
     storyId: story._id,

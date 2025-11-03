@@ -7,8 +7,6 @@ export default function TrackManager() {
   const dispatch = useDispatch();
   const trackData = useSelector((state) => state.track.value);
   const user = useSelector((state) => state.user.value);
-  console.log("array recently: ", user.recently_played);
-  console.log("taille recently: ", user.recently_played.length);
   const { _id, title, image, author, url } = trackData.track;
   const { shouldPlayAutomatically } = trackData;
 

@@ -9,21 +9,15 @@ import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 
-
-
-
 export default function Home() {
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
   const trackData = useSelector((state) => state.track.value);
   const stories = useSelector((state) => state.stories.value);
-  const user = useSelector((state) => state.user.value)
-  console.log("created Stories:", stories.createdStories.length);
-  console.log("Liked Stories:", stories.likedStories.length);
+  const user = useSelector((state) => state.user.value);
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
   const navigation = useNavigation();
-  const [storiesSleepie, setStoriesSleepie] = useState([])
-
+  const [storiesSleepie, setStoriesSleepie] = useState([]);
 
   useEffect(() => {
     fetch(`http://${IP}:${port}/stories/sleepiestories`)
@@ -31,30 +25,27 @@ export default function Home() {
       .then((data) => {
         setStoriesSleepie(data.stories);
       });
-  }, [])
+  }, []);
 
   storiesSleepie.sort((a, b) => b.listen_counter - a.listen_counter);
   const mostListenedStories = storiesSleepie.slice(0, 10);
-  console.log("mostListenedStories", mostListenedStories[0])
-  console.log("storiesSleepie", storiesSleepie[0])
 
   const recently_playedWithLike = user.recently_played.map((story) => {
-    console.log("storyécoutéImage", story.url)
     return {
       ...story,
-      hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
-    }
-  })
+      hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id),
+    };
+  });
 
   const createdStoriesWithLike = stories.createdStories.map((story) => ({
     ...story,
-    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
-  }))
+    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id),
+  }));
 
   const mostListenedStoriesWithLike = mostListenedStories.map((story) => ({
     ...story,
-    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id)
-  }))
+    hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id),
+  }));
 
   return (
     <LinearGradient
@@ -69,9 +60,13 @@ export default function Home() {
           <CreateStoryCard onPress={() => navigation.navigate("create")} />
         </View>
         <View style={styles.carouselsContainer}>
-          {(user?.recently_played.length !== 0) && <CategoryCarousel title="Mes dernières écoutes" data={recently_playedWithLike} />}
+          {user?.recently_played.length !== 0 && (
+            <CategoryCarousel title="Mes dernières écoutes" data={recently_playedWithLike} />
+          )}
           <CategoryCarousel title="Les + écoutées" data={mostListenedStoriesWithLike} />
-          {(stories.createdStories.length !== 0) && <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />}
+          {stories.createdStories.length !== 0 && (
+            <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />
+          )}
         </View>
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
