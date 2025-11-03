@@ -9,7 +9,7 @@ export default function CategoryCarousel({
 }) {
   const sidePadding = Spacing.lg;
   const gapBetweenCard = Spacing.lg;
-  const cardSize = Dimensions.get("window").width * 0.45;
+  const cardSize = Dimensions.get("window").width * 0.42;
 
   const itemFullWidth = cardSize + gapBetweenCard;
 

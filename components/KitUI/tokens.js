@@ -111,6 +111,13 @@ export const Shadows = {
     shadowRadius: 30,
     elevation: 8,
   },
+  bold: {
+    shadowColor: "#000000",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.7,
+    shadowRadius: 20,
+    elevation: 15,
+  },
   focus: {
     shadowColor: "#4E8AFF",
     shadowOffset: { width: 0, height: 0 },

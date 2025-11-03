@@ -6,6 +6,7 @@ import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
+import { setCreatedStories, setLikedStories } from "../reducers/stories";
 
 export default function SignIn({ navigation }) {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -46,7 +47,10 @@ export default function SignIn({ navigation }) {
       });
       const data = await response.json();
       if (data.result) {
-        dispatch(updateUser(data.data));
+        console.log(data);
+        dispatch(updateUser(data.data.user));
+        dispatch(setCreatedStories(data.data.createdStories));
+        dispatch(setLikedStories(data.data.likedStories));
         setEmail({ error: false, value: "" });
         setPassword("");
         navigation.navigate("TabNavigator");
@@ -79,9 +83,7 @@ export default function SignIn({ navigation }) {
         password
         autoCapitalize="none"
       />
-      <View style={styles.button}>
-        <Button title="Signin" size="large" variant="primary" onPress={() => handlePress()} />
-      </View>
+      <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
       {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}(s)</Text>}
     </View>
@@ -95,11 +97,8 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontBody,
   },
   container: {
-    padding: 30,
+    paddingHorizontal: 30,
     justifyContent: "center",
     gap: 15,
-  },
-  button: {
-    marginTop: 30,
   },
 });

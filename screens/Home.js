@@ -50,6 +50,9 @@ const DATA_BEST = [
 
 export default function Home() {
   const trackData = useSelector((state) => state.track.value);
+  const stories = useSelector((state) => state.stories.value);
+  console.log("created Stories:", stories.createdStories.length);
+  console.log("Liked Stories:", stories.likedStories.length);
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
   const navigation = useNavigation();
 
