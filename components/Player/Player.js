@@ -71,10 +71,8 @@ export function Player() {
     // Définition du timestamp pour arreter l'histoire automatiquement
     const futureTime =
       time === "end" ? duration * 1000 + Date.now() : Date.now() + parseInt(time) * 60 * 1000;
-    console.log("set", futureTime);
     setSleepTimer(time);
     setTimerTimestamp(futureTime);
-    console.log("getTimerTimestamp(futureTime)", getTimerTimestamp());
   }
 
   // Gestion de -10 secondes sur la track

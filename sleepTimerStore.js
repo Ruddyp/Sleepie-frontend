@@ -1,11 +1,9 @@
-// src/services/SleepTimerStore.js (ou un chemin similaire)
-
 // Variable simple pour stocker le timestamp de fin du minuteur
 let sleepTimerTimestamp = null;
 
 /**
  * Définit l'heure d'arrêt du minuteur.
- * Utilisé par le composant Player (l'UI) via Redux.
+ * Utilisé par le composant Player.
  * @param {number | null} timestamp - L'heure en millisecondes (ou null pour annuler).
  */
 export const setTimerTimestamp = (timestamp) => {
