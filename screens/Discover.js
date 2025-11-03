@@ -32,7 +32,6 @@ export default function Discover() {
     ;
 
 
-
   // Récupère un tableau des labels de toutes les histoires sleepie
   for (const story of storiesSleepie) {
     for (const label of story.label) {
