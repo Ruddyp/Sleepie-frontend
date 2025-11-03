@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateIsFinished, updateIsGenerating } from "../../reducers/createForm";
 import { useEffect } from "react";
 import { updateTrack } from "../../reducers/track";
+import { updateCreatedStories } from "../../reducers/stories";
 
 const IP = process.env.EXPO_PUBLIC_IP;
 const port = process.env.EXPO_PUBLIC_PORT;
@@ -33,7 +34,7 @@ export default function WaitingStory() {
         });
         const data = await response.json();
         if (data.result) {
-          console.log("data.story", data.story);
+          console.log("Data story: ", data.story);
           dispatch(updateIsGenerating());
           dispatch(
             updateTrack({
@@ -41,6 +42,7 @@ export default function WaitingStory() {
               shouldPlayAutomatically: false,
             })
           );
+          dispatch(updateCreatedStories(data.story));
           dispatch(updateIsFinished());
         }
       } catch (error) {
