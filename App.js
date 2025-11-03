@@ -1,14 +1,8 @@
-import {
-  NavigationContainer,
-  getFocusedRouteNameFromRoute,
-} from "@react-navigation/native";
+import { NavigationContainer, getFocusedRouteNameFromRoute } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import TrackPlayer, {
-  Capability,
-  AppKilledPlaybackBehavior,
-} from "react-native-track-player";
+import TrackPlayer, { Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
 import { useEffect, useRef } from "react";
 import KitScreen from "./screens/KitScreen";
 import Home from "./screens/Home";
@@ -42,11 +36,7 @@ const TabNavigator = () => {
     <Tab.Navigator
       screenOptions={{ headerShown: false }}
       tabBar={({ state, navigation, descriptors }) => (
-        <NightTabBar
-          state={state}
-          navigation={navigation}
-          descriptors={descriptors}
-        />
+        <NightTabBar state={state} navigation={navigation} descriptors={descriptors} />
       )}
     >
       <Tab.Screen name="home" component={Home} />
@@ -85,20 +75,12 @@ export default function App() {
       try {
         await TrackPlayer.setupPlayer();
         await TrackPlayer.updateOptions({
+          progressUpdateEventInterval: 5,
           capabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
-          compactCapabilities: [
-            Capability.Play,
-            Capability.Pause,
-            Capability.SeekTo,
-          ],
-          notificationCapabilities: [
-            Capability.Play,
-            Capability.Pause,
-            Capability.SeekTo,
-          ],
+          compactCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
+          notificationCapabilities: [Capability.Play, Capability.Pause, Capability.SeekTo],
           android: {
-            appKilledPlaybackBehavior:
-              AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
+            appKilledPlaybackBehavior: AppKilledPlaybackBehavior.StopPlaybackAndRemoveNotification,
           },
         });
         console.log("setup track player ok.");
@@ -112,22 +94,15 @@ export default function App() {
     <Provider store={store}>
       <TrackManager />
       <SafeAreaProvider>
-        <SafeAreaView
-          style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}
-        >
+        <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}>
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen
-                name="Login"
-                component={Login}
-                options={{ headerShown: false }}
-              />
+              <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
               <Stack.Screen
                 name="TabNavigator"
                 component={TabNavigator}
                 options={({ navigation, route }) => {
-                  const routeName =
-                    getFocusedRouteNameFromRoute(route) || "home";
+                  const routeName = getFocusedRouteNameFromRoute(route) || "home";
                   //ajouter ci-dessous pour cacher le header les différentes pages sans header
                   if (routeName === "profil" || routeName === "playlist") {
                     return { headerShown: false };

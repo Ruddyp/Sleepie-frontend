@@ -14,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 import { useSelector, useDispatch } from "react-redux";
 import { likeStory } from "../../modules/databaseAction";
+import { useState } from "react";
+import { getTimerTimestamp, setTimerTimestamp } from "../../sleepTimerStore";
 
 const events = [
   Event.RemotePlay,
@@ -25,6 +27,8 @@ const events = [
 ];
 const windowWidth = Dimensions.get("window").width;
 
+const timerOptions = ["1", "5", "10", "20", "40", "end"];
+
 export function Player() {
   const activeTrack = useActiveTrack();
   const { position, duration } = useProgress(100); // 100ms de rafraîchissement
@@ -35,6 +39,7 @@ export function Player() {
   const trackData = useSelector((state) => state.track.value);
   const stories = useSelector((state) => state.stories.value);
   const dispatch = useDispatch();
+  const [sleepTimer, setSleepTimer] = useState(null);
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -60,6 +65,16 @@ export function Player() {
       console.log("Action: Lecture");
       await TrackPlayer.play();
     }
+  }
+
+  async function handleSleepTimer(time) {
+    // Définition du timestamp pour arreter l'histoire automatiquement
+    const futureTime =
+      time === "end" ? duration * 1000 + Date.now() : Date.now() + parseInt(time) * 60 * 1000;
+    console.log("set", futureTime);
+    setSleepTimer(time);
+    setTimerTimestamp(futureTime);
+    console.log("getTimerTimestamp(futureTime)", getTimerTimestamp());
   }
 
   // Gestion de -10 secondes sur la track
@@ -178,32 +193,32 @@ export function Player() {
       </View>
 
       {/* Sleep Timer */}
-      {/* <View style={styles.timerSection}>
+      <View style={styles.timerSection}>
         <View style={styles.timerHeader}>
-        <Text style={styles.timerIcon}>⏱</Text>
-        <Text style={styles.timerLabel}>Minuteur sommeil</Text>
+          <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
+          <Text style={styles.timerLabel}>Minuteur sommeil</Text>
         </View>
-        
+
         <View style={styles.timerOptions}>
-        {timerOptions.map((time) => (
+          {timerOptions.map((time) => (
             <TouchableOpacity
-            key={time}
-            style={[styles.timerButton, sleepTimer === time && styles.timerButtonActive]}
-            onPress={() => setSleepTimer(time)}
-            activeOpacity={0.8}
+              style={[
+                styles.timerButton,
+                {
+                  backgroundColor: sleepTimer === time ? Colors.audioWave : Colors.bgTertiarySolid,
+                },
+              ]}
+              key={time}
+              onPress={() => handleSleepTimer(time)}
+              activeOpacity={0.8}
             >
-            <Text
-            style={[
-                styles.timerButtonText,
-                sleepTimer === time && styles.timerButtonTextActive,
-                ]}
-                >
-                {time === "Fin" ? "Fin de piste" : `${time} min`}
-                </Text>
-                </TouchableOpacity>
-                ))}
-                </View>
-                </View> */}
+              <Text style={styles.timerButtonText}>
+                {time === "end" ? "Fin de piste" : `${time} min`}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      </View>
     </LinearGradient>
   );
 }
@@ -214,7 +229,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: BorderRadius.large,
     padding: Spacing.xl,
-    gap: Spacing.xxl,
+    gap: Spacing.xl,
     ...Shadows.soft,
   },
   progressTextContainer: {
@@ -322,18 +337,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.lg,
     paddingVertical: Spacing.sm,
     borderRadius: BorderRadius.small,
-    backgroundColor: Colors.accentGlow,
-  },
-  timerButtonActive: {
-    backgroundColor: Colors.accentPrimarySolid,
   },
   timerButtonText: {
     color: Colors.textBody,
     fontSize: Typography.caption.fontSize,
     fontWeight: "400",
-  },
-  timerButtonTextActive: {
-    color: Colors.white,
-    fontWeight: "500",
   },
 });
