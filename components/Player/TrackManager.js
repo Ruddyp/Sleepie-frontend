@@ -6,7 +6,6 @@ export default function TrackManager() {
   const trackData = useSelector((state) => state.track.value);
   const { _id, title, image, author, url } = trackData.track;
   const { shouldPlayAutomatically } = trackData;
-  console.log({ shouldPlayAutomatically });
 
   useEffect(() => {
     if (url) {
