@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
-import { updateIsFinished, updateIsGenerating } from "../../reducers/createForm";
+import {
+  updateIsFinished,
+  updateIsGenerating,
+} from "../../reducers/createForm";
 import { useEffect } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
@@ -15,6 +18,13 @@ export default function WaitingStory() {
   const form = useSelector((state) => state.createForm.value);
   const user = useSelector((state) => state.user.value);
   const { steps, otherparam } = form;
+  function normalizeVoice(v) {
+    return String(v)
+      .normalize("NFD")
+      .replace(/\p{Diacritic}/gu, "") // retire les accents
+      .toLowerCase()
+      .trim();
+  }
 
   // A l'initialisation du composant on lance le fetch pour générer une histoire
   useEffect(() => {
@@ -22,7 +32,7 @@ export default function WaitingStory() {
       try {
         const body = {
           token: user.token,
-          voice: steps[0].response,
+          voice: normalizeVoice(steps[0].response),
           storyType: steps[1].response,
           protagonist: steps[2].response,
           location: steps[3].response,
@@ -31,7 +41,7 @@ export default function WaitingStory() {
           otherparamCharacterName: otherparam.characterName,
           otherparamWeather: otherparam.weather,
         };
-        console.log("body", body)
+        console.log("body", body);
         const response = await fetch(`http://${IP}:${port}/stories/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -59,7 +69,9 @@ export default function WaitingStory() {
   return (
     <View style={styles.main}>
       <ActivityIndicator size={100} color={Colors.textSleepieYellow} />
-      <Text style={styles.text}>Veuillez patienter, nous générons votre histoire...</Text>
+      <Text style={styles.text}>
+        Veuillez patienter, nous générons votre histoire...
+      </Text>
     </View>
   );
 }
