@@ -1,11 +1,16 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
 import { updateIsGenerating } from "../../reducers/createForm";
+import { updateModalParamState } from "../../reducers/modalparam";
+import ModalParamComponent from "./ModalParamComponent"
+
 
 export default function Step6() {
   const dispatch = useDispatch();
+  const modalParam = useSelector((state) => state.modalparam.value);
+  console.log(modalParam)
   return (
     <View style={styles.main}>
       <Button
@@ -19,7 +24,8 @@ export default function Step6() {
         <Text style={styles.textDivider}>Autres paramètres</Text>
         <View style={styles.divider}></View>
       </View>
-      <Button title="Définir d'autres paramètres" size="medium" variant="secondary" />
+      <Button title="Définir d'autres paramètres" size="medium" variant="secondary" onPress={() => dispatch(updateModalParamState(true))} />
+      {modalParam && <ModalParamComponent />}
     </View>
   );
 }
