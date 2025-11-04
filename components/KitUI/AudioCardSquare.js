@@ -5,7 +5,7 @@ import { updateTrack } from "../../reducers/track";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { likeStory } from "../../modules/databaseAction";
-import { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import TrackPlayer, { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 export default function AudioCardSquare(props) {
   const { title, image, author, _id, url, size, hasLiked } = props;
@@ -16,19 +16,33 @@ export default function AudioCardSquare(props) {
   const user = useSelector((state) => state.user.value);
 
   const isPlaying = activeTrack?.id === _id && playerState === State.Playing;
+  const isPaused = activeTrack?.id === _id && playerState === State.Paused;
+  const isEnded = activeTrack?.id === _id && playerState === State.Ended;
+
+  async function handlePress() {
+    dispatch(
+      updateTrack({
+        track: { _id, image, title, author: author, url },
+        shouldPlayAutomatically: true,
+      })
+    );
+    if (isPlaying) {
+      await TrackPlayer.pause();
+    }
+    if (isPaused) {
+      await TrackPlayer.play();
+    }
+    if (isEnded) {
+      await TrackPlayer.seekTo(0);
+      await TrackPlayer.play();
+    }
+  }
 
   return (
     <TouchableOpacity
       style={[styles.card, { width: size }]}
       activeOpacity={0.8}
-      onPress={() => {
-        dispatch(
-          updateTrack({
-            track: { _id, image, title, author: author, url },
-            shouldPlayAutomatically: true,
-          })
-        );
-      }}
+      onPress={() => handlePress()}
     >
       {/* IMAGE */}
       <View style={[styles.imageContainer, { width: size, height: size }]}>
@@ -44,6 +58,7 @@ export default function AudioCardSquare(props) {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.playLeftSpace, Shadows.bold]}
+          onPress={() => handlePause()}
         >
           {!isPlaying ? (
             <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />

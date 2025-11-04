@@ -12,7 +12,6 @@ import { filterDuration } from "../modules/filter";
 export default function Favorites() {
   const storiesFromRedux = useSelector((state) => state.stories.value);
   const trackData = useSelector((state) => state.track.value);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
 
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
@@ -43,8 +42,6 @@ export default function Favorites() {
     >
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <FilterBar
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
           selectedDuration={selectedDuration}
           setSelectedDuration={setSelectedDuration}
           hideCategory
