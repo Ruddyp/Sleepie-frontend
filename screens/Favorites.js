@@ -5,22 +5,31 @@ import MiniPlayer from "../components/Player/MiniPlayer";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
+import { useState } from "react";
+import FilterBar from "../components/KitUI/FilterBar";
+import { filterDuration } from "../modules/filter";
 
 export default function Favorites() {
   const storiesFromRedux = useSelector((state) => state.stories.value);
   const trackData = useSelector((state) => state.track.value);
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
 
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  const createdStories = storiesFromRedux.createdStories.map((story) => ({
-    ...story,
-    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
-  }));
+  const createdStories = storiesFromRedux.createdStories
+    .map((story) => ({
+      ...story,
+      hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
+    }))
+    .filter((story) => filterDuration(story, selectedDuration));
 
-  const likedStories = storiesFromRedux.likedStories.map((story) => ({
-    ...story,
-    hasLiked: true,
-  }));
+  const likedStories = storiesFromRedux.likedStories
+    .map((story) => ({
+      ...story,
+      hasLiked: true,
+    }))
+    .filter((story) => filterDuration(story, selectedDuration));
 
   const displayCreatedStories = createdStories.length !== 0;
   const displayLikedStories = likedStories.length !== 0;
@@ -33,6 +42,13 @@ export default function Favorites() {
       style={styles.linearContainer}
     >
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <FilterBar
+          selectedCategory={selectedCategory}
+          setSelectedCategory={setSelectedCategory}
+          selectedDuration={selectedDuration}
+          setSelectedDuration={setSelectedDuration}
+          hideCategory
+        />
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
         {displayCreatedStories && <CategoryCarousel title="Mes créations" data={createdStories} />}
 

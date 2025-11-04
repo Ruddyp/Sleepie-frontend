@@ -126,7 +126,7 @@ export default function VoicePlayer({
 
 const styles = StyleSheet.create({
   main: {
-    width: "50%",
+    width: "70%",
     justifyContent: "center",
     alignItems: "center",
     padding: Spacing.md,

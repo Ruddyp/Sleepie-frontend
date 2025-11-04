@@ -1,4 +1,3 @@
-import React from "react";
 import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "./tokens";
 
@@ -6,88 +5,79 @@ function FilterBar(props) {
   const {
     selectedCategory,
     selectedDuration,
-    onChangeCategory,
-    onChangeDuration,
-    style,
+    setSelectedCategory,
+    setSelectedDuration,
+    hideCategory = false,
+    hideDuration = false,
   } = props;
 
   const durationOptions = [
-    { key: "ALL", label: "Toutes" },
-    { key: "LE10", label: "≤ 10 min" },
-    { key: "D10_20", label: "10–20 min" },
-    { key: "D20_30", label: "20–30 min" },
-    { key: "GE30", label: "30+ min" },
+    { key: "all", label: "Toutes" },
+    { key: "1", label: "1-5 min", min: 1, max: 5 },
+    { key: "5", label: "5-10 min", min: 5, max: 10 },
+    { key: "10", label: "10-20 min", min: 10, max: 20 },
+    { key: "20", label: "20-30 min", min: 20, max: 30 },
+    { key: "30", label: "30+ min", min: 30, max: 9999 },
   ];
 
   const categoryOptions = [
-    { key: "ALL", label: "Toutes" },
+    { key: "all", label: "Toutes" },
     { key: "voyage", label: "Voyages" },
-    { key: "fiction", label: "Histoires fictionnelles" },
-    { key: "histoire", label: "Histoires historiques" },
-    { key: "nature", label: "Histoires de la nature" },
+    { key: "fiction", label: "Fictionnelles" },
+    { key: "historique", label: "Historiques" },
+    { key: "nature", label: "Nature" },
   ];
   return (
-    <View style={[styles.container, style]}>
+    <View style={styles.container}>
+      {/* Catégorie */}
+      {!hideCategory && (
+        <>
+          <Text style={styles.title}>Catégories d'histoires</Text>
+          <ScrollView horizontal>
+            <View style={styles.row}>
+              {categoryOptions.map((opt) => {
+                const selected = selectedCategory === opt.key;
+                return (
+                  <Pressable
+                    key={opt.key}
+                    onPress={() => setSelectedCategory(opt.key)}
+                    style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+                  >
+                    <Text style={selected ? styles.chipTextSelected : styles.chipTextUnselected}>
+                      {opt.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </ScrollView>
+        </>
+      )}
+
       {/* Durée */}
-      <Text style={styles.title}>Durée</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.row}>
-          {durationOptions.map((opt) => {
-            const selected = selectedDuration === opt.key;
-            return (
-              <Pressable
-                key={opt.key}
-                onPress={() => onChangeDuration(opt.key)}
-                style={[
-                  styles.chip,
-                  selected ? styles.chipSelected : styles.chipUnselected,
-                ]}
-              >
-                <Text
-                  style={
-                    selected
-                      ? styles.chipTextSelected
-                      : styles.chipTextUnselected
-                  }
-                >
-                  {opt.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </ScrollView>
-
-      {/* // Catégorie */}
-
-      <Text style={[styles.title, { marginTop: Spacing.sm }]}>Catégorie</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <View style={styles.row}>
-          {categoryOptions.map((opt) => {
-            const selected = selectedCategory === opt.key;
-            return (
-              <Pressable
-                key={opt.key}
-                onPress={() => onChangeCategory(opt.key)}
-                style={[
-                  styles.chip,
-                  selected ? styles.chipSelected : styles.chipUnselected,
-                ]}
-              >
-                <Text
-                  style={
-                    selected
-                      ? styles.chipTextSelected
-                      : styles.chipTextUnselected
-                  }
-                >
-                  {opt.label}
-                </Text>
-              </Pressable>
-            );
-          })}
-        </View>
-      </ScrollView>
+      {!hideDuration && (
+        <>
+          <Text style={styles.title}>Durée</Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+            <View style={styles.row}>
+              {durationOptions.map((opt) => {
+                const selected = selectedDuration.key === opt.key;
+                return (
+                  <Pressable
+                    key={opt.key}
+                    onPress={() => setSelectedDuration(opt)}
+                    style={[styles.chip, selected ? styles.chipSelected : styles.chipUnselected]}
+                  >
+                    <Text style={selected ? styles.chipTextSelected : styles.chipTextUnselected}>
+                      {opt.label}
+                    </Text>
+                  </Pressable>
+                );
+              })}
+            </View>
+          </ScrollView>
+        </>
+      )}
     </View>
   );
 }
@@ -95,33 +85,28 @@ function FilterBar(props) {
 const styles = StyleSheet.create({
   container: {
     width: "100%",
-    paddingTop: Spacing.sm,
-    paddingBottom: Spacing.xs,
     paddingHorizontal: Spacing.md,
+    gap: Spacing.sm,
   },
   title: {
-    ...Typography.micro,
-    color: Colors.textSecondary,
-    marginBottom: Spacing.xs,
+    color: Colors.textBody,
+    ...Typography.caption,
   },
   row: {
     flexDirection: "row",
     gap: Spacing.sm,
-    paddingRight: Spacing.xs,
+    paddingRight: Spacing.sm,
   },
   chip: {
     borderRadius: BorderRadius.round,
-    paddingVertical: 8,
+    paddingVertical: 12,
     paddingHorizontal: 12,
-    borderWidth: 1,
   },
   chipUnselected: {
     backgroundColor: Colors.accentGlow,
-    borderColor: Colors.borderSubtle,
   },
   chipSelected: {
     backgroundColor: Colors.bgTertiarySolid,
-    borderColor: "#234074",
   },
   chipTextUnselected: {
     ...Typography.micro,

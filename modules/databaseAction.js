@@ -33,6 +33,7 @@ export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) 
       body: JSON.stringify(body),
     });
     const data = await response.json();
+    console.log("story", story);
     dispatch(updateRecentlyPlayed(story));
   } catch (error) {
     console.log("error from updateStoryCountAndRecentlyPlayed", error.message);
