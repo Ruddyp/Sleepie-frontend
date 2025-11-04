@@ -4,6 +4,7 @@ const initialState = {
   value: {
     currentStep: 0,
     steps: [],
+    otherparam: [],
     isGenerating: false,
     isFinished: false,
   },
