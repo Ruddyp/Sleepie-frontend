@@ -15,7 +15,7 @@ export default function Input({
   autoCapitalize = "sentences",
 }) {
   const [focused, setFocused] = useState(false);
-  const [hidePassword, setHidePassword] = useState(true);
+  const [hidePassword, setHidePassword] = useState(secureTextEntry);
   const isPassword = secureTextEntry !== false;
 
 
