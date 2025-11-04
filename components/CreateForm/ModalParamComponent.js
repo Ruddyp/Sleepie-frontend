@@ -46,9 +46,10 @@ export default function ModalParamComponent() {
                                 <Text style={styles.titleparam}>CHOIX DU PERSONNAGE</Text>
                                 <Ionicons
                                     name="people"
-                                    size={Spacing.huge}
+                                    size={Spacing.xxl}
                                     color={Colors.textBody}
                                 />
+                                {form.otherparam.characterName && <Ionicons name="checkmark-circle" size={Spacing.xxl} color="green" />}
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity onPress={() => handleclickWeatherParam()}>
@@ -56,9 +57,10 @@ export default function ModalParamComponent() {
                                 <Text style={styles.titleparam}>CHOIX DE LA METEO </Text>
                                 <Ionicons
                                     name="partly-sunny"
-                                    size={Spacing.huge}
+                                    size={Spacing.xxl}
                                     color={Colors.textBody}
                                 />
+                                {form.otherparam.weather && <Ionicons name="checkmark-circle" size={Spacing.xxl} color="green" />}
                             </View>
                         </TouchableOpacity>
                     </View>
@@ -122,11 +124,11 @@ const styles = StyleSheet.create({
         ...Typography.body
     },
     optioncontainer: {
-        width: 300,
+        width: "85%",
         backgroundColor: Colors.bgTertiarySolid,
         borderRadius: 10,
         padding: 20,
-        gap: 20,
+        justifyContent: "space-between",
         flexDirection: "row",
         alignItems: "center"
     }
