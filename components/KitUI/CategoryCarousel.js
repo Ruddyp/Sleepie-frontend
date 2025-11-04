@@ -1,11 +1,4 @@
-import {
-  View,
-  Text,
-  Pressable,
-  FlatList,
-  StyleSheet,
-  Dimensions,
-} from "react-native";
+import { View, Text, Pressable, FlatList, StyleSheet, Dimensions } from "react-native";
 import { Colors, Spacing, Typography } from "./tokens";
 import AudioCardSquare from "./AudioCardSquare";
 import { Ionicons } from "@expo/vector-icons";
@@ -15,6 +8,7 @@ export default function CategoryCarousel({
   title = "",
   data = [], // Ensemble des histoires a afficher dans le carroussel
 }) {
+  if (data.length === 0) return null;
   const navigation = useNavigation();
   const route = useRoute();
   const sidePadding = Spacing.lg;
@@ -23,9 +17,7 @@ export default function CategoryCarousel({
 
   const itemFullWidth = cardSize + gapBetweenCard;
 
-  const renderItem = ({ item }) => (
-    <AudioCardSquare {...item} size={cardSize} />
-  );
+  const renderItem = ({ item }) => <AudioCardSquare {...item} size={cardSize} />;
 
   const handleSeeMore = () => {
     navigation.navigate("playlist", {
@@ -43,11 +35,7 @@ export default function CategoryCarousel({
           {title}
         </Text>
         <Pressable style={styles.moreContainer} onPress={handleSeeMore}>
-          <Ionicons
-            name="add-circle-outline"
-            size={Spacing.xl}
-            color={Colors.textTitle}
-          />
+          <Ionicons name="add-circle-outline" size={Spacing.xl} color={Colors.textTitle} />
           <Text style={styles.more}>Voir plus</Text>
         </Pressable>
       </View>
@@ -60,9 +48,7 @@ export default function CategoryCarousel({
           renderItem={renderItem}
           horizontal
           contentContainerStyle={{ paddingHorizontal: sidePadding }}
-          ItemSeparatorComponent={() => (
-            <View style={{ width: gapBetweenCard }} />
-          )}
+          ItemSeparatorComponent={() => <View style={{ width: gapBetweenCard }} />}
           snapToAlignment="start"
           snapToInterval={itemFullWidth}
           decelerationRate="fast"
