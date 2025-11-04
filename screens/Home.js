@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import { useNavigation } from "@react-navigation/native";
@@ -17,18 +17,15 @@ export default function Home() {
   const user = useSelector((state) => state.user.value);
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
   const navigation = useNavigation();
-  const [storiesSleepie, setStoriesSleepie] = useState([]);
+  const [mostListenedStories, setMostListenedStories] = useState([]);
 
   useEffect(() => {
-    fetch(`http://${IP}:${port}/stories/sleepiestories`)
+    fetch(`http://${IP}:${port}/stories/mostlistenedstories`)
       .then((response) => response.json())
       .then((data) => {
-        setStoriesSleepie(data.stories);
+        setMostListenedStories(data.mostListenedStories);
       });
   }, []);
-
-  storiesSleepie.sort((a, b) => b.listen_counter - a.listen_counter);
-  const mostListenedStories = storiesSleepie.slice(0, 10);
 
   const recently_playedWithLike = user.recently_played.map((story) => {
     return {
@@ -47,27 +44,25 @@ export default function Home() {
     hasLiked: stories.likedStories.some((likeStory) => likeStory._id === story._id),
   }));
 
+  const displayRecentlyPlayed = user?.recently_played.length !== 0;
+  const displayCreatedStory = stories.createdStories.length !== 0;
+
   return (
     <LinearGradient
       colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.main}
+      style={styles.linearContainer}
     >
-      <ScrollView>
-        {/* ---- Card "Créer mon histoire" au-dessus, séparée ---- */}
-        <View style={styles.createRow}>
-          <CreateStoryCard onPress={() => navigation.navigate("create")} />
-        </View>
-        <View style={styles.carouselsContainer}>
-          {user?.recently_played.length !== 0 && (
-            <CategoryCarousel title="Mes dernières écoutes" data={recently_playedWithLike} />
-          )}
-          <CategoryCarousel title="Les + écoutées" data={mostListenedStoriesWithLike} />
-          {stories.createdStories.length !== 0 && (
-            <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />
-          )}
-        </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        <CreateStoryCard onPress={() => navigation.navigate("create")} />
+        {displayRecentlyPlayed && (
+          <CategoryCarousel title="Mes dernières écoutes" data={recently_playedWithLike} />
+        )}
+        <CategoryCarousel title="Les + écoutées" data={mostListenedStoriesWithLike} />
+        {displayCreatedStory && (
+          <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />
+        )}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
@@ -76,8 +71,13 @@ export default function Home() {
 }
 
 const styles = StyleSheet.create({
-  main: { flex: 1 },
-  carouselsContainer: {
-    gap: Spacing.md,
+  linearContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollViewContainer: {
+    gap: Spacing.xl,
+    paddingBottom: Spacing.xxl,
   },
 });
