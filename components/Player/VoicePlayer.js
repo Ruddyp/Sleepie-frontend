@@ -50,7 +50,7 @@ export default function VoicePlayer({
 
   async function handlePlay() {
     // On met a jour le redux que si la voix choisi est différent dans le redux et on change la track
-    if (steps[currentStep - 1]?.response !== voice) {
+    if (steps[currentStep - 1]?.response !== voice || id !== _id) {
       setSelectedVoice(voice);
       dispatch(
         updateTrack({
