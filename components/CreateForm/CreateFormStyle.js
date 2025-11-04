@@ -47,5 +47,6 @@ export const formStyles = StyleSheet.create({
   },
   scrollViewContent: {
     paddingBottom: Spacing.maximale,
+    gap: Spacing.md,
   },
 });

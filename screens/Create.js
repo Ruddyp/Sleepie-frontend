@@ -12,6 +12,7 @@ import Step3 from "../components/CreateForm/Step3";
 import Step4 from "../components/CreateForm/Step4";
 import Step5 from "../components/CreateForm/Step5";
 import Step6 from "../components/CreateForm/Step6";
+import Step7 from "../components/CreateForm/Step7";
 import WaitingStory from "../components/CreateForm/WaitingStory";
 import { useEffect } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -20,34 +21,39 @@ import { updateTrack } from "../reducers/track";
 
 const steps = [
   {
+    title: "Choix de la voix",
+    subtitle: "Quel type de voix souhaitez-vous entendre ?",
+    stepComponent: <Step1 />,
+  },
+  {
     title: "Type d’histoire",
     subtitle: "Quel type d’histoire souhaitez-vous vivre ?",
-    stepComponent: <Step1 />,
+    stepComponent: <Step2 />,
   },
   {
     title: "Protagoniste",
     subtitle: "Qui souhaitez-vous suivre ?",
-    stepComponent: <Step2 />,
+    stepComponent: <Step3 />,
   },
   {
     title: "Univers / Lieu",
     subtitle: "Où se déroule l’histoire ?",
-    stepComponent: <Step3 />,
+    stepComponent: <Step4 />,
   },
   {
     title: "Effet recherché",
     subtitle: "Vers quel état souhaitez-vous être guidé ?",
-    stepComponent: <Step4 />,
+    stepComponent: <Step5 />,
   },
   {
     title: "Durée",
     subtitle: "Quelle durée pour votre histoire ?",
-    stepComponent: <Step5 />,
+    stepComponent: <Step6 />,
   },
   {
     title: "Configuration",
     subtitle: "Quelle durée pour votre histoire ?",
-    stepComponent: <Step6 />,
+    stepComponent: <Step7 />,
   },
 ];
 

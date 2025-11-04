@@ -17,20 +17,20 @@ export default function Step3() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🌊 Près de la mer",
-      subtitle: "L’air salé, le souffle du vent, les vagues régulières.",
+      title: "🚶‍♂️ Un.e voyageur.euse",
+      subtitle: "Explore le monde et ses merveilles.",
     },
     {
-      title: "🌲 Dans la nature",
-      subtitle: "Forêts, montagnes, sentiers, lacs, plaines — des paysages vastes et vivants.",
+      title: "🪴 Un.e habitant.e",
+      subtitle: "Découvre la vie quotidienne d’un lieu.",
     },
     {
-      title: "🏡 À la campagne ou dans un village",
-      subtitle: "La douceur d’un environnement calme, loin de l’agitation urbaine.",
+      title: "💬 Un.e confident.e",
+      subtitle: "Il partage un instant, une parole, un moment de vie.",
     },
     {
-      title: "✨ Dans un lieu imaginaire ",
-      subtitle: "Un endroit inventé, magique, hors du temps.",
+      title: "✨ Un.e rêveur.euse",
+      subtitle: "Il voit la vie autrement, avec imagination et douceur.",
     },
   ];
 
