@@ -20,7 +20,6 @@ export default function Home() {
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
   const navigation = useNavigation();
   const [mostListenedStories, setMostListenedStories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
 
   useEffect(() => {
@@ -67,8 +66,6 @@ export default function Home() {
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
         <CreateStoryCard onPress={() => navigation.navigate("create")} />
         <FilterBar
-          selectedCategory={selectedCategory}
-          setSelectedCategory={setSelectedCategory}
           selectedDuration={selectedDuration}
           setSelectedDuration={setSelectedDuration}
           hideCategory

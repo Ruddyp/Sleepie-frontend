@@ -7,12 +7,16 @@ import { Ionicons } from "@expo/vector-icons";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
+import FilterBar from "../components/KitUI/FilterBar";
+import { filterDuration } from "../modules/filter";
+import { useState } from "react";
 
 export default function Playlist() {
   const navigation = useNavigation();
   const route = useRoute();
   const { title = "playlist", stories = [], origin } = route.params;
   const trackData = useSelector((state) => state.track.value);
+  const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
   const storiesFromRedux = useSelector((state) => state.stories.value);
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
@@ -45,10 +49,15 @@ export default function Playlist() {
           <Text style={styles.subtitle}>{stories.length} morceaux</Text>
         </View>
       </View>
+      <FilterBar
+        selectedDuration={selectedDuration}
+        setSelectedDuration={setSelectedDuration}
+        hideCategory
+      />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {storiesWithLike.map((story) => (
-          <AudioCardSquare key={story._id} size={cardSize} {...story} />
-        ))}
+        {storiesWithLike
+          .map((story) => <AudioCardSquare key={story._id} size={cardSize} {...story} />)
+          .filter((story) => filterDuration(story, selectedDuration))}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
@@ -61,6 +70,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    gap: Spacing.md,
   },
   scrollViewContainer: {
     paddingVertical: Spacing.md,

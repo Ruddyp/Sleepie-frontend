@@ -29,6 +29,8 @@ export default function Step6() {
         maximumTrackTintColor={Colors.textTitle}
         thumbTintColor={Colors.textSleepieYellow}
         style={styles.slider}
+        step={5}
+        renderStepNumber
       />
       <Text style={styles.text}>{position}min</Text>
     </View>
