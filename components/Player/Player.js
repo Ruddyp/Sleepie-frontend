@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, Modal } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "../KitUI/tokens";
 import TrackPlayer, {
   useTrackPlayerEvents,
@@ -15,7 +15,7 @@ import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 import { useSelector, useDispatch } from "react-redux";
 import { likeStory } from "../../modules/databaseAction";
 import { useState } from "react";
-import { getTimerTimestamp, setTimerTimestamp } from "../../sleepTimerStore";
+import { setTimerTimestamp } from "../../sleepTimerStore";
 
 const events = [
   Event.RemotePlay,
@@ -40,6 +40,7 @@ export function Player() {
   const stories = useSelector((state) => state.stories.value);
   const dispatch = useDispatch();
   const [sleepTimer, setSleepTimer] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -179,7 +180,6 @@ export function Player() {
             </Text>
           </TouchableOpacity>
         </LinearGradient>
-
         <TouchableOpacity
           style={styles.controlButton}
           activeOpacity={0.8}
@@ -190,33 +190,73 @@ export function Player() {
         </TouchableOpacity>
       </View>
 
-      {/* Sleep Timer */}
-      <View style={styles.timerSection}>
-        <View style={styles.timerHeader}>
+      <View style={styles.controls}>
+        <TouchableOpacity
+          style={styles.sleepTimerButton}
+          activeOpacity={0.8}
+          onPress={() => setIsOpen(true)}
+        >
           <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
           <Text style={styles.timerLabel}>Minuteur sommeil</Text>
-        </View>
-
-        <View style={styles.timerOptions}>
-          {timerOptions.map((time) => (
-            <TouchableOpacity
-              style={[
-                styles.timerButton,
-                {
-                  backgroundColor: sleepTimer === time ? Colors.audioWave : Colors.bgTertiarySolid,
-                },
-              ]}
-              key={time}
-              onPress={() => handleSleepTimer(time)}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.timerButtonText}>
-                {time === "end" ? "Fin de piste" : `${time} min`}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
+        </TouchableOpacity>
       </View>
+
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isOpen}
+        onRequestClose={() => setIsOpen(false)}
+      >
+        <LinearGradient
+          colors={Colors.bgPrimary}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[styles.bottomSheet]}
+        >
+          {/* Sleep Timer */}
+          <View
+            style={{
+              gap: Spacing.lg,
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <View style={styles.timerHeader}>
+              <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
+              <Text style={styles.timerLabel}>Minuteur sommeil</Text>
+            </View>
+            <View style={styles.timerOptions}>
+              {timerOptions.map((time) => (
+                <TouchableOpacity
+                  style={[
+                    styles.timerButton,
+                    {
+                      backgroundColor:
+                        sleepTimer === time ? Colors.audioWave : Colors.bgTertiarySolid,
+                    },
+                  ]}
+                  key={time}
+                  onPress={() => handleSleepTimer(time)}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.timerButtonText}>
+                    {time === "end" ? "Fin de piste" : `${time} min`}
+                  </Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </View>
+          <View style={styles.bottomModalContainer}>
+            <TouchableOpacity onPress={() => setIsOpen(false)}>
+              <Ionicons
+                name="close-circle-outline"
+                size={Spacing.maximale}
+                color={Colors.textBody}
+              />
+            </TouchableOpacity>
+          </View>
+        </LinearGradient>
+      </Modal>
     </LinearGradient>
   );
 }
@@ -307,6 +347,18 @@ const styles = StyleSheet.create({
   playIcon: {
     marginLeft: 2,
   },
+  sleepTimerButton: {
+    width: "50%",
+    height: Sizes.buttonDefault,
+    borderRadius: BorderRadius.round,
+    backgroundColor: Colors.bgTertiarySolid,
+    borderWidth: 1,
+    borderColor: Colors.borderSubtle,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: Spacing.sm,
+  },
   timerSection: {
     gap: Spacing.md,
   },
@@ -326,7 +378,7 @@ const styles = StyleSheet.create({
     lineHeight: Typography.caption.lineHeight,
   },
   timerOptions: {
-    flexDirection: "row",
+    flexDirection: "column",
     flexWrap: "wrap",
     justifyContent: "center",
     gap: Spacing.sm,
@@ -340,5 +392,12 @@ const styles = StyleSheet.create({
     color: Colors.textBody,
     fontSize: Typography.caption.fontSize,
     fontWeight: "400",
+    textAlign: "center",
+  },
+  bottomSheet: {
+    height: "100%",
+    width: "100%",
+    justifyContent: "space-around",
+    alignItems: "center",
   },
 });
