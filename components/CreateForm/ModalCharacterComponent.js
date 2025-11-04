@@ -46,6 +46,7 @@ export default function ModalCharacterComponent() {
                             placeholder={form.otherparam?.characterName || "Nom de ton personnage"}
                             value={characterName}
                             onChangeText={(characterName) => setCharacterName(characterName)}
+                            secureTextEntry={false}
                         >
                         </Input>
                         <Button

@@ -6,6 +6,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
 
 export default function Login({ navigation, route }) {
+
+  const IP = process.env.EXPO_PUBLIC_IP;
+  const port = process.env.EXPO_PUBLIC_PORT;
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
 
@@ -17,6 +20,24 @@ export default function Login({ navigation, route }) {
     dispatch(deleteUser());
     navigation.navigate("Login");
   };
+
+  const handlePressAbonnement = async () => {
+    const body = {
+      token: user.token,
+      role: "premium"
+    }
+    try {
+      const response = await fetch(`http://${IP}:${port}/rights/modify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await response.json();
+      console.log(data)
+    } catch (error) {
+      console.log({ result: false, message: error.message })
+    }
+  }
 
   return (
     <LinearGradient
@@ -36,6 +57,10 @@ export default function Login({ navigation, route }) {
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>Mon abonnement</Text>
+        <View style={styles.abonnement}>
+          <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
+          <Button title="S'abonner" variant="primary" onPress={() => handlePressAbonnement()} />
+        </View>
       </View>
       <View style={styles.containerBottom}>
         <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
@@ -85,4 +110,12 @@ const styles = StyleSheet.create({
     flex: 1,
     gap: 10,
   },
+  abonnement: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  textabonnement: {
+    color: Colors.textBody
+  }
 });
