@@ -1,37 +1,56 @@
 import { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "./tokens";
+import { Ionicons } from "@expo/vector-icons";
+
 
 export default function Input({
   label,
   placeholder,
   value,
   onChangeText,
-  password = false,
+  secureTextEntry = false,
   error,
   keyboardType = "default",
   autoCapitalize = "sentences",
 }) {
   const [focused, setFocused] = useState(false);
+  const [hidePassword, setHidePassword] = useState(true);
+  const isPassword = secureTextEntry !== false;
+
+
 
   return (
     <View style={styles.container}>
       {label && <Text style={styles.label}>{label}</Text>}
-
-      <TextInput
-        style={[styles.input, focused && styles.inputFocused, error && styles.inputError]}
-        placeholder={placeholder}
-        placeholderTextColor={Colors.textSecondary}
-        value={value}
-        onChangeText={onChangeText}
-        secureTextEntry={password}
-        onFocus={() => setFocused(true)}
-        onBlur={() => setFocused(false)}
-        keyboardType={keyboardType}
-        autoCapitalize={autoCapitalize}
-      />
-
+      <View>
+        <TextInput
+          style={[styles.input, focused && styles.inputFocused, error && styles.inputError]}
+          placeholder={placeholder}
+          placeholderTextColor={Colors.textSecondary}
+          value={value}
+          onChangeText={onChangeText}
+          secureTextEntry={hidePassword}
+          onFocus={() => setFocused(true)}
+          onBlur={() => setFocused(false)}
+          keyboardType={keyboardType}
+          autoCapitalize={autoCapitalize}
+        />
+        {isPassword && (
+          <TouchableOpacity
+            style={styles.icon}
+            onPress={() => setHidePassword(!hidePassword)}
+          >
+            <Ionicons
+              name={!hidePassword ? "eye-off" : "eye"}
+              size={22}
+              color={Colors.textBody}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
       {error && <Text style={styles.errorText}>{error}</Text>}
+
     </View>
   );
 }
@@ -69,4 +88,9 @@ const styles = StyleSheet.create({
     lineHeight: Typography.micro.lineHeight,
     fontFamily: Typography.fontBody,
   },
+  icon: {
+    position: "absolute",
+    top: "30%",
+    left: "85%"
+  }
 });

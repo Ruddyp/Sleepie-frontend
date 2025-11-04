@@ -8,6 +8,7 @@ import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
 import { setCreatedStories, setLikedStories } from "../reducers/stories";
 
+
 export default function SignIn({ navigation }) {
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
@@ -17,6 +18,7 @@ export default function SignIn({ navigation }) {
   const [password, setPassword] = useState("");
   const [emptyfield, setEmptyfield] = useState(false);
   const [messageFromBack, setMessageFromBack] = useState("");
+
 
   const handlePress = async () => {
     setEmptyfield(false);
@@ -75,13 +77,15 @@ export default function SignIn({ navigation }) {
         keyboardType="email-address"
         autoCapitalize="none"
       />
-      <Input
-        placeholder="Mot de passe"
-        onChangeText={(value) => setPassword(value)}
-        value={password}
-        password
-        autoCapitalize="none"
-      />
+      <View style={styles.mdp}>
+        <Input
+          placeholder="Mot de passe"
+          onChangeText={(value) => setPassword(value)}
+          value={password}
+          secureTextEntry={true}
+          autoCapitalize="none"
+        />
+      </View>
       <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
       {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}(s)</Text>}
