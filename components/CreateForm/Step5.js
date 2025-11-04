@@ -1,36 +1,58 @@
-import { StyleSheet, Text, View } from "react-native";
-import { useEffect, useState } from "react";
+import { StyleSheet, Pressable, View } from "react-native";
+import ChoiceCard from "./ChoiceCard";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateStep } from "../../reducers/createForm";
-import Slider from "@react-native-community/slider";
-import { Colors, Spacing, Typography } from "../KitUI/tokens";
+import { Spacing } from "../KitUI/tokens";
 
 export default function Step5() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
   const intialValue = steps[currentStep - 1]?.response;
-  // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met 5
-  const [position, setPosition] = useState(intialValue || 1);
 
-  useEffect(() => {
-    dispatch(updateStep({ currentStep: form.currentStep, response: position }));
-  }, [position]);
+  // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
+  const [selectedCardTitle, setSelectedCardTitle] = useState(intialValue || null);
+
+  // Définir les données des cartes
+  const choices = [
+    {
+      title: "🍵 Réaliste",
+      subtitle: "Une histoire simple et ancrée dans le réel.",
+    },
+    {
+      title: "🌿 Méditative ",
+      subtitle: "Une histoire centrée sur les sensations : la lumière, la respiration, le silence.",
+    },
+    {
+      title: "🌬 Introspective ",
+      subtitle: "Une histoire intérieure, guidée par la pensée et la compréhension douce.",
+    },
+    {
+      title: "🌌 Imaginaire",
+      subtitle: "Glisser vers un univers apaisant et merveilleux.",
+    },
+  ];
+
+  function handleChoice(title) {
+    dispatch(updateStep({ currentStep: form.currentStep, response: title }));
+    setSelectedCardTitle(title);
+  }
 
   return (
     <View style={styles.main}>
-      <Slider
-        minimumValue={1}
-        maximumValue={30}
-        value={position}
-        onSlidingComplete={(value) => setPosition(value)}
-        onValueChange={(value) => setPosition(value)}
-        minimumTrackTintColor={Colors.accentPrimarySolid}
-        maximumTrackTintColor={Colors.textTitle}
-        thumbTintColor={Colors.textSleepieYellow}
-        style={styles.slider}
-      />
-      <Text style={styles.text}>{position}min</Text>
+      {choices.map((choice, index) => (
+        // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
+        <Pressable key={index} onPress={() => handleChoice(choice.title)} style={styles.pressable}>
+          {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
+          <ChoiceCard
+            title={choice.title}
+            subtitle={choice.subtitle}
+            isFocused={selectedCardTitle === choice.title}
+            icon={choice.icon}
+          />
+        </Pressable>
+      ))}
     </View>
   );
 }
@@ -38,16 +60,11 @@ export default function Step5() {
 const styles = StyleSheet.create({
   main: {
     width: "100%",
-    height: "100%",
+    gap: Spacing.lg,
+  },
+  pressable: {
+    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: Spacing.huge,
-  },
-  slider: {
-    width: "100%",
-  },
-  text: {
-    ...Typography.body,
-    color: Colors.textBody,
   },
 });

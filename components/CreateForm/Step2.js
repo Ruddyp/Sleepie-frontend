@@ -17,20 +17,21 @@ export default function Step2() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🚶‍♂️ Un.e voyageur.euse",
-      subtitle: "Explore le monde et ses merveilles.",
+      title: "🪶 Un voyage",
+      subtitle: "Découverte des paysages, des sons, des sensations.",
     },
     {
-      title: "🪴 Un.e habitant.e",
-      subtitle: "Découvre la vie quotidienne d’un lieu.",
+      title: "🤝 Une rencontre",
+      subtitle: "Une histoire centrée sur une relation ou un échange bienveillant.",
     },
     {
-      title: "💬 Un.e confident.e",
-      subtitle: "Il partage un instant, une parole, un moment de vie.",
+      title: "🏡 Un lieu à explorer",
+      subtitle:
+        "Une histoire qui se déroule dans un endroit particulier : un village, une île, une maison, un paysage.",
     },
     {
-      title: "✨ Un.e rêveur.euse",
-      subtitle: "Il voit la vie autrement, avec imagination et douceur.",
+      title: "☀️ Un moment de vie",
+      subtitle: "Une histoire qui se déroule sur une journée calme : matin, après-midi, ou soirée.",
     },
   ];
 

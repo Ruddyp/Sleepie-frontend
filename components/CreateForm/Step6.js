@@ -1,31 +1,36 @@
 import { StyleSheet, Text, View } from "react-native";
-import { Colors, Spacing, Typography } from "../KitUI/tokens";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "../KitUI/Button";
-import { updateIsGenerating } from "../../reducers/createForm";
-import { updateModalParamState } from "../../reducers/modalparam";
-import ModalParamComponent from "./ModalParamComponent"
-
+import { updateStep } from "../../reducers/createForm";
+import Slider from "@react-native-community/slider";
+import { Colors, Spacing, Typography } from "../KitUI/tokens";
 
 export default function Step6() {
   const dispatch = useDispatch();
-  const modalParam = useSelector((state) => state.modalparam.value);
-  console.log(modalParam)
+  const form = useSelector((state) => state.createForm.value);
+  const { currentStep, steps } = form;
+  const intialValue = steps[currentStep - 1]?.response;
+  // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met 5
+  const [position, setPosition] = useState(intialValue || 1);
+
+  useEffect(() => {
+    dispatch(updateStep({ currentStep: form.currentStep, response: position }));
+  }, [position]);
+
   return (
     <View style={styles.main}>
-      <Button
-        title="Génère ton histoire"
-        size="large"
-        variant="primary"
-        onPress={() => dispatch(updateIsGenerating())}
+      <Slider
+        minimumValue={1}
+        maximumValue={30}
+        value={position}
+        onSlidingComplete={(value) => setPosition(value)}
+        onValueChange={(value) => setPosition(value)}
+        minimumTrackTintColor={Colors.accentPrimarySolid}
+        maximumTrackTintColor={Colors.textTitle}
+        thumbTintColor={Colors.textSleepieYellow}
+        style={styles.slider}
       />
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider}></View>
-        <Text style={styles.textDivider}>Autres paramètres</Text>
-        <View style={styles.divider}></View>
-      </View>
-      <Button title="Définir d'autres paramètres" size="medium" variant="secondary" onPress={() => dispatch(updateModalParamState(true))} />
-      {modalParam && <ModalParamComponent />}
+      <Text style={styles.text}>{position}min</Text>
     </View>
   );
 }
@@ -34,23 +39,14 @@ const styles = StyleSheet.create({
   main: {
     width: "100%",
     height: "100%",
-    justifyContent: "flex-start",
-    alignItems: "center",
-    gap: Spacing.huge,
-  },
-  dividerContainer: {
-    width: "100%",
     justifyContent: "center",
     alignItems: "center",
-    flexDirection: "row",
+    paddingHorizontal: Spacing.huge,
   },
-  divider: {
-    width: "25%",
-    height: 2,
-    backgroundColor: Colors.audioWave,
-    marginHorizontal: Spacing.md,
+  slider: {
+    width: "100%",
   },
-  textDivider: {
+  text: {
     ...Typography.body,
     color: Colors.textBody,
   },

@@ -1,66 +1,51 @@
-import { StyleSheet, Pressable, View } from "react-native";
-import ChoiceCard from "./ChoiceCard";
+import { StyleSheet, View } from "react-native";
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { updateStep } from "../../reducers/createForm";
+import { useSelector } from "react-redux";
 import { Spacing } from "../KitUI/tokens";
+import VoicePlayer from "../Player/VoicePlayer";
 
 export default function Step1() {
-  const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const { currentStep, steps } = form;
   const intialValue = steps[currentStep - 1]?.response;
 
   // Dans le cas ou le user a deja rempli on utilise ce qu'il a rempli sinon on met null
-  const [selectedCardTitle, setSelectedCardTitle] = useState(
-    intialValue || null
-  );
+  const [selectedVoice, setSelectedVoice] = useState(intialValue || null);
 
-  // Définir les données des cartes
   const choices = [
     {
-      title: "🪶 Un voyage",
-      subtitle: "Découverte des paysages, des sons, des sensations.",
+      voice: "Clément",
+      url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Clement_sample_hsvusq.mp3",
+      gender: "male",
     },
     {
-      title: "🤝 Une rencontre",
-      subtitle:
-        "Une histoire centrée sur une relation ou un échange bienveillant.",
+      voice: "Emilie",
+      url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Emilie_sample_pzsugo.mp3",
+      gender: "female",
     },
     {
-      title: "🏡 Un lieu à explorer",
-      subtitle:
-        "Une histoire qui se déroule dans un endroit particulier : un village, une île, une maison, un paysage.",
+      voice: "Nicolas",
+      url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Nicolas_sample_sgmt1z.mp3",
+      gender: "male",
     },
     {
-      title: "☀️ Un moment de vie",
-      subtitle:
-        "Une histoire qui se déroule sur une journée calme : matin, après-midi, ou soirée.",
+      voice: "Sandra",
+      url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762251027/Sandra_sample_pysjgj.mp3",
+      gender: "female",
     },
   ];
-
-  function handleChoice(title) {
-    dispatch(updateStep({ currentStep: form.currentStep, response: title }));
-    setSelectedCardTitle(title);
-  }
 
   return (
     <View style={styles.main}>
       {choices.map((choice, index) => (
-        // 2. Utiliser TouchableWithoutFeedback pour rendre la carte cliquable
-        <Pressable
-          key={index}
-          onPress={() => handleChoice(choice.title)}
-          style={styles.pressable}
-        >
-          {/* 4. Passer la prop isFocused : true si le titre correspond à l'état */}
-          <ChoiceCard
-            title={choice.title}
-            subtitle={choice.subtitle}
-            isFocused={selectedCardTitle === choice.title}
-            icon={choice.icon}
-          />
-        </Pressable>
+        <VoicePlayer
+          key={`${choice.voice}-${index}`}
+          {...choice}
+          _id={`${choice.voice}-${index}`}
+          form={form}
+          selectedVoice={selectedVoice}
+          setSelectedVoice={setSelectedVoice}
+        />
       ))}
     </View>
   );
@@ -69,11 +54,8 @@ export default function Step1() {
 const styles = StyleSheet.create({
   main: {
     width: "100%",
-    gap: Spacing.lg,
-  },
-  pressable: {
-    width: "100%",
     justifyContent: "center",
     alignItems: "center",
+    gap: Spacing.lg,
   },
 });

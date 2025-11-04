@@ -28,7 +28,7 @@ export default function TrackManager() {
               {
                 id: _id,
                 title: title,
-                artist: author.username,
+                artist: author ? author.username : "",
                 artwork: image,
                 url: url,
               },
