@@ -29,7 +29,7 @@ export default function Step7() {
         variant="secondary"
         onPress={() => dispatch(updateModalParamState(true))}
       />
-      {modalParam && <ModalParamComponent />}
+      {modalParam.modalState && <ModalParamComponent />}
     </View>
   );
 }

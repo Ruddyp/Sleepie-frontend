@@ -1,22 +1,35 @@
-import { StyleSheet, View, Modal, Dimensions, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Modal, Dimensions, TouchableOpacity, Text } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
-import { updateModalParamState } from "../../reducers/modalparam";
+import { updateModalParamState, updateModalStateCharacter, updateModalParamStateWeather } from "../../reducers/modalparam";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors, Spacing } from "../KitUI/tokens";
+import { Colors, Spacing, Typography } from "../KitUI/tokens";
+import ModalCharacterComponent from "./ModalCharacterComponent"
+import ModalWeatherComponent from "./ModalWeatherComponent";
 
 const windowHeight = Dimensions.get("window").height;
 export default function ModalParamComponent() {
     const dispatch = useDispatch();
-    const modalparam = useSelector((state) => state.modalparam.value);
+    const modalParam = useSelector((state) => state.modalparam.value);
+    const form = useSelector((state) => state.createForm.value)
     function handleClose() {
         dispatch(updateModalParamState(false));
+        dispatch(updateModalStateCharacter(false));
+        dispatch(updateModalParamStateWeather(false));
     }
+
+    const handleclickCharacterParam = () => {
+        dispatch(updateModalStateCharacter(true))
+    }
+    const handleclickWeatherParam = () => {
+        dispatch(updateModalParamStateWeather(true))
+    }
+    console.log("form", form)
     return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={modalparam.modalState}
+            visible={modalParam.modalState}
             onRequestClose={() => dispatch(updateModalParamState(false))}
         >
             <LinearGradient
@@ -27,7 +40,29 @@ export default function ModalParamComponent() {
             >
                 <View style={styles.mainModalContainer}>
                     <View style={styles.middleModalContainer}>
-                        <Text>MODAL PARAM</Text>
+                        <Text style={styles.titlemodal}>AUTRES PARAMETRES</Text>
+                        <TouchableOpacity onPress={() => handleclickCharacterParam()}>
+                            <View style={styles.optioncontainer}>
+                                <Text style={styles.titleparam}>CHOIX DU PERSONNAGE</Text>
+                                <Ionicons
+                                    name="people"
+                                    size={Spacing.xxl}
+                                    color={Colors.textBody}
+                                />
+                                {form.otherparam.characterName && <Ionicons name="checkmark-circle" size={Spacing.xxl} color="green" />}
+                            </View>
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => handleclickWeatherParam()}>
+                            <View style={styles.optioncontainer}>
+                                <Text style={styles.titleparam}>CHOIX DE LA METEO </Text>
+                                <Ionicons
+                                    name="partly-sunny"
+                                    size={Spacing.xxl}
+                                    color={Colors.textBody}
+                                />
+                                {form.otherparam.weather && <Ionicons name="checkmark-circle" size={Spacing.xxl} color="green" />}
+                            </View>
+                        </TouchableOpacity>
                     </View>
                     <View style={styles.bottomModalContainer}>
                         <TouchableOpacity onPress={() => handleClose()}>
@@ -37,6 +72,10 @@ export default function ModalParamComponent() {
                                 color={Colors.textBody}
                             />
                         </TouchableOpacity>
+                    </View>
+                    <View>
+                        {modalParam.modalStateCharacter && <ModalCharacterComponent />}
+                        {modalParam.modalStateWeather && <ModalWeatherComponent />}
                     </View>
                 </View>
             </LinearGradient>
@@ -63,7 +102,9 @@ const styles = StyleSheet.create({
         width: "100%",
         height: "80%",
         alignItems: "center",
-        justifyContent: "center",
+        paddingTop: 20,
+        gap: 20,
+        // justifyContent: "center",
     },
     bottomSheet: {
         position: "absolute",
@@ -73,4 +114,23 @@ const styles = StyleSheet.create({
         alignItems: "center",
         bottom: 0,
     },
+    titlemodal: {
+        color: Colors.textTitle,
+        ...Typography.h2,
+        paddingBottom: 30,
+    },
+    titleparam: {
+        color: Colors.textTitle,
+        ...Typography.body
+    },
+    optioncontainer: {
+        width: "85%",
+        backgroundColor: Colors.bgTertiarySolid,
+        borderRadius: 10,
+        padding: 20,
+        justifyContent: "space-between",
+        flexDirection: "row",
+        alignItems: "center"
+    }
+
 });

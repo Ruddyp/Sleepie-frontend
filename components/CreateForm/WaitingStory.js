@@ -14,7 +14,7 @@ export default function WaitingStory() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
   const user = useSelector((state) => state.user.value);
-  const { steps } = form;
+  const { steps, otherparam } = form;
 
   // A l'initialisation du composant on lance le fetch pour générer une histoire
   useEffect(() => {
@@ -22,12 +22,16 @@ export default function WaitingStory() {
       try {
         const body = {
           token: user.token,
-          storyType: steps[0].response,
-          protagonist: steps[1].response,
-          location: steps[2].response,
-          effect: steps[3].response,
-          duration: steps[4].response,
+          voice: steps[0].response,
+          storyType: steps[1].response,
+          protagonist: steps[2].response,
+          location: steps[3].response,
+          effect: steps[4].response,
+          duration: steps[5].response,
+          otherparamCharacterName: otherparam.characterName,
+          otherparamWeather: otherparam.weather,
         };
+        console.log("body", body)
         const response = await fetch(`http://${IP}:${port}/stories/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
