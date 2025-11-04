@@ -1,4 +1,4 @@
-import { StyleSheet, View, ScrollView } from "react-native";
+import { StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors, Spacing } from "../components/KitUI/tokens";
 import { useState, useEffect } from "react";
@@ -50,10 +50,10 @@ export default function Discover() {
       colors={Colors.bgPrimary}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={{ flex: 1, justifyContent: "center", alignItems: "center" }}
+      style={styles.linearContainer}
     >
-      <ScrollView>
-        <View style={styles.carrousel}>{categoryCarrouselToDisplay}</View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        {categoryCarrouselToDisplay}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
@@ -62,14 +62,13 @@ export default function Discover() {
 }
 
 const styles = StyleSheet.create({
-  main: {
+  linearContainer: {
     flex: 1,
-    backgroundColor: Colors.bgPrimary,
+    justifyContent: "center",
+    alignItems: "center",
   },
-  carrousel: {
-    flex: 1,
-    width: "100%",
-    paddingTop: 50,
+  scrollViewContainer: {
     gap: Spacing.xl,
+    paddingBottom: Spacing.xxl,
   },
 });

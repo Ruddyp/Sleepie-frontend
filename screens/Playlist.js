@@ -1,5 +1,4 @@
 import { StyleSheet, View, Dimensions, ScrollView, TouchableOpacity, Text } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import AudioCardSquare from "../components/KitUI/AudioCardSquare";
 import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
@@ -17,7 +16,7 @@ export default function Playlist() {
   const storiesFromRedux = useSelector((state) => state.stories.value);
   const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
 
-  const CARD_SIZE = Math.floor((Dimensions.get("window").width - Spacing.xl * 2 - Spacing.lg) / 2);
+  const cardSize = Dimensions.get("window").width * 0.42;
 
   const handleBack = () => {
     if (origin) return navigation.navigate(origin);
@@ -30,50 +29,27 @@ export default function Playlist() {
 
   return (
     <LinearGradient
-      colors={[Colors.bgPrimary[0], Colors.bgPrimary[1]]}
+      colors={Colors.bgPrimary}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 1 }}
-      style={styles.main}
+      style={styles.linearContainer}
     >
-      <SafeAreaView style={{ flex: 1 }}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={handleBack}>
-            <Ionicons name="chevron-back" size={26} color={Colors.textTitle} />
-          </TouchableOpacity>
-          <View style={{ flex: 1 }}>
-            <Text style={styles.title} numberOfLines={1}>
-              {title}
-            </Text>
-            <Text style={styles.subtitle}>{stories.length} morceaux</Text>
-          </View>
-          <View style={{ width: 26 }} />
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBack}>
+          <Ionicons name="chevron-back" size={26} color={Colors.textTitle} />
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.title} numberOfLines={1}>
+            {title}
+          </Text>
+          <Text style={styles.subtitle}>{stories.length} morceaux</Text>
         </View>
-
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={{
-            paddingHorizontal: Spacing.xl,
-            paddingBottom: Spacing.xl * 2,
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: Spacing.lg,
-            justifyContent: "space-between",
-          }}
-        >
-          {storiesWithLike.map((story) => (
-            <AudioCardSquare
-              key={story._id}
-              _id={story._id}
-              title={story.title}
-              image={story.image}
-              author={story.author}
-              url={story.url}
-              hasLiked={story.hasLiked}
-              size={CARD_SIZE}
-            />
-          ))}
-        </ScrollView>
-      </SafeAreaView>
+      </View>
+      <ScrollView contentContainerStyle={styles.scrollViewContainer}>
+        {storiesWithLike.map((story) => (
+          <AudioCardSquare key={story._id} size={cardSize} {...story} />
+        ))}
+      </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
     </LinearGradient>
@@ -81,14 +57,26 @@ export default function Playlist() {
 }
 
 const styles = StyleSheet.create({
-  main: { flex: 1 },
+  linearContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  scrollViewContainer: {
+    paddingVertical: Spacing.md,
+    flexDirection: "row",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: Spacing.xl,
+  },
   header: {
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
     gap: Spacing.md,
-    paddingHorizontal: Spacing.xl,
-    paddingTop: Spacing.md,
-    paddingBottom: Spacing.md,
+    paddingVertical: Spacing.md,
+    paddingHorizontal: Spacing.xxl,
   },
   title: {
     color: Colors.textTitle,

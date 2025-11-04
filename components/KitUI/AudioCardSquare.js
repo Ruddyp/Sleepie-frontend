@@ -77,6 +77,9 @@ export default function AudioCardSquare(props) {
         <Text style={styles.title} numberOfLines={1}>
           {title}
         </Text>
+        <Text style={styles.subtitle} numberOfLines={1}>
+          {author.username}
+        </Text>
       </View>
     </TouchableOpacity>
   );
@@ -121,7 +124,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
   },
   title: {
-    color: Colors.textBody,
+    color: Colors.textTitle,
     ...Typography.body,
+  },
+  subtitle: {
+    color: Colors.textBody,
+    ...Typography.caption,
   },
 });
