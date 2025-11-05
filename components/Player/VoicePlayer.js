@@ -26,6 +26,7 @@ const events = [
 ];
 
 export default function VoicePlayer({
+  icon,
   voice,
   _id,
   url,
@@ -45,9 +46,7 @@ export default function VoicePlayer({
     // La fonction `addListener('blur', ...)` se déclenche lorsque l'écran
     // perd le focus (lorsque l'utilisateur navigue vers un autre écran).
     const unsubscribe = navigation.addListener("blur", async () => {
-      console.log(
-        "L'utilisateur a quitté l'écran. Exécution du code de nettoyage."
-      );
+      console.log("L'utilisateur a quitté l'écran. Exécution du code de nettoyage.");
       const track = await TrackPlayer.getActiveTrack();
       // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
       // Et on met a jour le redux track avec null
@@ -134,21 +133,15 @@ export default function VoicePlayer({
         <View style={styles.miniPlayerContainer}>
           <View style={styles.playContainer}>
             {isPlaying && id === _id ? (
-              <Ionicons
-                name="pause"
-                size={Spacing.xxxl}
-                color={Colors.textTitle}
-              />
+              <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
             ) : (
-              <Ionicons
-                name="play"
-                size={Spacing.xxxl}
-                color={Colors.textTitle}
-              />
+              <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
             )}
           </View>
           <View style={styles.textContainer}>
-            <Text style={styles.title}>{voice}</Text>
+            <Text style={styles.title}>
+              {icon} {voice}
+            </Text>
           </View>
         </View>
       </Pressable>
