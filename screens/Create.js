@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
+import { BorderRadius, Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../components/KitUI/Button";
 import { resetCreateForm, updateCurrentStep } from "../reducers/createForm";
@@ -14,10 +14,14 @@ import Step5 from "../components/CreateForm/Step5";
 import Step6 from "../components/CreateForm/Step6";
 import Step7 from "../components/CreateForm/Step7";
 import WaitingStory from "../components/CreateForm/WaitingStory";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { updateModalState } from "../reducers/modal";
 import { updateTrack } from "../reducers/track";
+import { useFocusEffect } from '@react-navigation/native';
+import React from "react";
+
+
 
 const steps = [
   {
@@ -67,6 +71,43 @@ export default function Create({ navigation }) {
   const isPartiallyFilled = form.steps.length > 0;
   const windowHeight = Dimensions.get("window").height;
   const displayModal = modal.modalState && isFinished;
+  const [modalSubscribeVisible, setSubscribeVisible] = useState(false)
+  const IP = process.env.EXPO_PUBLIC_IP;
+  const port = process.env.EXPO_PUBLIC_PORT;
+  const user = useSelector((state) => state.user.value);
+
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      getRole()
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+        console.log("départ de la page Create")
+      };
+    }, [])
+  );
+
+  const getRole = async () => {
+    const body = {
+      token: user.token
+    }
+    try {
+      const response = await fetch(`http://${IP}:${port}/rights/get`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+      const data = await response.json()
+      if (data.result) {
+        if (data.role === "user") return setSubscribeVisible(true)
+        if (data.role === "premium") return setSubscribeVisible(false)
+      }
+    } catch (error) {
+      console.log({ result: false, message: error.message })
+    }
+  }
 
   useEffect(() => {
     if (isFinished) {
@@ -84,6 +125,11 @@ export default function Create({ navigation }) {
     dispatch(resetCreateForm());
     navigation.navigate("home");
   }
+
+  const handleNavigate = (page) => {
+    setSubscribeVisible(false)
+    navigation.navigate("TabNavigator", { screen: page })
+  }
   return (
     <LinearGradient
       colors={Colors.bgPrimary}
@@ -91,6 +137,29 @@ export default function Create({ navigation }) {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
+      <Modal
+        visible={modalSubscribeVisible}
+        transparent={true}
+        animationType="fade"
+      >
+        <View style={styles.modalSubscribeOverlay}>
+          <View style={styles.modalSubscribe}>
+            <Text style={styles.textModalSubsribe}>Abonnez-vous pour accéder à la création d'histoire</Text>
+            <View style={styles.buttonModalSubscribe}>
+              <Button
+                title="S'abonner"
+                variant="primary"
+                onPress={() => handleNavigate("profil")}
+              />
+              <Button
+                title="Retour"
+                variant="secondary"
+                onPress={() => handleNavigate("home")}
+              />
+            </View>
+          </View>
+        </View>
+      </Modal>
       {isInitialStep && (
         <View style={formStyles.createContainer}>
           <View>
@@ -189,4 +258,28 @@ const styles = StyleSheet.create({
     alignItems: "center",
     bottom: 0,
   },
+  modalSubscribeOverlay: {
+    height: "100%",
+    backgroundColor: Colors.audioWave,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  modalSubscribe: {
+    backgroundColor: Colors.bgSecondarySolid,
+    width: 300,
+    height: 400,
+    borderRadius: BorderRadius.small,
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: Spacing.xl,
+  },
+  textModalSubsribe: {
+    ...Typography.h4,
+    color: Colors.textBody,
+    textAlign: "center"
+  },
+  buttonModalSubscribe: {
+    gap: Spacing.xl
+  }
+
 });

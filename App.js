@@ -44,7 +44,7 @@ const TabNavigator = () => {
       <Tab.Screen name="discover" component={Discover} />
       <Tab.Screen name="create" component={Create} />
       <Tab.Screen name="favorites" component={Favorites} />
-      <Tab.Screen name="kitScreen" component={KitScreen} />
+      {/* <Tab.Screen name="kitScreen" component={KitScreen} /> */}
       <Tab.Screen
         name="profil"
         component={Profil}

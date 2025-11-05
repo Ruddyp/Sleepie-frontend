@@ -1,9 +1,16 @@
-import { StyleSheet, Text, View } from "react-native";
-import { Colors, Typography } from "../components/KitUI/tokens";
+import { Modal, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { Colors, Typography, Spacing } from "../components/KitUI/tokens";
 import Button from "../components/KitUI/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
+import { useState } from "react";
+import { Ionicons } from "@expo/vector-icons";
+import { useFocusEffect } from '@react-navigation/native';
+import React from "react";
+
+
+
 
 export default function Login({ navigation, route }) {
 
@@ -11,6 +18,43 @@ export default function Login({ navigation, route }) {
   const port = process.env.EXPO_PUBLIC_PORT;
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
+  const [modalVisible, setModalVisible] = useState(false)
+  const [messageModal, setMessageModal] = useState("")
+  const [subscribe, setSubscribe] = useState(true)
+
+  useFocusEffect(
+    React.useCallback(() => {
+      // Do something when the screen is focused
+      getRole()
+      return () => {
+        // Do something when the screen is unfocused
+        // Useful for cleanup functions
+        console.log("départ de la page Profil")
+      };
+    }, [])
+  );
+
+
+
+  const getRole = async () => {
+    const body = {
+      token: user.token
+    }
+    try {
+      const response = await fetch(`http://${IP}:${port}/rights/get`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      })
+      const data = await response.json()
+      if (data.result) {
+        if (data.role === "user") return setSubscribe(true)
+        if (data.role === "premium") return setSubscribe(false)
+      }
+    } catch (error) {
+      console.log({ result: false, message: error.message })
+    }
+  }
 
   const handlePressDeconnect = () => {
     dispatch(deleteUser());
@@ -20,6 +64,7 @@ export default function Login({ navigation, route }) {
     dispatch(deleteUser());
     navigation.navigate("Login");
   };
+
 
   const handlePressAbonnement = async () => {
     const body = {
@@ -33,6 +78,15 @@ export default function Login({ navigation, route }) {
         body: JSON.stringify(body),
       });
       const data = await response.json();
+      if (data.result) {
+        setMessageModal(data.message)
+        setModalVisible(true)
+        setSubscribe(false)
+      } else {
+        setMessageModal(data.message);
+        setModalVisible(true)
+        setSubscribe(false)
+      }
       console.log(data)
     } catch (error) {
       console.log({ result: false, message: error.message })
@@ -54,13 +108,37 @@ export default function Login({ navigation, route }) {
         <View>
           <Text style={styles.textSmall}> Email : {user.email}</Text>
         </View>
+        <Modal
+          visible={modalVisible}
+          transparent={true}
+          animationType="fade"
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.overlay}>
+            <View style={styles.modal}>
+              <Text style={styles.textmodal}>{messageModal}</Text>
+              <TouchableOpacity
+                onPress={() => setModalVisible(false)}
+              >
+                <Ionicons
+                  name="close-circle-outline"
+                  size={Spacing.huge}
+                  color={Colors.textBody}
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+        </Modal>
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>Mon abonnement</Text>
-        <View style={styles.abonnement}>
+        {subscribe ? <View style={styles.abonnement}>
           <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
           <Button title="S'abonner" variant="primary" onPress={() => handlePressAbonnement()} />
-        </View>
+        </View> :
+          <View>
+            <Text style={styles.textabonnement}> Vous bénéficiez d'un abonnement premium</Text>
+          </View>}
       </View>
       <View style={styles.containerBottom}>
         <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
@@ -117,5 +195,26 @@ const styles = StyleSheet.create({
   },
   textabonnement: {
     color: Colors.textBody
+  },
+  modal: {
+    backgroundColor: Colors.bgTertiarySolid,
+    width: 300,
+    height: 200,
+    borderRadius: 20,
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 10,
+  },
+  textmodal: {
+    color: Colors.textBody,
+    ...Typography.h4,
+    textAlign: "center"
+  },
+  overlay: {
+    height: "100%",
+    backgroundColor: Colors.audioWave,
+    alignItems: "center",
+    justifyContent: "center"
   }
+
 });
