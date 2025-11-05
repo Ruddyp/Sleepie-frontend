@@ -1,20 +1,10 @@
 // components/KitUI/CreateStoryCardFull.js
 import { useEffect, useRef } from "react";
-import {
-  Pressable,
-  Text,
-  View,
-  StyleSheet,
-  Dimensions,
-  Animated,
-} from "react-native";
+import { Pressable, Text, View, StyleSheet, Dimensions, Animated } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
+import { Colors, Typography, Spacing, BorderRadius, Shadows } from "../KitUI/tokens";
 
-export default function CreateStoryCard({
-  onPress,
-  title = "Créer mon histoire",
-}) {
+export default function CreateStoryCard({ onPress, title = "Créer mon histoire" }) {
   const screenHeight = Dimensions.get("window").height;
   const CARD_HEIGHT = Math.floor(screenHeight / 3);
 
@@ -88,11 +78,7 @@ export default function CreateStoryCard({
             {/* Overlay respirant AU-DESSUS du gradient */}
             <Animated.View
               pointerEvents="none"
-              style={[
-                StyleSheet.absoluteFill,
-                styles.breathOverlay,
-                { opacity: overlayOpacity },
-              ]}
+              style={[StyleSheet.absoluteFill, styles.breathOverlay, { opacity: overlayOpacity }]}
             />
           </LinearGradient>
         </Animated.View>
