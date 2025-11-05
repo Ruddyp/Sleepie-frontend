@@ -5,6 +5,7 @@ import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer, { Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
 import { useEffect, useRef } from "react";
 import Meditation from "./screens/Meditation";
+import Welcome from "./screens/Welcome";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
 import Discover from "./screens/Discover";
@@ -98,6 +99,7 @@ export default function App() {
         <SafeAreaView style={{ flex: 1, backgroundColor: Colors.bgPrimarySolid }}>
           <NavigationContainer>
             <Stack.Navigator>
+              <Stack.Screen name="Welcome" component={Welcome} options={{ headerShown: false }} />
               <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
               <Stack.Screen
                 name="TabNavigator"
