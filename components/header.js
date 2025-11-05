@@ -1,18 +1,22 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Pressable } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { Colors, Typography } from "./KitUI/tokens";
+import { Colors, Spacing } from "./KitUI/tokens";
 
-export default function Header({ title, navigation, route, descriptors }) {
+export default function Header({ navigation }) {
   return (
     <View style={styles.container}>
       <View>
         <Text></Text>
       </View>
-
-      <Text style={styles.title} onPress={() => navigation.navigate("home")}>
-        {title}
-      </Text>
-
+      <View style={styles.imageContainer}>
+        <Pressable
+          onPress={() => navigation.navigate("home")}>
+          <Image
+            source={require('../assets/logo-Sleepie-blanc-transparent.png')}
+            style={styles.image}
+          />
+        </Pressable>
+      </View>
       <TouchableOpacity onPress={() => navigation.navigate("TabNavigator", { screen: "profil" })}>
         <Ionicons name="person-sharp" size={24} color="#fff" />
       </TouchableOpacity>
@@ -22,18 +26,21 @@ export default function Header({ title, navigation, route, descriptors }) {
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "red",
     justifyContent: "space-between",
     backgroundColor: Colors.bgPrimary[0],
     paddingHorizontal: 16,
     paddingTop: 50, // safe area pour iOS
     paddingBottom: 16,
   },
-  title: {
-    ...Typography.h3,
-    color: Colors.textTitle,
-    // fontSize: 18,
-    // fontWeight: "bold",
+  image: {
+    width: 150,
+    height: 50,
+  },
+  imageContainer: {
+    marginLeft: Spacing.xxl,
   },
 });
