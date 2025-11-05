@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import TrackPlayer from "react-native-track-player";
 import { updateStoryCountAndRecentlyPlayed } from "../../modules/databaseAction";
+import { voices } from "../../modules/constant";
 
 export default function TrackManager() {
   const dispatch = useDispatch();
@@ -36,7 +37,12 @@ export default function TrackManager() {
 
             if (shouldPlayAutomatically) {
               console.log("TrackManager: Lancement automatique demandé.");
-              await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
+
+              // Si la track en question n'est pas un sample de voix
+              // On met a jour le count de la track et ajout dans recently played
+              if (!voices.includes(title)) {
+                await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
+              }
               await TrackPlayer.play();
             } else {
               console.log("TrackManager: Piste chargée, mais pas de lancement automatique.");
@@ -47,7 +53,11 @@ export default function TrackManager() {
             // Appuyer sur le bouton va passer shouldPlayAutomatically a true mais la piste et la même
             if (shouldPlayAutomatically) {
               console.log("TrackManager: Lancement automatique demandé.");
-              await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
+              // Si la track en question n'est pas un sample de voix
+              // On met a jour le count de la track et ajout dans recently played
+              if (!voices.includes(title)) {
+                await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
+              }
               await TrackPlayer.play();
             }
           }

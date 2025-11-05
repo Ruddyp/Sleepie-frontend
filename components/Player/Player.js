@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions, Modal } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "../KitUI/tokens";
 import TrackPlayer, {
   useTrackPlayerEvents,
@@ -14,8 +14,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
 import { useSelector, useDispatch } from "react-redux";
 import { likeStory } from "../../modules/databaseAction";
-import { useState } from "react";
 import { setTimerTimestamp } from "../../sleepTimerStore";
+import SleepTimerModal from "./SleepTimerModal";
+import { useState } from "react";
 
 const events = [
   Event.RemotePlay,
@@ -27,8 +28,6 @@ const events = [
 ];
 const windowWidth = Dimensions.get("window").width;
 
-const timerOptions = ["1", "5", "10", "20", "40", "end"];
-
 export function Player() {
   const activeTrack = useActiveTrack();
   const { position, duration } = useProgress(100); // 100ms de rafraîchissement
@@ -39,7 +38,6 @@ export function Player() {
   const trackData = useSelector((state) => state.track.value);
   const stories = useSelector((state) => state.stories.value);
   const dispatch = useDispatch();
-  const [sleepTimer, setSleepTimer] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
 
   useTrackPlayerEvents(events, (event) => {
@@ -66,14 +64,6 @@ export function Player() {
       console.log("Action: Lecture");
       await TrackPlayer.play();
     }
-  }
-
-  async function handleSleepTimer(time) {
-    // Définition du timestamp pour arreter l'histoire automatiquement
-    const futureTime =
-      time === "end" ? duration * 1000 + Date.now() : Date.now() + parseInt(time) * 60 * 1000;
-    setSleepTimer(time);
-    setTimerTimestamp(futureTime);
   }
 
   // Gestion de -10 secondes sur la track
@@ -200,63 +190,7 @@ export function Player() {
           <Text style={styles.timerLabel}>Minuteur sommeil</Text>
         </TouchableOpacity>
       </View>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isOpen}
-        onRequestClose={() => setIsOpen(false)}
-      >
-        <LinearGradient
-          colors={Colors.bgPrimary}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[styles.bottomSheet]}
-        >
-          {/* Sleep Timer */}
-          <View
-            style={{
-              gap: Spacing.lg,
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <View style={styles.timerHeader}>
-              <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
-              <Text style={styles.timerLabel}>Minuteur sommeil</Text>
-            </View>
-            <View style={styles.timerOptions}>
-              {timerOptions.map((time) => (
-                <TouchableOpacity
-                  style={[
-                    styles.timerButton,
-                    {
-                      backgroundColor:
-                        sleepTimer === time ? Colors.audioWave : Colors.bgTertiarySolid,
-                    },
-                  ]}
-                  key={time}
-                  onPress={() => handleSleepTimer(time)}
-                  activeOpacity={0.8}
-                >
-                  <Text style={styles.timerButtonText}>
-                    {time === "end" ? "Fin de piste" : `${time} min`}
-                  </Text>
-                </TouchableOpacity>
-              ))}
-            </View>
-          </View>
-          <View style={styles.bottomModalContainer}>
-            <TouchableOpacity onPress={() => setIsOpen(false)}>
-              <Ionicons
-                name="close-circle-outline"
-                size={Spacing.maximale}
-                color={Colors.textBody}
-              />
-            </TouchableOpacity>
-          </View>
-        </LinearGradient>
-      </Modal>
+      <SleepTimerModal isOpen={isOpen} setIsOpen={setIsOpen} duration={duration} />
     </LinearGradient>
   );
 }
@@ -351,7 +285,7 @@ const styles = StyleSheet.create({
     width: "50%",
     height: Sizes.buttonDefault,
     borderRadius: BorderRadius.round,
-    backgroundColor: Colors.bgTertiarySolid,
+    backgroundColor: Colors.audioWave,
     borderWidth: 1,
     borderColor: Colors.borderSubtle,
     flexDirection: "row",
@@ -359,45 +293,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: Spacing.sm,
   },
-  timerSection: {
-    gap: Spacing.md,
-  },
-  timerHeader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: Spacing.sm,
-  },
-  timerIcon: {
-    fontSize: 16,
-    color: Colors.textSecondary,
-  },
   timerLabel: {
     color: Colors.textSecondary,
     fontSize: Typography.caption.fontSize,
     lineHeight: Typography.caption.lineHeight,
-  },
-  timerOptions: {
-    flexDirection: "column",
-    flexWrap: "wrap",
-    justifyContent: "center",
-    gap: Spacing.sm,
-  },
-  timerButton: {
-    paddingHorizontal: Spacing.lg,
-    paddingVertical: Spacing.sm,
-    borderRadius: BorderRadius.small,
-  },
-  timerButtonText: {
-    color: Colors.textBody,
-    fontSize: Typography.caption.fontSize,
-    fontWeight: "400",
-    textAlign: "center",
-  },
-  bottomSheet: {
-    height: "100%",
-    width: "100%",
-    justifyContent: "space-around",
-    alignItems: "center",
   },
 });

@@ -12,6 +12,9 @@ import TrackPlayer, {
 import { useDispatch } from "react-redux";
 import { updateTrack } from "../../reducers/track";
 import { updateStep } from "../../reducers/createForm";
+import { voices } from "../../modules/constant";
+import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
 
 const events = [
   Event.RemotePlay,
@@ -32,12 +35,40 @@ export default function VoicePlayer({
   setSelectedVoice,
 }) {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const playbackState = usePlaybackState();
   const playerState = playbackState.state;
   const activeTrack = useActiveTrack();
   const { id } = activeTrack || {};
   const { currentStep, steps } = form;
-  console.log("activetrack", activeTrack);
+
+  useEffect(() => {
+    // La fonction `addListener('blur', ...)` se déclenche lorsque l'écran
+    // perd le focus (lorsque l'utilisateur navigue vers un autre écran).
+    const unsubscribe = navigation.addListener("blur", async () => {
+      console.log("L'utilisateur a quitté l'écran. Exécution du code de nettoyage.");
+      const track = await TrackPlayer.getActiveTrack();
+      // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
+      // Et on met a jour le redux track avec null
+      if (voices.includes(track?.title)) {
+        await TrackPlayer.reset();
+        dispatch(
+          updateTrack({
+            track: {
+              _id: null,
+              title: null,
+              author: null,
+              url: null,
+            },
+            shouldPlayAutomatically: false,
+          })
+        );
+      }
+    });
+
+    // désabonne l'écouteur lorsque le composant est démonté.
+    return unsubscribe;
+  }, [navigation]);
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {
@@ -57,7 +88,7 @@ export default function VoicePlayer({
           track: {
             _id: _id,
             title: voice,
-            author: "",
+            author: { username: "Sleepie" },
             url: url,
           },
           shouldPlayAutomatically: true,
