@@ -79,6 +79,7 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   optionsContainer: {
+    marginTop: Spacing.xl,
     marginBottom: Spacing.xxl,
     backgroundColor: Colors.bgSleepieBlue2,
     flexDirection: "row",

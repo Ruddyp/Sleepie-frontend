@@ -17,10 +17,10 @@ const TAB_CONFIG = {
     isMain: true,
   },
   favorites: { inactive: "heart-outline", active: "heart", label: "Favoris" },
-  kitScreen: {
-    inactive: "person-outline",
-    active: "person",
-    label: "KitScreen",
+  meditation: {
+    inactive: "ellipse-outline",
+    active: "ellipse",
+    label: "Méditer",
   },
 };
 

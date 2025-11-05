@@ -4,7 +4,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import TrackPlayer, { Capability, AppKilledPlaybackBehavior } from "react-native-track-player";
 import { useEffect, useRef } from "react";
-import KitScreen from "./screens/KitScreen";
+import Meditation from "./screens/Meditation";
 import Home from "./screens/Home";
 import Create from "./screens/Create";
 import Discover from "./screens/Discover";
@@ -43,8 +43,8 @@ const TabNavigator = () => {
       <Tab.Screen name="home" component={Home} />
       <Tab.Screen name="discover" component={Discover} />
       <Tab.Screen name="create" component={Create} />
+      <Tab.Screen name="meditation" component={Meditation} />
       <Tab.Screen name="favorites" component={Favorites} />
-      {/* <Tab.Screen name="kitScreen" component={KitScreen} /> */}
       <Tab.Screen
         name="profil"
         component={Profil}
