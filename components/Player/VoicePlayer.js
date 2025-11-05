@@ -27,7 +27,6 @@ const events = [
 
 export default function VoicePlayer({
   voice,
-  gender,
   _id,
   url,
   form,
@@ -46,7 +45,9 @@ export default function VoicePlayer({
     // La fonction `addListener('blur', ...)` se déclenche lorsque l'écran
     // perd le focus (lorsque l'utilisateur navigue vers un autre écran).
     const unsubscribe = navigation.addListener("blur", async () => {
-      console.log("L'utilisateur a quitté l'écran. Exécution du code de nettoyage.");
+      console.log(
+        "L'utilisateur a quitté l'écran. Exécution du code de nettoyage."
+      );
       const track = await TrackPlayer.getActiveTrack();
       // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
       // Et on met a jour le redux track avec null
@@ -113,13 +114,6 @@ export default function VoicePlayer({
     }
   }
 
-  const iconGender =
-    gender === "male" ? (
-      <Ionicons name="male" size={Spacing.xxxl} color={Colors.info} />
-    ) : (
-      <Ionicons name="female" size={Spacing.xxxl} color={"lightpink"} />
-    );
-
   const focusedVoice = selectedVoice === voice;
 
   return (
@@ -140,13 +134,20 @@ export default function VoicePlayer({
         <View style={styles.miniPlayerContainer}>
           <View style={styles.playContainer}>
             {isPlaying && id === _id ? (
-              <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
+              <Ionicons
+                name="pause"
+                size={Spacing.xxxl}
+                color={Colors.textTitle}
+              />
             ) : (
-              <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
+              <Ionicons
+                name="play"
+                size={Spacing.xxxl}
+                color={Colors.textTitle}
+              />
             )}
           </View>
           <View style={styles.textContainer}>
-            {iconGender}
             <Text style={styles.title}>{voice}</Text>
           </View>
         </View>
@@ -181,6 +182,6 @@ const styles = StyleSheet.create({
     width: "75%",
     flexDirection: "row",
     alignItems: "center",
-    gap: Spacing.sm,
+    gap: Spacing.lg,
   },
 });
