@@ -4,6 +4,9 @@ import Button from "../components/KitUI/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
+import { resetStories } from "../reducers/stories"
+import { resetTrack } from "../reducers/track";
+import { resetForm } from "../reducers/createForm"
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from '@react-navigation/native';
@@ -58,12 +61,12 @@ export default function Login({ navigation, route }) {
 
   const handlePressDeconnect = () => {
     dispatch(deleteUser());
+    dispatch(resetStories());
+    dispatch(resetForm());
+    dispatch(resetTrack())
     navigation.navigate("Login");
   };
-  const handlePressDelete = () => {
-    dispatch(deleteUser());
-    navigation.navigate("Login");
-  };
+
 
 
   const handlePressAbonnement = async () => {
@@ -142,7 +145,7 @@ export default function Login({ navigation, route }) {
       </View>
       <View style={styles.containerBottom}>
         <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
-        <Button title="Supprimer mon compte" onPress={() => handlePressDelete()} />
+        {/* <Button title="Supprimer mon compte" onPress={() => handlePressDelete()} /> */}
       </View>
     </LinearGradient>
   );
@@ -184,9 +187,9 @@ const styles = StyleSheet.create({
     color: Colors.textBody,
   },
   containerBottom: {
+    justifyContent: "center",
     padding: 10,
     flex: 1,
-    gap: 10,
   },
   abonnement: {
     flexDirection: "row",

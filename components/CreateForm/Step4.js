@@ -19,20 +19,24 @@ export default function Step4() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🌊 Près de la mer",
+      title: "Près de la mer",
       subtitle: "L’air salé, le souffle du vent, les vagues régulières.",
+      icon: "🌊",
     },
     {
-      title: "🌲 Dans la nature",
+      title: "Dans la nature",
       subtitle: "Forêts, montagnes... des paysages vastes et vivants.",
+      icon: "🌲",
     },
     {
-      title: "🏡 À la campagne",
+      title: "À la campagne",
       subtitle: "La douceur d’un environnement loin de l’agitation.",
+      icon: "🏡",
     },
     {
-      title: "✨ Dans un lieu imaginaire ",
+      title: "Dans un lieu imaginaire ",
       subtitle: "Un endroit inventé, magique, hors du temps.",
+      icon: "✨",
     },
   ];
 

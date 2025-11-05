@@ -23,6 +23,7 @@ export default function SignUp({ navigation }) {
 
   const handlepressSignUp = async () => {
     setMessageFromBack("")
+    setErrorPassword({ error: false, value: "" })
     setEmptyfield(false);
 
     const inputFields = [email.value, username, password, confirmationPassword];
@@ -38,7 +39,7 @@ export default function SignUp({ navigation }) {
     const isValidEmail = (email) => emailRegex.test(email);
     if (!isValidEmail(email.value)) {
       setEmail({
-        error: "invalid email",
+        error: "Email non valide",
         value: email.value,
       });
       return;
@@ -115,14 +116,14 @@ export default function SignUp({ navigation }) {
         onPress={() => handlepressSignUp()}
       />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
-      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}(s)</Text>}
+      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}</Text>}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   errorMessage: {
-    color: Colors.textTitle,
+    color: Colors.error,
     ...Typography.body,
     fontFamily: Typography.fontBody,
   },

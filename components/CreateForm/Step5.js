@@ -19,20 +19,24 @@ export default function Step5() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🍵 Réaliste",
+      title: "Réaliste",
       subtitle: "Une histoire simple et ancrée dans le réel.",
+      icon: "🍵",
     },
     {
-      title: "🌿 Méditative ",
+      title: "Méditative ",
       subtitle: "Une histoire centrée sur les sensations.",
+      icon: "🧘‍♂️",
     },
     {
-      title: "🌬 Introspective ",
+      title: "Introspective ",
       subtitle: "Une histoire intérieure, guidée par la pensée.",
+      icon: "🌬",
     },
     {
-      title: "🌌 Imaginaire",
+      title: "Imaginaire",
       subtitle: "Glisser vers un univers apaisant et merveilleux.",
+      icon: "🌌",
     },
   ];
 

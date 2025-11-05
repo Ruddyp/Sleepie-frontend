@@ -19,20 +19,24 @@ export default function Step3() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🚶‍♂️ Voyageur",
+      title: "Voyageur",
       subtitle: "Explore le monde et ses merveilles.",
+      icon: "🚶‍♂️",
     },
     {
-      title: "☕ Vous et moi",
+      title: "Vous et moi",
       subtitle: "Découvrez la vie quotidienne d’une personne.",
+      icon: "🧑‍🤝‍🧑",
     },
     {
-      title: "💬 Confident",
+      title: "Confident",
       subtitle: "Partagez un moment de vie.",
+      icon: "💬",
     },
     {
-      title: "✨ Rêveur",
+      title: "Rêveur",
       subtitle: "Un personnage plein d'imagination.",
+      icon: "✨",
     },
   ];
 

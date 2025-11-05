@@ -19,20 +19,24 @@ export default function Step2() {
   // Définir les données des cartes
   const choices = [
     {
-      title: "🪶 Un voyage",
+      title: "Un voyage",
       subtitle: "Découverte des paysages, des sons, des sensations.",
+      icon: "🌍",
     },
     {
-      title: "🤝 Une rencontre",
+      title: "Une rencontre",
       subtitle: "Une histoire centrée sur un échange bienveillant.",
+      icon: "🤝",
     },
     {
-      title: "🏡 Un lieu à explorer",
+      title: "Un lieu à explorer",
       subtitle: "Explorez un endroit du monde.",
+      icon: "🏡",
     },
     {
-      title: "☀️ Un moment de vie",
+      title: "Un moment de vie",
       subtitle: "Se déroule sur une journée calme.",
+      icon: "☀️",
     },
   ];
 

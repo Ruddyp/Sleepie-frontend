@@ -6,7 +6,7 @@ import {
   Dimensions,
   TouchableOpacity,
 } from "react-native";
-import { Colors, Spacing } from "../KitUI/tokens";
+import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
 import { updateTrack } from "../../reducers/track";
@@ -114,5 +114,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     bottom: 0,
+  },
+  text: {
+    ...Typography.body,
+    color: Colors.textBody,
+    textAlign: "center",
   },
 });
