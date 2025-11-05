@@ -13,7 +13,8 @@ import { useDispatch } from "react-redux";
 import { updateTrack } from "../../reducers/track";
 import { updateStep } from "../../reducers/createForm";
 import { voices } from "../../modules/constant";
-import { useEffect } from "react";
+import { useCallback } from "react";
+import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
 
 const events = [
@@ -42,33 +43,29 @@ export default function VoicePlayer({
   const { id } = activeTrack || {};
   const { currentStep, steps } = form;
 
-  useEffect(() => {
-    // La fonction `addListener('blur', ...)` se déclenche lorsque l'écran
-    // perd le focus (lorsque l'utilisateur navigue vers un autre écran).
-    const unsubscribe = navigation.addListener("blur", async () => {
-      console.log("L'utilisateur a quitté l'écran. Exécution du code de nettoyage.");
-      const track = await TrackPlayer.getActiveTrack();
-      // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
-      // Et on met a jour le redux track avec null
-      if (voices.includes(track?.title)) {
-        await TrackPlayer.reset();
-        dispatch(
-          updateTrack({
-            track: {
-              _id: null,
-              title: null,
-              author: null,
-              url: null,
-            },
-            shouldPlayAutomatically: false,
-          })
-        );
-      }
-    });
-
-    // désabonne l'écouteur lorsque le composant est démonté.
-    return unsubscribe;
-  }, [navigation]);
+  useFocusEffect(
+    useCallback(() => {
+      return async () => {
+        const track = await TrackPlayer.getActiveTrack();
+        // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
+        // Et on met a jour le redux track avec null
+        if (voices.includes(track?.title)) {
+          await TrackPlayer.reset();
+          dispatch(
+            updateTrack({
+              track: {
+                _id: null,
+                title: null,
+                author: null,
+                url: null,
+              },
+              shouldPlayAutomatically: false,
+            })
+          );
+        }
+      };
+    }, [navigation])
+  );
 
   useTrackPlayerEvents(events, (event) => {
     if (event.type === Event.PlaybackError) {

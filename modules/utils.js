@@ -1,3 +1,11 @@
+export function capitalizeFirstLetter(str) {
+  if (!str || str.length === 0) {
+    return "";
+  }
+
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
 export function formatSecondsToMinutes(totalSeconds) {
   // S'assurer que l'entrée est un nombre non négatif
   if (typeof totalSeconds !== "number" || totalSeconds < 0) {

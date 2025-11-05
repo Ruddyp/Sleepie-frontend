@@ -11,10 +11,9 @@ import TrackPlayer, {
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
-import { formatSecondsToMinutes } from "../../modules/formatSecondsToMinutes";
+import { formatSecondsToMinutes } from "../../modules/utils";
 import { useSelector, useDispatch } from "react-redux";
 import { likeStory } from "../../modules/databaseAction";
-import { setTimerTimestamp } from "../../sleepTimerStore";
 import SleepTimerModal from "./SleepTimerModal";
 import { useState } from "react";
 

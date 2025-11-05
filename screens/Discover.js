@@ -8,6 +8,7 @@ import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import FilterBar from "../components/KitUI/FilterBar";
 import { filterDuration } from "../modules/filter";
+import { capitalizeFirstLetter } from "../modules/utils";
 
 export default function Discover() {
   const IP = process.env.EXPO_PUBLIC_IP;
@@ -55,7 +56,7 @@ export default function Discover() {
         ...story,
         hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
       }));
-    return <CategoryCarousel key={i} title={labelName} data={stories} />;
+    return <CategoryCarousel key={i} title={capitalizeFirstLetter(labelName)} data={stories} />;
   });
 
   return (

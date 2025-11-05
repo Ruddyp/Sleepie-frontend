@@ -1,16 +1,25 @@
 import { View, Text, ScrollView, Pressable, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "./tokens";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback } from "react";
 
-function FilterBar(props) {
-  const {
-    selectedCategory,
-    selectedDuration,
-    setSelectedCategory,
-    setSelectedDuration,
-    hideCategory = false,
-    hideDuration = false,
-  } = props;
-
+function FilterBar({
+  selectedCategory,
+  selectedDuration,
+  setSelectedCategory,
+  setSelectedDuration,
+  hideCategory = false,
+  hideDuration = false,
+}) {
+  useFocusEffect(
+    useCallback(() => {
+      return () => {
+        // Si l'utilisateur part de cet écran, on réinitialise les filtres à "all"
+        if (!hideCategory) setSelectedCategory("all");
+        if (!hideDuration) setSelectedDuration({ key: "all", label: "Toutes" });
+      };
+    }, [setSelectedCategory, setSelectedDuration])
+  );
   const durationOptions = [
     { key: "all", label: "Toutes" },
     { key: "1", label: "1-5 min", min: 1, max: 5 },

@@ -9,7 +9,6 @@ module.exports = async function () {
     TrackPlayer.seekTo(event.position);
   });
   TrackPlayer.addEventListener(Event.PlaybackProgressUpdated, async (event) => {
-    console.log("eveeeeeeennnnnnt", event);
     const sleepTimestamp = getTimerTimestamp();
     console.log("sleepTimestamp", sleepTimestamp);
 
