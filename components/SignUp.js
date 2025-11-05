@@ -17,19 +17,19 @@ export default function SignUp({ navigation }) {
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
 
-  const [errorPassword, setErrorPassword] = useState(false);
+  const [errorPassword, setErrorPassword] = useState({ error: false, value: "" });
   const [emptyfield, setEmptyfield] = useState(false);
   const [messageFromBack, setMessageFromBack] = useState("");
 
   const handlepressSignUp = async () => {
-    setErrorPassword(false);
+    setMessageFromBack("")
     setEmptyfield(false);
 
     const inputFields = [email.value, username, password, confirmationPassword];
     if (!checkInput(inputFields)) return setEmptyfield(true);
 
     if (password !== confirmationPassword) {
-      setErrorPassword(true);
+      setErrorPassword({ error: true, value: "Les mots de passe ne correspondent pas" });
       return;
     }
 
@@ -90,8 +90,8 @@ export default function SignUp({ navigation }) {
         }
         value={email.value}
         error={email.error}
-        keyboardType="email-address" /*Ne fonctionne pas*/
-        autoCapitalize="none" /*Ne fonctionne pas*/
+        keyboardType="email-address"
+        autoCapitalize="none"
       />
       <Input
         placeholder="Mot de passe"
@@ -106,6 +106,7 @@ export default function SignUp({ navigation }) {
         value={confirmationPassword}
         secureTextEntry={true}
         autoCapitalize="none"
+        error={errorPassword.value}
       />
       <Button
         title="Créer mon compte"
@@ -113,9 +114,6 @@ export default function SignUp({ navigation }) {
         variant="primary"
         onPress={() => handlepressSignUp()}
       />
-      {errorPassword && (
-        <Text style={styles.errorMessage}>Les mots de passe ne correspondent pas</Text>
-      )}
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
       {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}(s)</Text>}
     </View>

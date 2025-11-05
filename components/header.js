@@ -41,6 +41,6 @@ const styles = StyleSheet.create({
     height: 50,
   },
   imageContainer: {
-    marginLeft: Spacing.xxl,
+    marginLeft: Spacing.huge,
   },
 });

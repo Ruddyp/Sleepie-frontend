@@ -84,6 +84,7 @@ export default function SignIn({ navigation }) {
           value={password}
           secureTextEntry={true}
           autoCapitalize="none"
+
         />
       </View>
       <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />
