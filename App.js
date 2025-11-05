@@ -113,7 +113,6 @@ export default function App() {
                     return {
                       header: () => (
                         <Header
-                          title="Sleepie"
                           navigation={navigation}
                           route={route}
                           descriptors={route.descriptors}
