@@ -1,10 +1,7 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  updateIsFinished,
-  updateIsGenerating,
-} from "../../reducers/createForm";
+import { updateIsFinished, updateIsGenerating } from "../../reducers/createForm";
 import { useEffect } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
@@ -38,8 +35,7 @@ export default function WaitingStory() {
           location: steps[3].response,
           effect: steps[4].response,
           duration: steps[5].response,
-          otherparamCharacterName: otherparam.characterName,
-          otherparamWeather: otherparam.weather,
+          otherParam: otherparam,
         };
         console.log("body", body);
         const response = await fetch(`http://${IP}:${port}/stories/create`, {
@@ -69,9 +65,7 @@ export default function WaitingStory() {
   return (
     <View style={styles.main}>
       <ActivityIndicator size={100} color={Colors.textSleepieYellow} />
-      <Text style={styles.text}>
-        Veuillez patienter, nous générons votre histoire...
-      </Text>
+      <Text style={styles.text}>Veuillez patienter, nous générons votre histoire...</Text>
     </View>
   );
 }
