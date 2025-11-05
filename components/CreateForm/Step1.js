@@ -14,24 +14,20 @@ export default function Step1() {
 
   const choices = [
     {
-      voice: "Clément",
+      voice: "🧔 Clément",
       url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Clement_sample_hsvusq.mp3",
-      gender: "male",
     },
     {
-      voice: "Emilie",
+      voice: "👩 Emilie",
       url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Emilie_sample_pzsugo.mp3",
-      gender: "female",
     },
     {
-      voice: "Nicolas",
+      voice: "👨‍🦱 Nicolas",
       url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762250342/Nicolas_sample_sgmt1z.mp3",
-      gender: "male",
     },
     {
-      voice: "Sandra",
+      voice: "👩‍🦳 Sandra",
       url: "https://res.cloudinary.com/dzwgrfwif/video/upload/v1762251027/Sandra_sample_pysjgj.mp3",
-      gender: "female",
     },
   ];
 
