@@ -26,10 +26,12 @@ export default function Playlist() {
     if (origin) return navigation.navigate(origin);
     navigation.navigate("home");
   };
-  const storiesWithLike = stories.map((story) => ({
-    ...story,
-    hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
-  }));
+  const storiesWithLike = stories
+    .map((story) => ({
+      ...story,
+      hasLiked: storiesFromRedux.likedStories.some((e) => e._id === story._id),
+    }))
+    .filter((story) => filterDuration(story, selectedDuration));
 
   return (
     <LinearGradient
@@ -46,7 +48,7 @@ export default function Playlist() {
           <Text style={styles.title} numberOfLines={1}>
             {title}
           </Text>
-          <Text style={styles.subtitle}>{stories.length} morceaux</Text>
+          <Text style={styles.subtitle}>{stories.length} histoires</Text>
         </View>
       </View>
       <FilterBar
@@ -55,9 +57,9 @@ export default function Playlist() {
         hideCategory
       />
       <ScrollView contentContainerStyle={styles.scrollViewContainer}>
-        {storiesWithLike
-          .map((story) => <AudioCardSquare key={story._id} size={cardSize} {...story} />)
-          .filter((story) => filterDuration(story, selectedDuration))}
+        {storiesWithLike.map((story) => (
+          <AudioCardSquare key={story._id} size={cardSize} {...story} />
+        ))}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
