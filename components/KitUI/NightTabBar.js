@@ -16,7 +16,11 @@ const TAB_CONFIG = {
     label: "Créer",
     isMain: true,
   },
-  favorites: { inactive: "heart-outline", active: "heart", label: "Favoris" },
+  favorites: {
+    inactive: "heart-outline",
+    active: "heart",
+    label: "Bibliothèque",
+  },
   meditation: {
     inactive: "cloudy-night-outline",
     active: "cloudy-night",
