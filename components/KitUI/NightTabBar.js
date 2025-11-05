@@ -18,8 +18,8 @@ const TAB_CONFIG = {
   },
   favorites: { inactive: "heart-outline", active: "heart", label: "Favoris" },
   meditation: {
-    inactive: "ellipse-outline",
-    active: "ellipse",
+    inactive: "cloudy-night-outline",
+    active: "cloudy-night",
     label: "Méditer",
   },
 };
@@ -30,12 +30,16 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
   const visibleRoutes = state.routes.filter((route) => {
     const opts = descriptors[route.key].options;
     if (opts.tabBarButton === null) return false;
-    if (opts.tabBarItemStyle && opts.tabBarItemStyle.display === "none") return false;
+    if (opts.tabBarItemStyle && opts.tabBarItemStyle.display === "none")
+      return false;
     return true;
   });
 
   return (
-    <View style={[styles.container, { paddingBottom: Spacing.xs }]} accessibilityRole="tablist">
+    <View
+      style={[styles.container, { paddingBottom: Spacing.xs }]}
+      accessibilityRole="tablist"
+    >
       {visibleRoutes.map((route, index) => {
         const isActive = index === activeIndex;
         const cfg = TAB_CONFIG[route.name] || {
@@ -66,7 +70,10 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
                 colors={["#1064DB", "#00A0F7"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
-                style={[styles.mainIconWrapper, isActive && styles.mainIconActive]}
+                style={[
+                  styles.mainIconWrapper,
+                  isActive && styles.mainIconActive,
+                ]}
               >
                 <Ionicons
                   name={cfg.active}
@@ -85,13 +92,21 @@ export const NightTabBar = ({ state, navigation, descriptors }) => {
               </LinearGradient>
             ) : (
               <View style={styles.iconContainer}>
-                <Ionicons name={cfg.inactive} size={iconSize} color={Colors.textSecondary} />
+                <Ionicons
+                  name={cfg.inactive}
+                  size={iconSize}
+                  color={Colors.textSecondary}
+                />
               </View>
             )}
 
             {/* Label */}
             <Text
-              style={[styles.label, isActive && styles.labelActive, isMain && styles.mainLabel]}
+              style={[
+                styles.label,
+                isActive && styles.labelActive,
+                isMain && styles.mainLabel,
+              ]}
             >
               {cfg.label}
             </Text>
