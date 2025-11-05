@@ -3,7 +3,7 @@ import { StyleSheet, ScrollView } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import CategoryCarousel from "../components/KitUI/CategoryCarousel";
 import { useNavigation } from "@react-navigation/native";
-import CreateStoryCard from "../components/KitUI/CreateStoryCard";
+import CreateStoryCard from "../components/Create/CreateStoryCard";
 import { Colors, Spacing } from "../components/KitUI/tokens";
 import PlayerModal from "../components/Player/PlayerModal";
 import { useSelector } from "react-redux";
