@@ -26,8 +26,25 @@ export const trackSlice = createSlice({
     updateTrack: (state, action) => {
       state.value = action.payload;
     },
+    resetTrack: (state) => {
+      state.value = {
+        track: {
+          _id: null,
+          url: null,
+          author: null,
+          created_at: null,
+          like: null,
+          listen_counter: null,
+          label: null,
+          title: null,
+          configuration: null,
+          image: null,
+        },
+        shouldPlayAutomatically: false,
+      }
+    }
   },
 });
 
-export const { updateTrack } = trackSlice.actions;
+export const { updateTrack, resetTrack } = trackSlice.actions;
 export default trackSlice.reducer;

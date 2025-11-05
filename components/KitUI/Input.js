@@ -13,6 +13,7 @@ export default function Input({
   error,
   keyboardType = "default",
   autoCapitalize = "sentences",
+  maxLength,
 }) {
   const [focused, setFocused] = useState(false);
   const [hidePassword, setHidePassword] = useState(secureTextEntry);
@@ -35,6 +36,7 @@ export default function Input({
           onBlur={() => setFocused(false)}
           keyboardType={keyboardType}
           autoCapitalize={autoCapitalize}
+          maxLength={maxLength}
         />
         {isPassword && (
           <TouchableOpacity

@@ -42,6 +42,15 @@ export const createFormSlice = createSlice({
         ...state.value.otherparam,
         weather: action.payload
       }
+    },
+    resetForm: (state) => {
+      state.value = {
+        currentStep: 0,
+        steps: [],
+        otherparam: {},
+        isGenerating: false,
+        isFinished: false,
+      }
     }
   },
 });
@@ -54,5 +63,6 @@ export const {
   resetCreateForm,
   updateParamCharacter,
   updateParamWeather,
+  resetForm,
 } = createFormSlice.actions;
 export default createFormSlice.reducer;

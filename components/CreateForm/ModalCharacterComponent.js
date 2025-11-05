@@ -14,6 +14,7 @@ export default function ModalCharacterComponent() {
     const form = useSelector((state) => state.createForm.value)
     const initialValue = form.otherparam?.characterName || ""
     const [characterName, setCharacterName] = useState(initialValue)
+    const [errorInput, setErrorInput] = useState("")
     const dispatch = useDispatch();
     const modalparam = useSelector((state) => state.modalparam.value);
     function handleClose() {
@@ -22,8 +23,14 @@ export default function ModalCharacterComponent() {
     console.log(characterName)
 
     const handleClick = () => {
-        dispatch(updateParamCharacter(characterName))
-        dispatch(updateModalStateCharacter(false))
+        const regex = /[a-zA-Z0-9-]/g
+        if (regex.test(characterName)) {
+            dispatch(updateParamCharacter(characterName))
+            dispatch(updateModalStateCharacter(false))
+        } else {
+            setErrorInput("Seules les lettres, chiffres, espaces et tirets sont autorisés")
+        }
+
     }
 
     return (
@@ -47,6 +54,8 @@ export default function ModalCharacterComponent() {
                             value={characterName}
                             onChangeText={(characterName) => setCharacterName(characterName)}
                             secureTextEntry={false}
+                            maxLength={20}
+                            error={errorInput}
                         >
                         </Input>
                         <Button

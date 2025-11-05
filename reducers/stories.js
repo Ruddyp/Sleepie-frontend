@@ -29,9 +29,15 @@ export const storiesSlice = createSlice({
     setCreatedStories: (state, action) => {
       state.value.createdStories = action.payload;
     },
+    resetStories: (state) => {
+      state.value = {
+        likedStories: [],
+        createdStories: [],
+      }
+    }
   },
 });
 
-export const { updateLikedStories, setLikedStories, updateCreatedStories, setCreatedStories } =
+export const { updateLikedStories, setLikedStories, updateCreatedStories, setCreatedStories, resetStories } =
   storiesSlice.actions;
 export default storiesSlice.reducer;

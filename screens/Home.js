@@ -75,7 +75,7 @@ export default function Home() {
         )}
         <CategoryCarousel title="Les + écoutées" data={mostListenedStoriesWithLike} />
         {displayCreatedStory && (
-          <CategoryCarousel title="Mes histoires crées" data={createdStoriesWithLike} />
+          <CategoryCarousel title="Mes histoires créées" data={createdStoriesWithLike} />
         )}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
