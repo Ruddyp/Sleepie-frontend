@@ -23,8 +23,7 @@ export default function CreateFormStep({ stepComponent, title, subtitle, nbSteps
     dispatch(updateCurrentStep(currentStep + 1));
     // Si on clique sur suivant et qu'une voix est entrain d'être jouée, on la remet a zéro et on l'arrête
     if (isVoiceStep && isPlaying) {
-      await TrackPlayer.seekTo(0);
-      await TrackPlayer.pause();
+      await TrackPlayer.reset();
     }
   }
 

@@ -1,11 +1,4 @@
-import {
-  StyleSheet,
-  Text,
-  View,
-  Modal,
-  Dimensions,
-  TouchableOpacity,
-} from "react-native";
+import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
@@ -21,6 +14,7 @@ export default function SuccessModal({ navigation, displayModal }) {
   const trackData = useSelector((state) => state.track.value);
 
   function handleClose(type) {
+    dispatch(resetCreateForm());
     if (type === "start") {
       // Quand on appuie sur le bouton Ecoutez votre histoire on lance l'histoire automatiquement
       dispatch(
@@ -31,7 +25,6 @@ export default function SuccessModal({ navigation, displayModal }) {
       );
     }
     // On reset les params de create form
-    dispatch(resetCreateForm());
     navigation.navigate("home");
   }
 
@@ -53,18 +46,10 @@ export default function SuccessModal({ navigation, displayModal }) {
             <Text></Text>
           </View>
           <View style={styles.middleModalContainer}>
-            <Ionicons
-              name="checkmark-circle"
-              size={Spacing.maximale}
-              color={Colors.success}
-            />
+            <Ionicons name="checkmark-circle" size={Spacing.maximale} color={Colors.success} />
             <View>
-              <Text style={styles.text}>
-                Votre histoire a bien été générée.
-              </Text>
-              <Text style={styles.text}>
-                Retrouvez-la dans votre Bibliothèque.
-              </Text>
+              <Text style={styles.text}>Votre histoire a bien été générée.</Text>
+              <Text style={styles.text}>Retrouvez-la dans votre Bibliothèque.</Text>
             </View>
 
             <Button

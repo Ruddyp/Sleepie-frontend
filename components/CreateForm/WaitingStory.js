@@ -45,9 +45,9 @@ export default function WaitingStory() {
         });
         const data = await response.json();
         if (data.result) {
+          dispatch(updateIsFinished());
           dispatch(updateModalState(false));
           dispatch(updateIsGenerating());
-          dispatch(updateIsFinished());
           dispatch(updateCreatedStories(data.story));
           dispatch(
             updateTrack({
