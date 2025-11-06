@@ -7,10 +7,9 @@ import Input from "../components/KitUI/Input";
 import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
 import { setCreatedStories, setLikedStories } from "../reducers/stories";
+import { backendUrl } from "../modules/utils";
 
 export default function SignIn({ navigation }) {
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState({ error: false, value: "" });
@@ -40,7 +39,7 @@ export default function SignIn({ navigation }) {
     };
     setMessageFromBack("");
     try {
-      const response = await fetch(`http://${IP}:${port}/users/signin`, {
+      const response = await fetch(`${backendUrl}/users/signin`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -84,16 +83,9 @@ export default function SignIn({ navigation }) {
           autoCapitalize="none"
         />
       </View>
-      <Button
-        title="Me connecter"
-        size="large"
-        variant="primary"
-        onPress={() => handlePress()}
-      />
+      <Button title="Me connecter" size="large" variant="primary" onPress={() => handlePress()} />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
-      {messageFromBack && (
-        <Text style={styles.errorMessage}>{messageFromBack}</Text>
-      )}
+      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}</Text>}
     </View>
   );
 }

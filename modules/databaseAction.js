@@ -1,7 +1,6 @@
-const IP = process.env.EXPO_PUBLIC_IP;
-const port = process.env.EXPO_PUBLIC_PORT;
 import { updateLikedStories } from "../reducers/stories";
 import { updateRecentlyPlayed } from "../reducers/users";
+import { backendUrl } from "./utils";
 
 export async function likeStory(story, token, dispatch) {
   const body = {
@@ -9,7 +8,7 @@ export async function likeStory(story, token, dispatch) {
     storyId: story._Id,
   };
   try {
-    const response = await fetch(`http://${IP}:${port}/stories/like`, {
+    const response = await fetch(`${backendUrl}/stories/like`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
@@ -27,7 +26,7 @@ export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) 
     storyId: story._id,
   };
   try {
-    const response = await fetch(`http://${IP}:${port}/stories/play`, {
+    const response = await fetch(`${backendUrl}/stories/play`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),

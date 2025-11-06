@@ -8,9 +8,7 @@ import { updateCreatedStories } from "../../reducers/stories";
 import { updateModalState } from "../../reducers/modal";
 import { resetCreateForm } from "../../reducers/createForm";
 import Stepper from "./Stepper";
-
-const IP = process.env.EXPO_PUBLIC_IP;
-const port = process.env.EXPO_PUBLIC_PORT;
+import { backendUrl } from "../../modules/utils";
 
 export default function WaitingStory() {
   const dispatch = useDispatch();
@@ -72,7 +70,7 @@ export default function WaitingStory() {
           duration: steps[5].response,
           otherParam: otherparam,
         };
-        const response = await fetch(`http://${IP}:${port}/stories/create`, {
+        const response = await fetch(`${backendUrl}/stories/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),

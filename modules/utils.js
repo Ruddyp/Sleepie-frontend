@@ -23,3 +23,5 @@ export function formatSecondsToMinutes(totalSeconds) {
   // Construire la chaîne de caractères finale "m:ss"
   return `${minutes}:${formattedSeconds}`;
 }
+
+export const backendUrl = "https://sleepie-backend.vercel.app";

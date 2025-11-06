@@ -8,11 +8,9 @@ import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import FilterBar from "../components/KitUI/FilterBar";
 import { filterDuration } from "../modules/filter";
-import { capitalizeFirstLetter } from "../modules/utils";
+import { backendUrl, capitalizeFirstLetter } from "../modules/utils";
 
 export default function Discover() {
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
   const [storiesSleepie, setStoriesSleepie] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
@@ -22,7 +20,7 @@ export default function Discover() {
   const displayMiniPlayer = !modal.modalState && trackData.track.url !== null;
 
   useEffect(() => {
-    fetch(`http://${IP}:${port}/stories/sleepiestories`)
+    fetch(`${backendUrl}/stories/sleepiestories`)
       .then((response) => response.json())
       .then((data) => {
         setStoriesSleepie(data.stories);

@@ -4,11 +4,10 @@ import { useFocusEffect } from "@react-navigation/native";
 import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "../KitUI/Button";
+import { backendUrl } from "../../modules/utils";
 
 export default function SubscribeModal({ navigation }) {
   const [isOpen, setIsOpen] = useState(false);
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
   const user = useSelector((state) => state.user.value);
 
   useFocusEffect(
@@ -22,7 +21,7 @@ export default function SubscribeModal({ navigation }) {
       token: user.token,
     };
     try {
-      const response = await fetch(`http://${IP}:${port}/rights/get`, {
+      const response = await fetch(`${backendUrl}/rights/get`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

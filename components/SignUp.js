@@ -6,11 +6,9 @@ import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
+import { backendUrl } from "../modules/utils";
 
 export default function SignUp({ navigation }) {
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
-
   const dispatch = useDispatch();
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState({ error: false, value: "" });
@@ -59,7 +57,7 @@ export default function SignUp({ navigation }) {
     setMessageFromBack("");
 
     try {
-      const response = await fetch(`http://${IP}:${port}/users/signup`, {
+      const response = await fetch(`${backendUrl}/users/signup`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -122,9 +120,7 @@ export default function SignUp({ navigation }) {
         onPress={() => handlepressSignUp()}
       />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
-      {messageFromBack && (
-        <Text style={styles.errorMessage}>{messageFromBack}</Text>
-      )}
+      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}</Text>}
     </View>
   );
 }

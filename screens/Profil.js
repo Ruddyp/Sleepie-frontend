@@ -4,90 +4,81 @@ import Button from "../components/KitUI/Button";
 import { LinearGradient } from "expo-linear-gradient";
 import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
-import { resetStories } from "../reducers/stories"
+import { resetStories } from "../reducers/stories";
 import { resetTrack } from "../reducers/track";
-import { resetForm } from "../reducers/createForm"
+import { resetForm } from "../reducers/createForm";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect } from "@react-navigation/native";
 import React from "react";
-
-
-
+import { backendUrl } from "../modules/utils";
 
 export default function Login({ navigation, route }) {
-
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
-  const [modalVisible, setModalVisible] = useState(false)
-  const [messageModal, setMessageModal] = useState("")
-  const [subscribe, setSubscribe] = useState(true)
+  const [modalVisible, setModalVisible] = useState(false);
+  const [messageModal, setMessageModal] = useState("");
+  const [subscribe, setSubscribe] = useState(true);
 
   useFocusEffect(
     React.useCallback(() => {
-      getRole()
+      getRole();
     }, [])
   );
 
-
-
   const getRole = async () => {
     const body = {
-      token: user.token
-    }
-    try {
-      const response = await fetch(`http://${IP}:${port}/rights/get`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      })
-      const data = await response.json()
-      if (data.result) {
-        if (data.role === "user") return setSubscribe(true)
-        if (data.role === "premium") return setSubscribe(false)
-      }
-    } catch (error) {
-      console.log({ result: false, message: error.message })
-    }
-  }
-
-  const handlePressDeconnect = () => {
-    dispatch(deleteUser());
-    dispatch(resetStories());
-    dispatch(resetForm());
-    dispatch(resetTrack())
-    navigation.navigate("Login");
-  };
-
-
-
-  const handlePressAbonnement = async () => {
-    const body = {
       token: user.token,
-      role: "premium"
-    }
+    };
     try {
-      const response = await fetch(`http://${IP}:${port}/rights/modify`, {
+      const response = await fetch(`${backendUrl}/rights/get`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
       const data = await response.json();
       if (data.result) {
-        setMessageModal(data.message)
-        setModalVisible(true)
-        setSubscribe(false)
-      } else {
-        setMessageModal(data.message);
-        setModalVisible(true)
-        setSubscribe(false)
+        if (data.role === "user") return setSubscribe(true);
+        if (data.role === "premium") return setSubscribe(false);
       }
     } catch (error) {
-      console.log({ result: false, message: error.message })
+      console.log({ result: false, message: error.message });
     }
-  }
+  };
+
+  const handlePressDeconnect = () => {
+    dispatch(deleteUser());
+    dispatch(resetStories());
+    dispatch(resetForm());
+    dispatch(resetTrack());
+    navigation.navigate("Login");
+  };
+
+  const handlePressAbonnement = async () => {
+    const body = {
+      token: user.token,
+      role: "premium",
+    };
+    try {
+      const response = await fetch(`${backendUrl}/rights/modify`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+      const data = await response.json();
+      if (data.result) {
+        setMessageModal(data.message);
+        setModalVisible(true);
+        setSubscribe(false);
+      } else {
+        setMessageModal(data.message);
+        setModalVisible(true);
+        setSubscribe(false);
+      }
+    } catch (error) {
+      console.log({ result: false, message: error.message });
+    }
+  };
 
   return (
     <LinearGradient
@@ -113,14 +104,8 @@ export default function Login({ navigation, route }) {
           <View style={styles.overlay}>
             <View style={styles.modal}>
               <Text style={styles.textmodal}>{messageModal}</Text>
-              <TouchableOpacity
-                onPress={() => setModalVisible(false)}
-              >
-                <Ionicons
-                  name="close-circle-outline"
-                  size={Spacing.huge}
-                  color={Colors.textBody}
-                />
+              <TouchableOpacity onPress={() => setModalVisible(false)}>
+                <Ionicons name="close-circle-outline" size={Spacing.huge} color={Colors.textBody} />
               </TouchableOpacity>
             </View>
           </View>
@@ -128,13 +113,16 @@ export default function Login({ navigation, route }) {
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>Mon abonnement</Text>
-        {subscribe ? <View style={styles.abonnement}>
-          <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
-          <Button title="S'abonner" variant="primary" onPress={() => handlePressAbonnement()} />
-        </View> :
+        {subscribe ? (
+          <View style={styles.abonnement}>
+            <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
+            <Button title="S'abonner" variant="primary" onPress={() => handlePressAbonnement()} />
+          </View>
+        ) : (
           <View>
             <Text style={styles.textabonnement}> Vous bénéficiez d'un abonnement premium</Text>
-          </View>}
+          </View>
+        )}
       </View>
       <View style={styles.containerBottom}>
         <Button title="Se déconnecter" onPress={() => handlePressDeconnect()} />
@@ -190,7 +178,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   textabonnement: {
-    color: Colors.textBody
+    color: Colors.textBody,
   },
   modal: {
     backgroundColor: Colors.bgTertiarySolid,
@@ -204,13 +192,12 @@ const styles = StyleSheet.create({
   textmodal: {
     color: Colors.textBody,
     ...Typography.h4,
-    textAlign: "center"
+    textAlign: "center",
   },
   overlay: {
     height: "100%",
     backgroundColor: Colors.audioWave,
     alignItems: "center",
-    justifyContent: "center"
-  }
-
+    justifyContent: "center",
+  },
 });

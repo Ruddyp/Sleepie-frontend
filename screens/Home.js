@@ -10,10 +10,9 @@ import { useSelector } from "react-redux";
 import MiniPlayer from "../components/Player/MiniPlayer";
 import FilterBar from "../components/KitUI/FilterBar";
 import { filterDuration } from "../modules/filter";
+import { backendUrl } from "../modules/utils";
 
 export default function Home() {
-  const IP = process.env.EXPO_PUBLIC_IP;
-  const port = process.env.EXPO_PUBLIC_PORT;
   const trackData = useSelector((state) => state.track.value);
   const stories = useSelector((state) => state.stories.value);
   const user = useSelector((state) => state.user.value);
@@ -23,7 +22,7 @@ export default function Home() {
   const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
 
   useEffect(() => {
-    fetch(`http://${IP}:${port}/stories/mostlistenedstories`)
+    fetch(`${backendUrl}/stories/mostlistenedstories`)
       .then((response) => response.json())
       .then((data) => {
         setMostListenedStories(data.mostListenedStories);
