@@ -1,7 +1,7 @@
 import { Text, View, StyleSheet } from "react-native";
 import { BorderRadius, Colors, Spacing, Typography } from "../KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
-export default function Stepper({ nbSteps, currentStep }) {
+export default function Stepper({ nbSteps, currentStep, hideText = false }) {
   const progressPercentage = (currentStep * 100) / nbSteps;
   const styles = StyleSheet.create({
     main: {
@@ -42,9 +42,9 @@ export default function Stepper({ nbSteps, currentStep }) {
           style={styles.stepperProgress}
         ></LinearGradient>
       </LinearGradient>
-      <Text style={styles.title}>
+      {!hideText && <Text style={styles.title}>
         Etape {currentStep}/{nbSteps}{" "}
-      </Text>
+      </Text>}
     </View>
   );
 }
