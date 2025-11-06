@@ -5,6 +5,7 @@ import Button from "../KitUI/Button";
 import { updateTrack } from "../../reducers/track";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { resetCreateForm } from "../../reducers/createForm";
 
 const windowHeight = Dimensions.get("window").height;
 
@@ -13,6 +14,7 @@ export default function SuccessModal({ navigation, displayModal }) {
   const trackData = useSelector((state) => state.track.value);
 
   function handleClose(type) {
+    dispatch(resetCreateForm());
     if (type === "start") {
       // Quand on appuie sur le bouton Ecoutez votre histoire on lance l'histoire automatiquement
       dispatch(

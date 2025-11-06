@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
 import { updateModalState } from "../../reducers/modal";
-import { resetCreateForm } from "../../reducers/createForm";
 import Stepper from "./Stepper";
 import { backendUrl } from "../../modules/utils";
 
@@ -78,7 +77,6 @@ export default function WaitingStory() {
         const data = await response.json();
         if (data.result) {
           setStopLoader(true);
-          dispatch(resetCreateForm());
           dispatch(updateCreatedStories(data.story));
           dispatch(
             updateTrack({
