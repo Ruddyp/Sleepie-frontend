@@ -10,7 +10,6 @@ export default function TrackManager() {
   const user = useSelector((state) => state.user.value);
   const { _id, title, image, author, url } = trackData.track;
   const { shouldPlayAutomatically } = trackData;
-  console.log("trackkkkkkkkkkk", trackData);
 
   useEffect(() => {
     if (url) {
@@ -21,7 +20,6 @@ export default function TrackManager() {
           const isSameTrack = currentTrack?.id === _id;
 
           if (!isSameTrack) {
-            console.log("TrackManager: Nouvelle piste détectée. Chargement et lecture.");
 
             // Réinitialisation du lecteur
             await TrackPlayer.reset();
@@ -35,25 +33,18 @@ export default function TrackManager() {
                 url: url,
               },
             ]);
-
             if (shouldPlayAutomatically) {
-              console.log("TrackManager: Lancement automatique demandé.");
-
               // Si la track en question n'est pas un sample de voix
               // On met a jour le count de la track et ajout dans recently played
               if (!voices.includes(title)) {
                 await updateStoryCountAndRecentlyPlayed(user.token, trackData.track, dispatch);
               }
               await TrackPlayer.play();
-            } else {
-              console.log("TrackManager: Piste chargée, mais pas de lancement automatique.");
             }
           } else {
-            console.log("TrackManager: Même piste que celle en cours.");
             // Gestion du cas de création d'une hsitoire
             // Appuyer sur le bouton va passer shouldPlayAutomatically a true mais la piste et la même
             if (shouldPlayAutomatically) {
-              console.log("TrackManager: Lancement automatique demandé.");
               // Si la track en question n'est pas un sample de voix
               // On met a jour le count de la track et ajout dans recently played
               if (!voices.includes(title)) {

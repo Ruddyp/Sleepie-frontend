@@ -27,13 +27,7 @@ export default function Login({ navigation, route }) {
 
   useFocusEffect(
     React.useCallback(() => {
-      // Do something when the screen is focused
       getRole()
-      return () => {
-        // Do something when the screen is unfocused
-        // Useful for cleanup functions
-        console.log("départ de la page Profil")
-      };
     }, [])
   );
 
@@ -90,7 +84,6 @@ export default function Login({ navigation, route }) {
         setModalVisible(true)
         setSubscribe(false)
       }
-      console.log(data)
     } catch (error) {
       console.log({ result: false, message: error.message })
     }

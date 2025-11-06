@@ -101,16 +101,13 @@ export default function MiniPlayer() {
 
   async function handlePlay() {
     if (isEnded) {
-      console.log("Action: Restart");
       await TrackPlayer.seekTo(0);
       await TrackPlayer.play();
     }
 
     if (isPlaying) {
-      console.log("Action: Pause");
       await TrackPlayer.pause();
     } else {
-      console.log("Action: Lecture");
       await TrackPlayer.play();
     }
   }

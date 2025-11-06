@@ -24,7 +24,7 @@ export default function CreateStoryCard({
   const screenHeight = Dimensions.get("window").height;
   const CARD_HEIGHT = Math.floor(screenHeight / 3);
 
-  // --- Animation "respiration"
+  // Animation "respiration"
   const breath = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -46,12 +46,11 @@ export default function CreateStoryCard({
     return () => loop.stop();
   }, [breath]);
 
-  // 1) Scale doux sur la carte
   const scale = breath.interpolate({
     inputRange: [0, 1],
     outputRange: [1, 1.06],
   });
-  // 2) Overlay respirant au-dessus du gradient (sinon caché)
+
   const overlayOpacity = breath.interpolate({
     inputRange: [0, 1],
     outputRange: [0.0, 0.25],

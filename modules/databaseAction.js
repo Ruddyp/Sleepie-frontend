@@ -22,7 +22,6 @@ export async function likeStory(story, token, dispatch) {
 }
 
 export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) {
-  console.log("storzefiubzefuziefniuezy", story);
   const body = {
     token: token,
     storyId: story._id,

@@ -22,13 +22,6 @@ export default function Home() {
   const [mostListenedStories, setMostListenedStories] = useState([]);
   const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
 
-  // console.log("recent:");
-  // console.log(user.recently_played[1]?.title);
-  // console.log(user.recently_played[1]?.configuration.duration);
-  // console.log("most listende:");
-  // console.log(mostListenedStories[0]?.title);
-  // console.log(mostListenedStories[0]?.configuration.duration);
-
   useEffect(() => {
     fetch(`http://${IP}:${port}/stories/mostlistenedstories`)
       .then((response) => response.json())

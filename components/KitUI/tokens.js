@@ -1,8 +1,3 @@
-/**
- * SLEEPIE DESIGN TOKENS - REACT NATIVE
- * Mode Nuit Exclusif
- */
-
 export const Colors = {
   // Backgrounds
   bgPrimary: ["#0B1A33", "#0F2045"], // gradient

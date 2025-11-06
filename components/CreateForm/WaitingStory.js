@@ -44,7 +44,6 @@ export default function WaitingStory() {
     const intervalId = setInterval(() => {
       setCurrentStepLoader(prev => {
         const next = prev + 1000;
-        console.log(next);
 
         // arrêt automatique si on atteint la fin
         if (next >= (nbStepsLoader - 1000)) {
@@ -76,7 +75,6 @@ export default function WaitingStory() {
           duration: steps[5].response,
           otherParam: otherparam,
         };
-        console.log("body", body);
         const response = await fetch(`http://${IP}:${port}/stories/create`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },

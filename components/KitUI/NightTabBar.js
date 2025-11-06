@@ -33,7 +33,6 @@ const TAB_CONFIG = {
 };
 
 const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
 
 
 export const NightTabBar = ({ state, navigation, descriptors }) => {
