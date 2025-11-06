@@ -22,6 +22,7 @@ export async function likeStory(story, token, dispatch) {
 }
 
 export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) {
+  console.log("storzefiubzefuziefniuezy", story);
   const body = {
     token: token,
     storyId: story._id,
@@ -33,7 +34,6 @@ export async function updateStoryCountAndRecentlyPlayed(token, story, dispatch) 
       body: JSON.stringify(body),
     });
     const data = await response.json();
-    console.log("story", story);
     dispatch(updateRecentlyPlayed(story));
   } catch (error) {
     console.log("error from updateStoryCountAndRecentlyPlayed", error.message);

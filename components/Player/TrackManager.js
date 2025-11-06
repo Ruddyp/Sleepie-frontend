@@ -10,6 +10,7 @@ export default function TrackManager() {
   const user = useSelector((state) => state.user.value);
   const { _id, title, image, author, url } = trackData.track;
   const { shouldPlayAutomatically } = trackData;
+  console.log("trackkkkkkkkkkk", trackData);
 
   useEffect(() => {
     if (url) {
@@ -67,6 +68,12 @@ export default function TrackManager() {
       };
 
       loadAndPlayTrack();
+    } else {
+      const resetTrack = async () => {
+        // Réinitialisation du lecteur
+        await TrackPlayer.reset();
+      };
+      resetTrack();
     }
   }, [_id, url, shouldPlayAutomatically]);
 

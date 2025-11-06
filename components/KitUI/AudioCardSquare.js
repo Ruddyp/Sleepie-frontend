@@ -8,7 +8,7 @@ import { likeStory } from "../../modules/databaseAction";
 import TrackPlayer, { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
 
 export default function AudioCardSquare(props) {
-  const { title, image, author, _id, url, size, hasLiked } = props;
+  const { title, image, author, _id, url, size, hasLiked, configuration } = props;
   const dispatch = useDispatch();
   const activeTrack = useActiveTrack();
   const playbackState = usePlaybackState();
@@ -22,7 +22,7 @@ export default function AudioCardSquare(props) {
   async function handlePress() {
     dispatch(
       updateTrack({
-        track: { _id, image, title, author: author, url },
+        track: { _id, image, title, author: author, url, configuration },
         shouldPlayAutomatically: true,
       })
     );

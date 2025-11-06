@@ -3,16 +3,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateModalState } from "../../reducers/modal";
 import { Player } from "./Player";
 import { LinearGradient } from "expo-linear-gradient";
-import { Ionicons } from "@expo/vector-icons";
-import { Colors, Spacing } from "../KitUI/tokens";
+import { Colors } from "../KitUI/tokens";
 
 const windowHeight = Dimensions.get("window").height;
 export default function PlayerModal() {
   const dispatch = useDispatch();
   const modal = useSelector((state) => state.modal.value);
-  function handleClose() {
-    dispatch(updateModalState(false));
-  }
   return (
     <Modal
       animationType="slide"
@@ -30,15 +26,6 @@ export default function PlayerModal() {
           <View style={styles.middleModalContainer}>
             <Player />
           </View>
-          <View style={styles.bottomModalContainer}>
-            <TouchableOpacity onPress={() => handleClose()}>
-              <Ionicons
-                name="close-circle-outline"
-                size={Spacing.maximale}
-                color={Colors.textBody}
-              />
-            </TouchableOpacity>
-          </View>
         </View>
       </LinearGradient>
     </Modal>
@@ -48,11 +35,6 @@ export default function PlayerModal() {
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-  },
-  bottomModalContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
   },
   mainModalContainer: {
     width: "100%",

@@ -16,6 +16,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { likeStory } from "../../modules/databaseAction";
 import SleepTimerModal from "./SleepTimerModal";
 import { useState } from "react";
+import { updateModalState } from "../../reducers/modal";
 
 const events = [
   Event.RemotePlay,
@@ -187,6 +188,11 @@ export function Player() {
         >
           <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
           <Text style={styles.timerLabel}>Minuteur sommeil</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={[styles.controls, { marginTop: Spacing.lg }]}>
+        <TouchableOpacity onPress={() => dispatch(updateModalState(false))}>
+          <Ionicons name="close-circle" size={Spacing.massive} color={Colors.textBody} />
         </TouchableOpacity>
       </View>
       <SleepTimerModal isOpen={isOpen} setIsOpen={setIsOpen} duration={duration} />
