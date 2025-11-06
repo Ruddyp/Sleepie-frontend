@@ -27,7 +27,6 @@ const events = [
   Event.PlaybackActiveTrackChanged,
 ];
 const windowWidth = Dimensions.get("window").width;
-const windowHeight = Dimensions.get("window").height;
 
 export function Player() {
   const activeTrack = useActiveTrack();
@@ -206,8 +205,8 @@ const styles = StyleSheet.create({
     width: windowWidth * 0.9,
     height: "100%",
     borderRadius: BorderRadius.large,
-    padding: Spacing.xl,
-    gap: windowHeight >= 800 ? Spacing.md : Spacing.xl,
+    paddingVertical: Spacing.sm,
+    justifyContent: "space-around",
     ...Shadows.soft,
   },
   progressTextContainer: {

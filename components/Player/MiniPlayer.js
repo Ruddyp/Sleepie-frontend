@@ -8,6 +8,7 @@ import {
   PanResponder,
   Animated,
   Easing,
+  Dimensions,
 } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "../KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
@@ -33,6 +34,7 @@ const events = [
   Event.PlaybackError,
   Event.PlaybackActiveTrackChanged,
 ];
+const windowWidth = Dimensions.get("window").width;
 
 export default function MiniPlayer() {
   const dispatch = useDispatch();
@@ -55,10 +57,6 @@ export default function MiniPlayer() {
   const hasLiked = stories.likedStories.some((story) => story._id === id);
   const isPlaying = playerState === State.Playing;
   const isEnded = playerState === State.Ended;
-
-  function handleSwipeCleanup() {
-    dispatch(resetTrack());
-  }
 
   const panResponder = useRef(
     PanResponder.create({
@@ -218,7 +216,7 @@ const styles = StyleSheet.create({
   },
   title: {
     ...Typography.body,
-    fontSize: 18,
+    fontSize: windowWidth <= 360 ? 16 : 18,
     color: Colors.textBody,
   },
   subtitle: {

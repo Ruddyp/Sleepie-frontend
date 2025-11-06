@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
   },
   middleModalContainer: {
     width: "100%",
-    height: "80%",
+    // height: windowHeight <= 800 ? "90%" : "80%",
+    height: windowHeight * 0.85,
     alignItems: "center",
     justifyContent: "center",
   },
