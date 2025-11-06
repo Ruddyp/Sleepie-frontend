@@ -8,7 +8,6 @@ import { useState } from "react";
 import { checkInput } from "../modules/checkInput";
 import { setCreatedStories, setLikedStories } from "../reducers/stories";
 
-
 export default function SignIn({ navigation }) {
   const IP = process.env.EXPO_PUBLIC_IP;
   const port = process.env.EXPO_PUBLIC_PORT;
@@ -18,7 +17,6 @@ export default function SignIn({ navigation }) {
   const [password, setPassword] = useState("");
   const [emptyfield, setEmptyfield] = useState(false);
   const [messageFromBack, setMessageFromBack] = useState("");
-
 
   const handlePress = async () => {
     setEmptyfield(false);
@@ -31,7 +29,7 @@ export default function SignIn({ navigation }) {
     const isValidEmail = (email) => emailRegex.test(email);
     if (!isValidEmail(email.value)) {
       setEmail({
-        error: "invalid email",
+        error: "Email non valide",
         value: email.value,
       });
       return;
@@ -84,7 +82,6 @@ export default function SignIn({ navigation }) {
           value={password}
           secureTextEntry={true}
           autoCapitalize="none"
-
         />
       </View>
       <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />

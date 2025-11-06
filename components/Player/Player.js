@@ -27,6 +27,7 @@ const events = [
   Event.PlaybackActiveTrackChanged,
 ];
 const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
 
 export function Player() {
   const activeTrack = useActiveTrack();
@@ -187,7 +188,7 @@ export function Player() {
           onPress={() => setIsOpen(true)}
         >
           <Ionicons name="timer" size={Spacing.xxl} color={Colors.textBody} />
-          <Text style={styles.timerLabel}>Minuteur sommeil</Text>
+          <Text style={styles.timerLabel}>Minuteur</Text>
         </TouchableOpacity>
       </View>
       <View style={[styles.controls, { marginTop: Spacing.lg }]}>
@@ -206,7 +207,7 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: BorderRadius.large,
     padding: Spacing.xl,
-    gap: Spacing.xl,
+    gap: windowHeight >= 800 ? Spacing.md : Spacing.xl,
     ...Shadows.soft,
   },
   progressTextContainer: {
@@ -287,12 +288,12 @@ const styles = StyleSheet.create({
     marginLeft: 2,
   },
   sleepTimerButton: {
-    width: "50%",
     height: Sizes.buttonDefault,
     borderRadius: BorderRadius.round,
     backgroundColor: Colors.audioWave,
     borderWidth: 1,
     borderColor: Colors.borderSubtle,
+    paddingHorizontal: Spacing.lg,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
