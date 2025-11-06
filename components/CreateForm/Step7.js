@@ -1,15 +1,14 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import Button from "../KitUI/Button";
 import { updateIsGenerating } from "../../reducers/createForm";
-import { updateModalParamState } from "../../reducers/modalparam";
 import ModalParamComponent from "./ModalParamComponent";
+import { useState } from "react";
 
 export default function Step7() {
   const dispatch = useDispatch();
-  const modalParam = useSelector((state) => state.modalparam.value);
-  console.log(modalParam);
+  const [isOpen, setIsOpen] = useState(false);
   return (
     <View style={styles.main}>
       <Button
@@ -27,9 +26,9 @@ export default function Step7() {
         title="Définir d'autres paramètres"
         size="medium"
         variant="secondary"
-        onPress={() => dispatch(updateModalParamState(true))}
+        onPress={() => setIsOpen(true)}
       />
-      {modalParam.modalState && <ModalParamComponent />}
+      <ModalParamComponent isOpen={isOpen} setIsOpen={setIsOpen} />
     </View>
   );
 }
