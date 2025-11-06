@@ -3,7 +3,6 @@ import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
 import { updateTrack } from "../../reducers/track";
-import { resetCreateForm } from "../../reducers/createForm";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -14,7 +13,6 @@ export default function SuccessModal({ navigation, displayModal }) {
   const trackData = useSelector((state) => state.track.value);
 
   function handleClose(type) {
-    dispatch(resetCreateForm());
     if (type === "start") {
       // Quand on appuie sur le bouton Ecoutez votre histoire on lance l'histoire automatiquement
       dispatch(

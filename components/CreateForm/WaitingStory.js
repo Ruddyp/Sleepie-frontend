@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
 import { updateModalState } from "../../reducers/modal";
+import { resetCreateForm } from "../../reducers/createForm";
 import Stepper from "./Stepper";
 
 const IP = process.env.EXPO_PUBLIC_IP;
@@ -16,8 +17,8 @@ export default function WaitingStory() {
   const form = useSelector((state) => state.createForm.value);
   const user = useSelector((state) => state.user.value);
   const { steps, otherparam } = form;
-  const [currentStepLoader, setCurrentStepLoader] = useState(0)
-  const [stopLoader, setStopLoader] = useState(false)
+  const [currentStepLoader, setCurrentStepLoader] = useState(0);
+  const [stopLoader, setStopLoader] = useState(false);
   function normalizeVoice(v) {
     return String(v)
       .normalize("NFD")
@@ -28,25 +29,24 @@ export default function WaitingStory() {
 
   const nbStepsLoader = 30000;
 
-  useEffect(() => { //vide 
+  useEffect(() => {
+    //vide
     if (stopLoader) {
       dispatch(updateIsFinished());
       dispatch(updateModalState(false));
       dispatch(updateIsGenerating());
     }
-
   }, [stopLoader]);
-
 
   useEffect(() => {
     if (stopLoader) return; // ne lance pas l'interval si on doit stopper
 
     const intervalId = setInterval(() => {
-      setCurrentStepLoader(prev => {
+      setCurrentStepLoader((prev) => {
         const next = prev + 1000;
 
         // arrêt automatique si on atteint la fin
-        if (next >= (nbStepsLoader - 1000)) {
+        if (next >= nbStepsLoader - 1000) {
           clearInterval(intervalId);
         }
 
@@ -57,9 +57,6 @@ export default function WaitingStory() {
     // cleanup si le composant se démonte (ex : modale fermée)
     return () => clearInterval(intervalId);
   }, [stopLoader]);
-
-
-
 
   // A l'initialisation du composant on lance le fetch pour générer une histoire
   useEffect(() => {
@@ -82,7 +79,8 @@ export default function WaitingStory() {
         });
         const data = await response.json();
         if (data.result) {
-          setStopLoader(true)
+          setStopLoader(true);
+          dispatch(resetCreateForm());
           dispatch(updateCreatedStories(data.story));
           dispatch(
             updateTrack({
