@@ -1,10 +1,14 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { Colors, Typography, Spacing, Shadows } from "./tokens";
 
 const TAB_CONFIG = {
-  home: { inactive: "home-outline", active: "home", label: "Accueil" },
+  home: {
+    inactive: "home-outline",
+    active: "home",
+    label: "Accueil"
+  },
   discover: {
     inactive: "headset-outline",
     active: "headset",
@@ -17,8 +21,8 @@ const TAB_CONFIG = {
     isMain: true,
   },
   favorites: {
-    inactive: "heart-outline",
-    active: "heart",
+    inactive: "book-outline",
+    active: "book",
     label: "Bibliothèque",
   },
   meditation: {
@@ -27,6 +31,10 @@ const TAB_CONFIG = {
     label: "Méditer",
   },
 };
+
+const windowWidth = Dimensions.get("window").width;
+const windowHeight = Dimensions.get("window").height;
+
 
 export const NightTabBar = ({ state, navigation, descriptors }) => {
   const activeIndex = state.index;
@@ -125,12 +133,13 @@ const ICON = 44;
 
 const styles = StyleSheet.create({
   container: {
+    width: "100%",
     flexDirection: "row",
-    justifyContent: "space-around",
+    justifyContent: "center",
     alignItems: "center",
+    gap: windowWidth <= 360 ? Spacing.xl : Spacing.xxl,
     backgroundColor: Colors.bgPrimarySolid,
-    paddingHorizontal: Spacing.sm,
-    paddingTop: Spacing.sm,
+    paddingVertical: Spacing.sm,
     borderTopWidth: 1,
     borderTopColor: Colors.borderSubtle,
     ...Shadows.soft,
@@ -138,8 +147,6 @@ const styles = StyleSheet.create({
   tab: {
     alignItems: "center",
     justifyContent: "center",
-    paddingVertical: Spacing.md,
-    paddingHorizontal: Spacing.md,
   },
   mainTab: {
     marginTop: -20, // bouton créer flottant
@@ -171,8 +178,7 @@ const styles = StyleSheet.create({
   },
   label: {
     color: Colors.textSecondary,
-    fontSize: Typography.micro.fontSize,
-    fontWeight: "400",
+    ...Typography.ultramicro,
   },
   labelActive: {
     color: "#FFFFFF",
@@ -182,6 +188,6 @@ const styles = StyleSheet.create({
     textShadowRadius: 6,
   },
   mainLabel: {
-    fontSize: Typography.caption.fontSize,
+    fontSize: Typography.micro.fontSize,
   },
 });

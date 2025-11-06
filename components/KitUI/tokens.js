@@ -85,6 +85,11 @@ export const Typography = {
     lineHeight: 16,
     fontWeight: "400",
   },
+  ultramicro: {
+    fontSize: 10,
+    lineHeight: 16,
+    fontWeight: "400",
+  }
 };
 
 export const Spacing = {
