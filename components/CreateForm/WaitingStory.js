@@ -28,7 +28,7 @@ export default function WaitingStory() {
 
   const nbStepsLoader = 30000;
 
-  useEffect(() => {
+  useEffect(() => { //vide 
     if (stopLoader) {
       dispatch(updateIsFinished());
       dispatch(updateModalState(false));
