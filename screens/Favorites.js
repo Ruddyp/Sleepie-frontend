@@ -50,7 +50,7 @@ export default function Favorites() {
         {displayCreatedStories && <CategoryCarousel title="Mes créations" data={createdStories} />}
 
         {/* Carrousel 2 : sons/histoires likés */}
-        {displayLikedStories && <CategoryCarousel title="Sons likés" data={likedStories} />}
+        {displayLikedStories && <CategoryCarousel title="Histoires aimées" data={likedStories} />}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />
