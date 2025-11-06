@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/users";
-import { Colors, Typography } from "../components/KitUI/tokens";
+import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { useState } from "react";
@@ -84,9 +84,16 @@ export default function SignIn({ navigation }) {
           autoCapitalize="none"
         />
       </View>
-      <Button title="Se connecter" size="large" variant="primary" onPress={() => handlePress()} />
+      <Button
+        title="Me connecter"
+        size="large"
+        variant="primary"
+        onPress={() => handlePress()}
+      />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
-      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}</Text>}
+      {messageFromBack && (
+        <Text style={styles.errorMessage}>{messageFromBack}</Text>
+      )}
     </View>
   );
 }
@@ -98,8 +105,8 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontBody,
   },
   container: {
-    paddingHorizontal: 30,
+    paddingHorizontal: Spacing.xxl,
     justifyContent: "center",
-    gap: 15,
+    gap: Spacing.lg,
   },
 });

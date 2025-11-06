@@ -1,5 +1,18 @@
-import { StyleSheet, Text, View, KeyboardAvoidingView, Platform, Pressable } from "react-native";
-import { BorderRadius, Colors, Sizes, Spacing, Typography } from "../components/KitUI/tokens";
+import {
+  StyleSheet,
+  Text,
+  View,
+  KeyboardAvoidingView,
+  Platform,
+  Pressable,
+} from "react-native";
+import {
+  BorderRadius,
+  Colors,
+  Sizes,
+  Spacing,
+  Typography,
+} from "../components/KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
 import SignUp from "../components/SignUp";
@@ -23,7 +36,11 @@ export default function Login({ navigation }) {
           <Pressable
             style={[
               styles.buttonLeft,
-              { backgroundColor: isEnabled ? Colors.bgPrimarySolid : Colors.bgSleepieBlue2 },
+              {
+                backgroundColor: isEnabled
+                  ? Colors.bgPrimarySolid
+                  : Colors.bgSleepieBlue2,
+              },
             ]}
             onPress={() => setIsEnabled(false)}
           >
@@ -32,7 +49,11 @@ export default function Login({ navigation }) {
           <Pressable
             style={[
               styles.buttonRight,
-              { backgroundColor: !isEnabled ? Colors.bgPrimarySolid : Colors.bgSleepieBlue2 },
+              {
+                backgroundColor: !isEnabled
+                  ? Colors.bgPrimarySolid
+                  : Colors.bgSleepieBlue2,
+              },
             ]}
             onPress={() => setIsEnabled(true)}
           >
@@ -79,12 +100,12 @@ const styles = StyleSheet.create({
     height: "100%",
   },
   optionsContainer: {
-    marginTop: Spacing.xl,
-    marginBottom: Spacing.xxl,
+    marginTop: Spacing.huge,
+    marginBottom: Spacing.huge,
     backgroundColor: Colors.bgSleepieBlue2,
     flexDirection: "row",
     height: Sizes.buttonDefault,
-    width: "70%",
+    width: "85%",
     borderRadius: BorderRadius.xlarge,
     alignSelf: "center",
     flexDirection: "row",

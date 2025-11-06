@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 import { updateUser } from "../reducers/users";
-import { Colors, Typography } from "../components/KitUI/tokens";
+import { Colors, Spacing, Typography } from "../components/KitUI/tokens";
 import Button from "../components/KitUI/Button";
 import Input from "../components/KitUI/Input";
 import { useState } from "react";
@@ -17,20 +17,26 @@ export default function SignUp({ navigation }) {
   const [password, setPassword] = useState("");
   const [confirmationPassword, setConfirmationPassword] = useState("");
 
-  const [errorPassword, setErrorPassword] = useState({ error: false, value: "" });
+  const [errorPassword, setErrorPassword] = useState({
+    error: false,
+    value: "",
+  });
   const [emptyfield, setEmptyfield] = useState(false);
   const [messageFromBack, setMessageFromBack] = useState("");
 
   const handlepressSignUp = async () => {
-    setMessageFromBack("")
-    setErrorPassword({ error: false, value: "" })
+    setMessageFromBack("");
+    setErrorPassword({ error: false, value: "" });
     setEmptyfield(false);
 
     const inputFields = [email.value, username, password, confirmationPassword];
     if (!checkInput(inputFields)) return setEmptyfield(true);
 
     if (password !== confirmationPassword) {
-      setErrorPassword({ error: true, value: "Les mots de passe ne correspondent pas" });
+      setErrorPassword({
+        error: true,
+        value: "Les mots de passe ne correspondent pas",
+      });
       return;
     }
 
@@ -116,7 +122,9 @@ export default function SignUp({ navigation }) {
         onPress={() => handlepressSignUp()}
       />
       {emptyfield && <Text style={styles.errorMessage}>Champ(s) vide(s)</Text>}
-      {messageFromBack && <Text style={styles.errorMessage}>{messageFromBack}</Text>}
+      {messageFromBack && (
+        <Text style={styles.errorMessage}>{messageFromBack}</Text>
+      )}
     </View>
   );
 }
@@ -128,8 +136,8 @@ const styles = StyleSheet.create({
     fontFamily: Typography.fontBody,
   },
   container: {
-    paddingHorizontal: 30,
+    paddingHorizontal: Spacing.xxl,
     justifyContent: "center",
-    gap: 15,
+    gap: Spacing.lg,
   },
 });
