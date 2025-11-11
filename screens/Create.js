@@ -14,10 +14,9 @@ import Step5 from "../components/CreateForm/Step5";
 import Step6 from "../components/CreateForm/Step6";
 import Step7 from "../components/CreateForm/Step7";
 import WaitingStory from "../components/CreateForm/WaitingStory";
-import { useEffect } from "react";
-import { updateModalState } from "../reducers/modal";
 import SubscribeModal from "../components/Create/SubscribeModal";
 import SuccessModal from "../components/Create/SuccessModal";
+import ErrorModal from "../components/Create/ErrorModal";
 
 const steps = [
   {
@@ -57,21 +56,48 @@ const steps = [
   },
 ];
 
-export default function Create({ navigation }) {
+export default function Create() {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
-  const modal = useSelector((state) => state.modal.value);
-  const { currentStep, isGenerating, isFinished } = form;
-  const isInitialStep = currentStep === 0;
+  const { currentStep, generationStatus } = form;
+  const isInitialStep = currentStep === 0 && generationStatus === "initial";
   const isPartiallyFilled = form.steps.length > 0;
-  const displayModal = modal.modalState && isFinished;
 
-  useEffect(() => {
-    if (isFinished) {
-      // On vient set a true pour quand on va naviguer sur la home afficher direct la modal en pleine ecran avec le player
-      dispatch(updateModalState(true));
+  function getFormContent() {
+    if (isInitialStep)
+      return (
+        <View style={formStyles.createContainer}>
+          <View>
+            <Text style={formStyles.title}>Créer mon histoire</Text>
+            <Text style={formStyles.subtitle}>Personnalisée en 3 minutes</Text>
+          </View>
+          <Button
+            title={
+              !isPartiallyFilled
+                ? "Création de l'histoire"
+                : "Reprendre mon histoire"
+            }
+            size="large"
+            variant="primary"
+            onPress={() => dispatch(updateCurrentStep(1))}
+          />
+        </View>
+      );
+
+    switch (generationStatus) {
+      case "initial":
+        return (
+          <CreateFormStep {...steps[currentStep - 1]} nbSteps={steps.length} />
+        );
+      case "generating":
+        return <WaitingStory />;
+      case "success":
+        return <SuccessModal />;
+      case "error":
+        return <ErrorModal />;
     }
-  }, [isFinished]);
+  }
+  const formContent = getFormContent();
 
   return (
     <LinearGradient
@@ -80,26 +106,8 @@ export default function Create({ navigation }) {
       end={{ x: 1, y: 1 }}
       style={styles.main}
     >
-      {isInitialStep && (
-        <View style={formStyles.createContainer}>
-          <View>
-            <Text style={formStyles.title}>Créer mon histoire</Text>
-            <Text style={formStyles.subtitle}>Personnalisée en 3 minutes</Text>
-          </View>
-          <Button
-            title={!isPartiallyFilled ? "Création de l'histoire" : "Reprendre mon histoire"}
-            size="large"
-            variant="primary"
-            onPress={() => dispatch(updateCurrentStep(1))}
-          />
-        </View>
-      )}
-      {!isInitialStep && !isGenerating && !isFinished && (
-        <CreateFormStep {...steps[currentStep - 1]} nbSteps={steps.length} />
-      )}
-      {isGenerating && !isFinished && <WaitingStory />}
-      <SuccessModal navigation={navigation} displayModal={displayModal} />
-      <SubscribeModal navigation={navigation} />
+      {formContent}
+      <SubscribeModal />
     </LinearGradient>
   );
 }

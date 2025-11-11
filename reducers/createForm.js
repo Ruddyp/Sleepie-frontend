@@ -5,8 +5,7 @@ const initialState = {
     currentStep: 0,
     steps: [],
     otherparam: {},
-    isGenerating: false,
-    isFinished: false,
+    generationStatus: "initial", // 'initial' | 'generating' | 'success' | 'error'
   },
 };
 
@@ -22,47 +21,41 @@ export const createFormSlice = createSlice({
       const stepToUpdate = action.payload.currentStep - 1;
       state.value.steps[stepToUpdate] = { response: action.payload.response };
     },
-    updateIsGenerating: (state) => {
-      state.value.isGenerating = !state.value.isGenerating;
-    },
-    updateIsFinished: (state) => {
-      state.value.isFinished = !state.value.isFinished;
-    },
     resetCreateForm: (state) => {
       state.value = initialState.value;
     },
     updateParamCharacter: (state, action) => {
       state.value.otherparam = {
         ...state.value.otherparam,
-        characterName: action.payload
-      }
+        characterName: action.payload,
+      };
     },
     updateParamWeather: (state, action) => {
       state.value.otherparam = {
         ...state.value.otherparam,
-        weather: action.payload
-      }
+        weather: action.payload,
+      };
     },
-    resetForm: (state) => {
-      state.value = {
-        currentStep: 0,
-        steps: [],
-        otherparam: {},
-        isGenerating: false,
-        isFinished: false,
-      }
-    }
+    startGeneration: (state) => {
+      state.value.generationStatus = "generating";
+    },
+    generationSuccess: (state) => {
+      state.value.generationStatus = "success";
+    },
+    generationError: (state) => {
+      state.value.generationStatus = "error";
+    },
   },
 });
 
 export const {
   updateCurrentStep,
   updateStep,
-  updateIsGenerating,
-  updateIsFinished,
   resetCreateForm,
   updateParamCharacter,
   updateParamWeather,
-  resetForm,
+  startGeneration,
+  generationSuccess,
+  generationError,
 } = createFormSlice.actions;
 export default createFormSlice.reducer;

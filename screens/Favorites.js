@@ -12,9 +12,13 @@ import { filterDuration } from "../modules/filter";
 export default function Favorites() {
   const storiesFromRedux = useSelector((state) => state.stories.value);
   const trackData = useSelector((state) => state.track.value);
-  const [selectedDuration, setSelectedDuration] = useState({ key: "all", label: "Toutes" });
+  const [selectedDuration, setSelectedDuration] = useState({
+    key: "all",
+    label: "Toutes",
+  });
 
-  const displayMiniPlayer = !trackData.modalState && trackData.track.url !== null;
+  const displayMiniPlayer =
+    !trackData.modalState && trackData.track.url !== null;
 
   const createdStories = storiesFromRedux.createdStories
     .map((story) => ({
@@ -47,10 +51,14 @@ export default function Favorites() {
           hideCategory
         />
         {/* Carrousel 1 : sons/histoires créés par l’utilisateur */}
-        {displayCreatedStories && <CategoryCarousel title="Mes créations" data={createdStories} />}
+        {displayCreatedStories && (
+          <CategoryCarousel title="Mes créations" data={createdStories} />
+        )}
 
         {/* Carrousel 2 : sons/histoires likés */}
-        {displayLikedStories && <CategoryCarousel title="Histoires aimées" data={likedStories} />}
+        {displayLikedStories && (
+          <CategoryCarousel title="Mes favoris" data={likedStories} />
+        )}
       </ScrollView>
       {displayMiniPlayer && <MiniPlayer />}
       <PlayerModal />

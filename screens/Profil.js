@@ -6,27 +6,27 @@ import { useSelector, useDispatch } from "react-redux";
 import { deleteUser } from "../reducers/users";
 import { resetStories } from "../reducers/stories";
 import { resetTrack } from "../reducers/track";
-import { resetForm } from "../reducers/createForm";
+import { resetCreateForm } from "../reducers/createForm";
 import { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { useFocusEffect } from "@react-navigation/native";
-import React from "react";
 import { backendUrl } from "../modules/utils";
+import { useCallback } from "react";
 
-export default function Login({ navigation, route }) {
+export default function Login({ navigation }) {
   const user = useSelector((state) => state.user.value);
   const dispatch = useDispatch();
   const [modalVisible, setModalVisible] = useState(false);
   const [messageModal, setMessageModal] = useState("");
-  const [subscribe, setSubscribe] = useState(true);
+  const [isSubscribe, setisSubscribe] = useState(false);
 
   useFocusEffect(
-    React.useCallback(() => {
+    useCallback(() => {
       getRole();
     }, [])
   );
 
-  const getRole = async () => {
+  async function getRole() {
     const body = {
       token: user.token,
     };
@@ -38,23 +38,23 @@ export default function Login({ navigation, route }) {
       });
       const data = await response.json();
       if (data.result) {
-        if (data.role === "user") return setSubscribe(true);
-        if (data.role === "premium") return setSubscribe(false);
+        if (data.role === "user") return setisSubscribe(false);
+        if (data.role === "premium") return setisSubscribe(true);
       }
     } catch (error) {
       console.log({ result: false, message: error.message });
     }
-  };
+  }
 
-  const handlePressDeconnect = () => {
+  function handlePressDeconnect() {
     dispatch(deleteUser());
     dispatch(resetStories());
-    dispatch(resetForm());
+    dispatch(resetCreateForm());
     dispatch(resetTrack());
     navigation.navigate("Login");
-  };
+  }
 
-  const handlePressAbonnement = async () => {
+  async function handlePressAbonnement() {
     const body = {
       token: user.token,
       role: "premium",
@@ -69,16 +69,12 @@ export default function Login({ navigation, route }) {
       if (data.result) {
         setMessageModal(data.message);
         setModalVisible(true);
-        setSubscribe(false);
-      } else {
-        setMessageModal(data.message);
-        setModalVisible(true);
-        setSubscribe(false);
+        setisSubscribe(true);
       }
     } catch (error) {
       console.log({ result: false, message: error.message });
     }
-  };
+  }
 
   return (
     <LinearGradient
@@ -105,7 +101,11 @@ export default function Login({ navigation, route }) {
             <View style={styles.modal}>
               <Text style={styles.textmodal}>{messageModal}</Text>
               <TouchableOpacity onPress={() => setModalVisible(false)}>
-                <Ionicons name="close-circle-outline" size={Spacing.huge} color={Colors.textBody} />
+                <Ionicons
+                  name="close-circle-outline"
+                  size={Spacing.huge}
+                  color={Colors.textBody}
+                />
               </TouchableOpacity>
             </View>
           </View>
@@ -113,14 +113,21 @@ export default function Login({ navigation, route }) {
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>Mon abonnement</Text>
-        {subscribe ? (
-          <View style={styles.abonnement}>
-            <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
-            <Button title="S'abonner" variant="primary" onPress={() => handlePressAbonnement()} />
+        {isSubscribe ? (
+          <View>
+            <Text style={styles.textabonnement}>
+              {" "}
+              Vous bénéficiez d'un abonnement premium
+            </Text>
           </View>
         ) : (
-          <View>
-            <Text style={styles.textabonnement}> Vous bénéficiez d'un abonnement premium</Text>
+          <View style={styles.abonnement}>
+            <Text style={styles.textabonnement}>S'abonner pour 50 €/mois</Text>
+            <Button
+              title="S'abonner"
+              variant="primary"
+              onPress={() => handlePressAbonnement()}
+            />
           </View>
         )}
       </View>
@@ -133,12 +140,6 @@ export default function Login({ navigation, route }) {
 }
 
 const styles = StyleSheet.create({
-  area: {
-    flex: 1,
-    margin: 0,
-    padding: 0,
-    backgroundColor: "blue",
-  },
   main: {
     flex: 1,
     height: "100%",

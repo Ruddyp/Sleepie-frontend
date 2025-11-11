@@ -2,7 +2,7 @@ import { StyleSheet, Text, View } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch } from "react-redux";
 import Button from "../KitUI/Button";
-import { updateIsGenerating } from "../../reducers/createForm";
+import { startGeneration } from "../../reducers/createForm";
 import ModalParamComponent from "./ModalParamComponent";
 import { useState } from "react";
 
@@ -15,7 +15,7 @@ export default function Step7() {
         title="Génère ton histoire"
         size="large"
         variant="primary"
-        onPress={() => dispatch(updateIsGenerating())}
+        onPress={() => dispatch(startGeneration())}
       />
       <View style={styles.dividerContainer}>
         <View style={styles.divider}></View>

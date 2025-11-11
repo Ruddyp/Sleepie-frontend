@@ -5,10 +5,12 @@ import { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import Button from "../KitUI/Button";
 import { backendUrl } from "../../modules/utils";
+import { useNavigation } from "@react-navigation/native";
 
-export default function SubscribeModal({ navigation }) {
+export default function SubscribeModal() {
   const [isOpen, setIsOpen] = useState(false);
   const user = useSelector((state) => state.user.value);
+  const navigation = useNavigation();
 
   useFocusEffect(
     useCallback(() => {
@@ -45,10 +47,20 @@ export default function SubscribeModal({ navigation }) {
     <Modal visible={isOpen} transparent={true} animationType="fade">
       <View style={styles.mainContainer}>
         <View style={styles.subscribeContainer}>
-          <Text style={styles.text}>Abonnez-vous pour accéder à la création d'histoire</Text>
+          <Text style={styles.text}>
+            Abonnez-vous pour accéder à la création d'histoire
+          </Text>
           <View style={styles.buttonContainer}>
-            <Button title="S'abonner" variant="primary" onPress={() => handleNavigate("profil")} />
-            <Button title="Retour" variant="secondary" onPress={() => handleNavigate("home")} />
+            <Button
+              title="S'abonner"
+              variant="primary"
+              onPress={() => handleNavigate("profil")}
+            />
+            <Button
+              title="Retour"
+              variant="secondary"
+              onPress={() => handleNavigate("home")}
+            />
           </View>
         </View>
       </View>

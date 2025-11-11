@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Modal, Dimensions, TouchableOpacity } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Modal,
+  Dimensions,
+  TouchableOpacity,
+} from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
@@ -6,12 +13,17 @@ import { updateTrack } from "../../reducers/track";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { resetCreateForm } from "../../reducers/createForm";
+import { updateModalState } from "../../reducers/modal";
+import { useNavigation } from "@react-navigation/native";
 
 const windowHeight = Dimensions.get("window").height;
 
-export default function SuccessModal({ navigation, displayModal }) {
+export default function SuccessModal() {
   const dispatch = useDispatch();
   const trackData = useSelector((state) => state.track.value);
+  const form = useSelector((state) => state.createForm.value);
+  const navigation = useNavigation();
+  const displayModal = form.generationStatus === "success";
 
   function handleClose(type) {
     dispatch(resetCreateForm());
@@ -23,6 +35,7 @@ export default function SuccessModal({ navigation, displayModal }) {
           shouldPlayAutomatically: true,
         })
       );
+      dispatch(updateModalState(true));
     }
     // On reset les params de create form
     navigation.navigate("home");
@@ -46,10 +59,18 @@ export default function SuccessModal({ navigation, displayModal }) {
             <Text></Text>
           </View>
           <View style={styles.middleModalContainer}>
-            <Ionicons name="checkmark-circle" size={Spacing.maximale} color={Colors.success} />
+            <Ionicons
+              name="checkmark-circle"
+              size={Spacing.maximale}
+              color={Colors.success}
+            />
             <View>
-              <Text style={styles.text}>Votre histoire a bien été générée.</Text>
-              <Text style={styles.text}>Retrouvez-la dans votre Bibliothèque.</Text>
+              <Text style={styles.text}>
+                Votre histoire a bien été générée.
+              </Text>
+              <Text style={styles.text}>
+                Retrouvez-la dans votre Bibliothèque.
+              </Text>
             </View>
 
             <Button

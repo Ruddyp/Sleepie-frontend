@@ -1,11 +1,10 @@
 import { StyleSheet, Text, View, ActivityIndicator } from "react-native";
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
-import { updateIsFinished, updateIsGenerating } from "../../reducers/createForm";
+import { generationError, generationSuccess } from "../../reducers/createForm";
 import { useEffect, useState } from "react";
 import { updateTrack } from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
-import { updateModalState } from "../../reducers/modal";
 import Stepper from "./Stepper";
 import { backendUrl } from "../../modules/utils";
 
@@ -25,15 +24,6 @@ export default function WaitingStory() {
   }
 
   const nbStepsLoader = 30000;
-
-  useEffect(() => {
-    //vide
-    if (stopLoader) {
-      dispatch(updateIsFinished());
-      dispatch(updateModalState(false));
-      dispatch(updateIsGenerating());
-    }
-  }, [stopLoader]);
 
   useEffect(() => {
     if (stopLoader) return; // ne lance pas l'interval si on doit stopper
@@ -84,9 +74,11 @@ export default function WaitingStory() {
               shouldPlayAutomatically: false,
             })
           );
+          dispatch(generationSuccess());
         }
       } catch (error) {
         console.log("Error happended while generating story", error);
+        dispatch(generationError());
       }
     })();
   }, []);
@@ -94,8 +86,14 @@ export default function WaitingStory() {
   return (
     <View style={styles.main}>
       <ActivityIndicator size={100} color={Colors.textSleepieYellow} />
-      <Text style={styles.text}>Veuillez patienter, nous générons votre histoire...</Text>
-      <Stepper nbSteps={nbStepsLoader} currentStep={currentStepLoader} hideText={true} />
+      <Text style={styles.text}>
+        Veuillez patienter, nous générons votre histoire...
+      </Text>
+      <Stepper
+        nbSteps={nbStepsLoader}
+        currentStep={currentStepLoader}
+        hideText={true}
+      />
     </View>
   );
 }
