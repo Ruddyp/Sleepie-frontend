@@ -3,7 +3,10 @@ import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import { generationError, generationSuccess } from "../../reducers/createForm";
 import { useEffect, useState } from "react";
-import { updateTrack } from "../../reducers/track";
+import {
+  updateShouldPlayAutomatically,
+  updateTrack,
+} from "../../reducers/track";
 import { updateCreatedStories } from "../../reducers/stories";
 import Stepper from "./Stepper";
 import { backendUrl } from "../../modules/utils";
@@ -68,12 +71,8 @@ export default function WaitingStory() {
         if (data.result) {
           setStopLoader(true);
           dispatch(updateCreatedStories(data.story));
-          dispatch(
-            updateTrack({
-              track: { ...data.story },
-              shouldPlayAutomatically: false,
-            })
-          );
+          dispatch(updateTrack({ ...data.story }));
+          dispatch(updateShouldPlayAutomatically(false));
           dispatch(generationSuccess());
         }
       } catch (error) {

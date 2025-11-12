@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { State } from "react-native-track-player";
 
 const initialState = {
   value: {
@@ -15,6 +16,8 @@ const initialState = {
       image: null,
     },
     shouldPlayAutomatically: false,
+    playbackState: State.Paused,
+    seekTo: null,
   },
 };
 
@@ -24,7 +27,16 @@ export const trackSlice = createSlice({
   initialState,
   reducers: {
     updateTrack: (state, action) => {
-      state.value = action.payload;
+      state.value.track = action.payload;
+    },
+    updateShouldPlayAutomatically: (state, action) => {
+      state.value.shouldPlayAutomatically = action.payload;
+    },
+    updatePlaybackState: (state, action) => {
+      state.value.playbackState = action.payload;
+    },
+    updateSeekTo: (state, action) => {
+      state.value.seekTo = action.payload;
     },
     resetTrack: (state) => {
       state.value = initialState.value;
@@ -32,5 +44,11 @@ export const trackSlice = createSlice({
   },
 });
 
-export const { updateTrack, resetTrack } = trackSlice.actions;
+export const {
+  updateTrack,
+  updateShouldPlayAutomatically,
+  updatePlaybackState,
+  updateSeekTo,
+  resetTrack,
+} = trackSlice.actions;
 export default trackSlice.reducer;

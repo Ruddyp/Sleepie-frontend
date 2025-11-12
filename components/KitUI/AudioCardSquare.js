@@ -1,40 +1,43 @@
 import { View, Text, TouchableOpacity, Image, StyleSheet } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius, Shadows } from "./tokens";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTrack } from "../../reducers/track";
+import {
+  updatePlaybackState,
+  updateShouldPlayAutomatically,
+  updateTrack,
+} from "../../reducers/track";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { likeStory } from "../../modules/databaseAction";
-import TrackPlayer, { State, useActiveTrack, usePlaybackState } from "react-native-track-player";
+import { State, useActiveTrack } from "react-native-track-player";
 
 export default function AudioCardSquare(props) {
-  const { title, image, author, _id, url, size, hasLiked, configuration } = props;
+  const { title, image, author, _id, url, size, hasLiked, configuration } =
+    props;
   const dispatch = useDispatch();
   const activeTrack = useActiveTrack();
-  const playbackState = usePlaybackState();
-  const playerState = playbackState.state;
   const user = useSelector((state) => state.user.value);
+  const trackData = useSelector((state) => state.track.value);
+  const { playbackState } = trackData;
 
-  const isPlaying = activeTrack?.id === _id && playerState === State.Playing;
-  const isPaused = activeTrack?.id === _id && playerState === State.Paused;
-  const isEnded = activeTrack?.id === _id && playerState === State.Ended;
+  const isPlaying = activeTrack?.id === _id && playbackState === State.Playing;
+  const isPaused =
+    activeTrack?.id === _id &&
+    (playbackState === State.Paused || playbackState === State.Ready);
+  const isEnded = activeTrack?.id === _id && playbackState === State.Ended;
 
-  async function handlePress() {
-    dispatch(
-      updateTrack({
-        track: { _id, image, title, author: author, url, configuration },
-        shouldPlayAutomatically: true,
-      })
-    );
+  function handlePress() {
+    if (activeTrack?.id !== _id) {
+      dispatch(
+        updateTrack({ _id, image, title, author: author, url, configuration })
+      );
+      dispatch(updateShouldPlayAutomatically(true));
+    }
     if (isPlaying) {
-      await TrackPlayer.pause();
+      dispatch(updatePlaybackState(State.Paused));
     }
-    if (isPaused) {
-      await TrackPlayer.play();
-    }
-    if (isEnded) {
-      await TrackPlayer.seekTo(0);
-      await TrackPlayer.play();
+    if (isPaused || isEnded) {
+      dispatch(updatePlaybackState(State.Playing));
     }
   }
 
@@ -58,12 +61,15 @@ export default function AudioCardSquare(props) {
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[styles.iconContainer, styles.playLeftSpace, Shadows.bold]}
-          onPress={() => handlePause()}
         >
           {!isPlaying ? (
             <Ionicons name="play" size={Spacing.xxl} color={Colors.textTitle} />
           ) : (
-            <Ionicons name="pause" size={Spacing.xxl} color={Colors.textTitle} />
+            <Ionicons
+              name="pause"
+              size={Spacing.xxl}
+              color={Colors.textTitle}
+            />
           )}
         </LinearGradient>
 
@@ -81,7 +87,11 @@ export default function AudioCardSquare(props) {
             {hasLiked ? (
               <Ionicons name="heart" size={Spacing.xxl} color={Colors.error} />
             ) : (
-              <Ionicons name="heart-outline" size={Spacing.xxl} color={Colors.textTitle} />
+              <Ionicons
+                name="heart-outline"
+                size={Spacing.xxl}
+                color={Colors.textTitle}
+              />
             )}
           </TouchableOpacity>
         </LinearGradient>

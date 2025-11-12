@@ -1,13 +1,20 @@
-import { View, Text, TouchableOpacity, StyleSheet, Image, Dimensions } from "react-native";
-import { Colors, Typography, Spacing, BorderRadius, Shadows, Sizes } from "../KitUI/tokens";
-import TrackPlayer, {
-  useTrackPlayerEvents,
-  useActiveTrack,
-  useProgress,
-  Event,
-  State,
-  usePlaybackState,
-} from "react-native-track-player";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native";
+import {
+  Colors,
+  Typography,
+  Spacing,
+  BorderRadius,
+  Shadows,
+  Sizes,
+} from "../KitUI/tokens";
+import { useActiveTrack, useProgress, State } from "react-native-track-player";
 import { LinearGradient } from "expo-linear-gradient";
 import Slider from "@react-native-community/slider";
 import { Ionicons } from "@expo/vector-icons";
@@ -17,61 +24,46 @@ import { likeStory } from "../../modules/databaseAction";
 import SleepTimerModal from "./SleepTimerModal";
 import { useState } from "react";
 import { updateModalState } from "../../reducers/modal";
+import { updatePlaybackState, updateSeekTo } from "../../reducers/track";
 
-const events = [
-  Event.RemotePlay,
-  Event.RemotePause,
-  Event.RemotePlayPause,
-  Event.PlaybackState,
-  Event.PlaybackError,
-  Event.PlaybackActiveTrackChanged,
-];
 const windowWidth = Dimensions.get("window").width;
 
 export function Player() {
   const activeTrack = useActiveTrack();
   const { position, duration } = useProgress(100); // 100ms de rafraîchissement
-  const playbackState = usePlaybackState();
-  const playerState = playbackState.state;
   const { title, artwork, artist, id } = activeTrack || {};
   const user = useSelector((state) => state.user.value);
-  const trackData = useSelector((state) => state.track.value);
   const stories = useSelector((state) => state.stories.value);
+  const trackData = useSelector((state) => state.track.value);
+  const { playbackState } = trackData;
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
 
-  useTrackPlayerEvents(events, (event) => {
-    if (event.type === Event.PlaybackError) {
-      console.warn("An error occured while playing the current track.");
-    }
-  });
-
   const hasLiked = stories.likedStories.some((story) => story._id === id);
-  const isPlaying = playerState === State.Playing;
-  const isEnded = playerState === State.Ended;
+  const isPlaying = playbackState === State.Playing;
+  const isEnded = playbackState === State.Ended;
+  const isPaused = playbackState === State.Paused;
 
+  // Gestion du bouton play/pause
   async function handlePlay() {
-    if (isEnded) {
-      await TrackPlayer.seekTo(0);
-      await TrackPlayer.play();
-    }
-
     if (isPlaying) {
-      await TrackPlayer.pause();
-    } else {
-      await TrackPlayer.play();
+      dispatch(updatePlaybackState(State.Paused));
+    }
+    if (isPaused || isEnded) {
+      dispatch(updatePlaybackState(State.Playing));
     }
   }
 
   // Gestion de -10 secondes sur la track
-  async function handlePlayBack() {
-    position - 10 >= 0 ? await TrackPlayer.seekTo(position - 10) : await TrackPlayer.seekTo(0);
+  function handlePlayBack() {
+    const newPosition = position - 10 >= 0 ? position - 10 : 0;
+    dispatch(updateSeekTo(newPosition));
   }
+
   // Gestion de +10 secondes sur la track
-  async function handlePlayForward() {
-    position + 10 <= duration
-      ? await TrackPlayer.seekTo(position + 10)
-      : await TrackPlayer.seekTo(duration);
+  function handlePlayForward() {
+    const newPosition = position + 10 <= duration ? position + 10 : duration;
+    dispatch(updateSeekTo(newPosition));
   }
 
   return (
@@ -103,9 +95,17 @@ export function Player() {
               onPress={() => likeStory(trackData.track, user.token, dispatch)}
             >
               {hasLiked ? (
-                <Ionicons name="heart" size={Spacing.xxxl} color={Colors.error} />
+                <Ionicons
+                  name="heart"
+                  size={Spacing.xxxl}
+                  color={Colors.error}
+                />
               ) : (
-                <Ionicons name="heart-outline" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="heart-outline"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               )}
             </TouchableOpacity>
           </LinearGradient>
@@ -122,13 +122,15 @@ export function Player() {
           minimumValue={0}
           maximumValue={duration}
           value={position}
-          onSlidingComplete={(value) => TrackPlayer.seekTo(value)}
+          onSlidingComplete={(value) => dispatch(updateSeekTo(value))}
           minimumTrackTintColor={Colors.accentPrimarySolid}
           maximumTrackTintColor={Colors.textTitle}
           thumbTintColor={Colors.textSleepieYellow}
         />
         <View style={styles.progressTextContainer}>
-          <Text style={styles.progressText}>{formatSecondsToMinutes(Math.round(position))}</Text>
+          <Text style={styles.progressText}>
+            {formatSecondsToMinutes(Math.round(position))}
+          </Text>
           <Text style={styles.progressText}>
             {formatSecondsToMinutes(Math.round(duration - position))}
           </Text>
@@ -160,9 +162,17 @@ export function Player() {
           <TouchableOpacity onPress={() => handlePlay()} activeOpacity={0.8}>
             <Text style={styles.playIcon}>
               {isPlaying ? (
-                <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="pause"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               ) : (
-                <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="play"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               )}
             </Text>
           </TouchableOpacity>
@@ -189,10 +199,18 @@ export function Player() {
       </View>
       <View style={[styles.controls, { marginTop: Spacing.lg }]}>
         <TouchableOpacity onPress={() => dispatch(updateModalState(false))}>
-          <Ionicons name="close-circle" size={Spacing.massive} color={Colors.textBody} />
+          <Ionicons
+            name="close-circle"
+            size={Spacing.massive}
+            color={Colors.textBody}
+          />
         </TouchableOpacity>
       </View>
-      <SleepTimerModal isOpen={isOpen} setIsOpen={setIsOpen} duration={duration} />
+      <SleepTimerModal
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+        duration={duration}
+      />
     </LinearGradient>
   );
 }

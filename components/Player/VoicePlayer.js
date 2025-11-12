@@ -2,29 +2,19 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import { Colors, Typography, Spacing, BorderRadius } from "../KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import TrackPlayer, {
-  useTrackPlayerEvents,
-  useActiveTrack,
-  usePlaybackState,
-  Event,
-  State,
-} from "react-native-track-player";
-import { useDispatch } from "react-redux";
-import { updateTrack } from "../../reducers/track";
+import TrackPlayer, { useActiveTrack, State } from "react-native-track-player";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  resetTrack,
+  updatePlaybackState,
+  updateShouldPlayAutomatically,
+  updateTrack,
+} from "../../reducers/track";
 import { updateStep } from "../../reducers/createForm";
 import { voices } from "../../modules/constant";
 import { useCallback } from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { useNavigation } from "@react-navigation/native";
-
-const events = [
-  Event.RemotePlay,
-  Event.RemotePause,
-  Event.RemotePlayPause,
-  Event.PlaybackState,
-  Event.PlaybackError,
-  Event.PlaybackActiveTrackChanged,
-];
 
 export default function VoicePlayer({
   icon,
@@ -37,11 +27,10 @@ export default function VoicePlayer({
 }) {
   const dispatch = useDispatch();
   const navigation = useNavigation();
-  const playbackState = usePlaybackState();
-  const playerState = playbackState.state;
   const activeTrack = useActiveTrack();
-  const { id } = activeTrack || {};
-  const { currentStep, steps } = form;
+  const trackData = useSelector((state) => state.track.value);
+  const { playbackState } = trackData;
+  const { currentStep } = form;
 
   useFocusEffect(
     useCallback(() => {
@@ -50,60 +39,39 @@ export default function VoicePlayer({
         // Si on quitte l'écran Create on reset le trackplayer pour enlever les sample de choix des voix
         // Et on met a jour le redux track avec null
         if (voices.includes(track?.title)) {
-          await TrackPlayer.reset();
-          dispatch(
-            updateTrack({
-              track: {
-                _id: null,
-                title: null,
-                author: null,
-                url: null,
-              },
-              shouldPlayAutomatically: false,
-            })
-          );
+          dispatch(resetTrack());
         }
       };
     }, [navigation])
   );
 
-  useTrackPlayerEvents(events, (event) => {
-    if (event.type === Event.PlaybackError) {
-      console.warn("An error occured while playing the current track.");
-    }
-  });
+  const isPlaying = activeTrack?.id === _id && playbackState === State.Playing;
+  const isPaused =
+    activeTrack?.id === _id &&
+    (playbackState === State.Paused || playbackState === State.Ready);
+  const isEnded = activeTrack?.id === _id && playbackState === State.Ended;
 
-  const isPlaying = playerState === State.Playing;
-  const isEnded = playerState === State.Ended;
-
-  async function handlePlay() {
+  function handlePlay() {
     // On met a jour le redux que si la voix choisi est différent dans le redux et on change la track
-    if (steps[currentStep - 1]?.response !== voice || id !== _id) {
-      setSelectedVoice(voice);
+    if (activeTrack?.id !== _id) {
       dispatch(
         updateTrack({
-          track: {
-            _id: _id,
-            title: voice,
-            author: { username: "Sleepie" },
-            url: url,
-          },
-          shouldPlayAutomatically: true,
+          _id: _id,
+          title: voice,
+          author: { username: "Sleepie" },
+          url: url,
         })
       );
+      dispatch(updateShouldPlayAutomatically(true));
       dispatch(updateStep({ currentStep: currentStep, response: voice }));
-      return;
-    }
-
-    if (isEnded) {
-      await TrackPlayer.seekTo(0);
-      await TrackPlayer.play();
+      setSelectedVoice(voice);
     }
 
     if (isPlaying) {
-      await TrackPlayer.pause();
-    } else {
-      await TrackPlayer.play();
+      dispatch(updatePlaybackState(State.Paused));
+    }
+    if (isPaused || isEnded) {
+      dispatch(updatePlaybackState(State.Playing));
     }
   }
 
@@ -126,10 +94,18 @@ export default function VoicePlayer({
       <Pressable onPress={() => handlePlay()}>
         <View style={styles.miniPlayerContainer}>
           <View style={styles.playContainer}>
-            {isPlaying && id === _id ? (
-              <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
+            {isPlaying ? (
+              <Ionicons
+                name="pause"
+                size={Spacing.xxxl}
+                color={Colors.textTitle}
+              />
             ) : (
-              <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
+              <Ionicons
+                name="play"
+                size={Spacing.xxxl}
+                color={Colors.textTitle}
+              />
             )}
           </View>
           <View style={styles.textContainer}>

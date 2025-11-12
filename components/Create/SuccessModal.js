@@ -9,7 +9,7 @@ import {
 import { Colors, Spacing, Typography } from "../KitUI/tokens";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "../KitUI/Button";
-import { updateTrack } from "../../reducers/track";
+import { updateShouldPlayAutomatically } from "../../reducers/track";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { resetCreateForm } from "../../reducers/createForm";
@@ -20,7 +20,6 @@ const windowHeight = Dimensions.get("window").height;
 
 export default function SuccessModal() {
   const dispatch = useDispatch();
-  const trackData = useSelector((state) => state.track.value);
   const form = useSelector((state) => state.createForm.value);
   const navigation = useNavigation();
   const displayModal = form.generationStatus === "success";
@@ -29,12 +28,7 @@ export default function SuccessModal() {
     dispatch(resetCreateForm());
     if (type === "start") {
       // Quand on appuie sur le bouton Ecoutez votre histoire on lance l'histoire automatiquement
-      dispatch(
-        updateTrack({
-          track: { ...trackData.track },
-          shouldPlayAutomatically: true,
-        })
-      );
+      dispatch(updateShouldPlayAutomatically(true));
       dispatch(updateModalState(true));
     }
     // On reset les params de create form

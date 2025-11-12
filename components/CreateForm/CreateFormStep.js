@@ -4,26 +4,27 @@ import Button from "../KitUI/Button";
 import { updateCurrentStep } from "../../reducers/createForm";
 import { formStyles } from "./CreateFormStyle";
 import Stepper from "./Stepper";
-import TrackPlayer, { State, usePlaybackState } from "react-native-track-player";
+import { resetTrack } from "../../reducers/track";
 
-export default function CreateFormStep({ stepComponent, title, subtitle, nbSteps }) {
+export default function CreateFormStep({
+  stepComponent,
+  title,
+  subtitle,
+  nbSteps,
+}) {
   const dispatch = useDispatch();
   const form = useSelector((state) => state.createForm.value);
-  const playbackState = usePlaybackState();
-  const playerState = playbackState.state;
-
   const { currentStep } = form;
   // Si on a aucune valeur dans le redux on disable le button next
   const disableButton = !form.steps[currentStep - 1];
 
   const isVoiceStep = currentStep === 1;
-  const isPlaying = playerState === State.Playing;
 
   async function handleNext() {
     dispatch(updateCurrentStep(currentStep + 1));
     // Si on clique sur suivant et qu'une voix est entrain d'être jouée, on la remet a zéro et on l'arrête
-    if (isVoiceStep && isPlaying) {
-      await TrackPlayer.reset();
+    if (isVoiceStep) {
+      dispatch(resetTrack());
     }
   }
 

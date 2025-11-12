@@ -13,62 +13,46 @@ import {
 import { Colors, Typography, Spacing, BorderRadius } from "../KitUI/tokens";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import TrackPlayer, {
-  useTrackPlayerEvents,
-  useActiveTrack,
-  usePlaybackState,
-  Event,
-  State,
-} from "react-native-track-player";
+import { useActiveTrack, State } from "react-native-track-player";
 import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { updateModalState } from "../../reducers/modal";
 import { likeStory } from "../../modules/databaseAction";
-import { resetTrack } from "../../reducers/track";
+import { resetTrack, updatePlaybackState } from "../../reducers/track";
 
-const events = [
-  Event.RemotePlay,
-  Event.RemotePause,
-  Event.RemotePlayPause,
-  Event.PlaybackState,
-  Event.PlaybackError,
-  Event.PlaybackActiveTrackChanged,
-];
 const windowWidth = Dimensions.get("window").width;
 
 export default function MiniPlayer() {
   const dispatch = useDispatch();
-  const playbackState = usePlaybackState();
-  const playerState = playbackState.state;
   const activeTrack = useActiveTrack();
   const { title, artwork, artist, id } = activeTrack || {};
   const user = useSelector((state) => state.user.value);
   const trackData = useSelector((state) => state.track.value);
+  const { playbackState } = trackData;
   const stories = useSelector((state) => state.stories.value);
 
   const pan = useRef(new Animated.ValueXY()).current;
 
-  useTrackPlayerEvents(events, (event) => {
-    if (event.type === Event.PlaybackError) {
-      console.warn("An error occured while playing the current track.");
-    }
-  });
-
   const hasLiked = stories.likedStories.some((story) => story._id === id);
-  const isPlaying = playerState === State.Playing;
-  const isEnded = playerState === State.Ended;
+  const isPlaying = playbackState === State.Playing;
+  const isEnded = playbackState === State.Ended;
+  const isPaused =
+    playbackState === State.Paused || playbackState === State.Ready;
 
   const panResponder = useRef(
     PanResponder.create({
       onMoveShouldSetPanResponder: (evt, gestureState) => {
         // Seuil horizontal vs vertical
         return (
-          Math.abs(gestureState.dx) > Math.abs(gestureState.dy) && Math.abs(gestureState.dx) > 5
+          Math.abs(gestureState.dx) > Math.abs(gestureState.dy) &&
+          Math.abs(gestureState.dx) > 5
         );
       },
-      onPanResponderMove: Animated.event([null, { dx: pan.x }], { useNativeDriver: false }),
+      onPanResponderMove: Animated.event([null, { dx: pan.x }], {
+        useNativeDriver: false,
+      }),
       onPanResponderRelease: (evt, gestureState) => {
-        const SWIPE_THRESHOLD = 150; // DIstance minimale pour activer l'animation de swipe
+        const SWIPE_THRESHOLD = 150; // Distance minimale pour activer l'animation de swipe
         const DISAPPEAR_DURATION = 400; // Durée avant disparition
         const HORIZONTAL_DISTANCE = 400; // Distance à parcourir pour sortir complètement de l'écran
 
@@ -100,15 +84,11 @@ export default function MiniPlayer() {
   ).current;
 
   async function handlePlay() {
-    if (isEnded) {
-      await TrackPlayer.seekTo(0);
-      await TrackPlayer.play();
-    }
-
     if (isPlaying) {
-      await TrackPlayer.pause();
-    } else {
-      await TrackPlayer.play();
+      dispatch(updatePlaybackState(State.Paused));
+    }
+    if (isPaused || isEnded) {
+      dispatch(updatePlaybackState(State.Playing));
     }
   }
 
@@ -131,9 +111,17 @@ export default function MiniPlayer() {
           <View style={styles.leftMiniPlayerContainer}>
             <TouchableOpacity onPress={() => handlePlay()} activeOpacity={0.8}>
               {isPlaying ? (
-                <Ionicons name="pause" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="pause"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               ) : (
-                <Ionicons name="play" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="play"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               )}
             </TouchableOpacity>
             <Pressable
@@ -152,7 +140,9 @@ export default function MiniPlayer() {
               </View>
               <View>
                 <Text style={styles.title}>{title}</Text>
-                <Text style={styles.subtitle}>{artist || "Auteur inconnu"}</Text>
+                <Text style={styles.subtitle}>
+                  {artist || "Auteur inconnu"}
+                </Text>
               </View>
             </Pressable>
           </View>
@@ -162,9 +152,17 @@ export default function MiniPlayer() {
               onPress={() => likeStory(trackData.track, user.token, dispatch)}
             >
               {hasLiked ? (
-                <Ionicons name="heart" size={Spacing.xxxl} color={Colors.error} />
+                <Ionicons
+                  name="heart"
+                  size={Spacing.xxxl}
+                  color={Colors.error}
+                />
               ) : (
-                <Ionicons name="heart-outline" size={Spacing.xxxl} color={Colors.textTitle} />
+                <Ionicons
+                  name="heart-outline"
+                  size={Spacing.xxxl}
+                  color={Colors.textTitle}
+                />
               )}
             </TouchableOpacity>
           </View>
