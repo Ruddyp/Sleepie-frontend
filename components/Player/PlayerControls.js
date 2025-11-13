@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { updatePlaybackState, updateSeekTo } from "../../reducers/track";
 export default function PlayerControls() {
-  const { position, duration } = useProgress(100); // 100ms de rafraîchissement
+  const { position, duration } = useProgress(500); // 100ms de rafraîchissement
   const trackData = useSelector((state) => state.track.value);
   const { playbackState } = trackData;
   const dispatch = useDispatch();
