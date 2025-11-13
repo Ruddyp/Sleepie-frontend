@@ -13,7 +13,7 @@ import {
   BorderRadius,
   Shadows,
 } from "../KitUI/tokens";
-import { useActiveTrack } from "react-native-track-player";
+import { useActiveTrack, useProgress } from "react-native-track-player";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
@@ -27,6 +27,7 @@ const windowWidth = Dimensions.get("window").width;
 
 export function Player() {
   const activeTrack = useActiveTrack();
+  const { position, duration } = useProgress(500); // refresh every 500ms
   const { title, artwork, artist, id } = activeTrack || {};
   const user = useSelector((state) => state.user.value);
   const stories = useSelector((state) => state.stories.value);
@@ -87,17 +88,17 @@ export function Player() {
 
       {/* Progress Bar */}
       <View>
-        <PlayerSlider />
+        <PlayerSlider duration={duration} position={position} />
       </View>
 
       {/* Controls */}
       <View style={styles.controls}>
-        <PlayerControls />
+        <PlayerControls duration={duration} position={position} />
       </View>
 
       {/* Sleep timer */}
       <View style={styles.controls}>
-        <PlayerSleepTimer />
+        <PlayerSleepTimer duration={duration} />
       </View>
 
       {/* Close player */}

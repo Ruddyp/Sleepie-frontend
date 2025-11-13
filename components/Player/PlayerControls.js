@@ -7,13 +7,12 @@ import {
   Shadows,
   Sizes,
 } from "../KitUI/tokens";
-import { useProgress, State } from "react-native-track-player";
+import { State } from "react-native-track-player";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 import { updatePlaybackState, updateSeekTo } from "../../reducers/track";
-export default function PlayerControls() {
-  const { position, duration } = useProgress(500); // 100ms de rafraîchissement
+export default function PlayerControls({ duration, position }) {
   const trackData = useSelector((state) => state.track.value);
   const { playbackState } = trackData;
   const dispatch = useDispatch();

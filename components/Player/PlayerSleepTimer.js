@@ -6,13 +6,11 @@ import {
   Sizes,
   BorderRadius,
 } from "../KitUI/tokens";
-import { useProgress } from "react-native-track-player";
 import { Ionicons } from "@expo/vector-icons";
 import SleepTimerModal from "./SleepTimerModal";
 import { useState } from "react";
 
-export default function PlayerSleepTimer() {
-  const { duration } = useProgress(500); // 100ms de rafraîchissement
+export default function PlayerSleepTimer({ duration }) {
   const [isOpen, setIsOpen] = useState(false);
   return (
     <>
